@@ -1,0 +1,10 @@
+{
+  "name": "DossierBJ",
+  "short_name": "DossierBJ",
+  "description": "Assistant documentaire indépendant pour démarches et dossiers sourcés.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f7f2",
+  "theme_color": "#12664f",
+  "lang": "fr"
+}
