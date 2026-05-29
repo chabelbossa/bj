@@ -1,4 +1,9 @@
-import type { SourceReviewItem } from "../schemas";
+import {
+  sourceCandidateDraftSchema,
+  type SourceCandidateDraft,
+  type SourceReviewEvent,
+  type SourceReviewItem,
+} from "../schemas";
 
 export type ManualIngestionChecklistItem = {
   id: string;
@@ -11,6 +16,18 @@ export type ManualIngestionReadiness = {
   readyForVerifiedStatus: boolean;
   checklist: ManualIngestionChecklistItem[];
   nextAction: string;
+};
+
+export type SourceCandidateDraftInput = {
+  title: string;
+  module: string;
+  country: string;
+  authority: string;
+  candidateUrl: string;
+  priority: SourceCandidateDraft["priority"];
+  relatedProcedureSlugs: string[];
+  notes: string[];
+  createdAt?: string;
 };
 
 export const manualIngestionWorkflow = [
@@ -63,3 +80,63 @@ export const getManualIngestionReadiness = (item: SourceReviewItem): ManualInges
     nextAction,
   };
 };
+
+export const createSourceReviewEvents = (items: SourceReviewItem[]): SourceReviewEvent[] =>
+  items.map((item) => ({
+    id: `${item.id}-event-${item.lastReviewedAt ?? "pending"}`,
+    reviewItemId: item.id,
+    status: item.status,
+    note: item.notes[0] ?? "Revue locale initiale.",
+    reviewedAt: item.lastReviewedAt ?? "2026-05-19",
+    actor: "local-operator",
+  }));
+
+const normalizeIdSegment = (value: string) =>
+  value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/gu, "-")
+    .replace(/^-|-$/gu, "")
+    .slice(0, 56);
+
+export const createSourceCandidateDraft = (
+  input: SourceCandidateDraftInput,
+): SourceCandidateDraft => {
+  const createdAt = input.createdAt ?? new Date().toISOString().slice(0, 10);
+  const idSegment = normalizeIdSegment(`${input.title}-${input.authority}`) || "source";
+
+  return sourceCandidateDraftSchema.parse({
+    ...input,
+    id: `source-candidate-${idSegment}-${createdAt}`,
+    title: input.title.trim(),
+    module: input.module.trim(),
+    country: input.country.trim().toUpperCase(),
+    authority: input.authority.trim(),
+    candidateUrl: input.candidateUrl.trim(),
+    relatedProcedureSlugs: input.relatedProcedureSlugs.map((slug) => slug.trim()).filter(Boolean),
+    notes: input.notes.map((note) => note.trim()).filter(Boolean),
+    createdAt,
+  });
+};
+
+export const formatSourceCandidateSeedSnippet = (draft: SourceCandidateDraft) =>
+  JSON.stringify(
+    {
+      id: draft.id.replace("source-candidate-", "source-review-"),
+      title: draft.title,
+      module: draft.module,
+      country: draft.country,
+      authority: draft.authority,
+      candidateUrl: draft.candidateUrl,
+      status: "to_connect",
+      priority: draft.priority,
+      relatedProcedureSlugs: draft.relatedProcedureSlugs,
+      notes: [
+        ...draft.notes,
+        `Source proposée localement le ${draft.createdAt}. Revue humaine requise avant validation.`,
+      ],
+    } satisfies SourceReviewItem,
+    null,
+    2,
+  );

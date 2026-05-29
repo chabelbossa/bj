@@ -4,13 +4,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ChecklistBuilder } from "@/components/checklist/ChecklistBuilder";
+import { ProcedureClaimList } from "@/components/procedure/ProcedureClaimList";
 import { ProcedureFactList } from "@/components/procedure/ProcedureFactList";
 import { ProcedureStatusBadge } from "@/components/procedure/ProcedureStatusBadge";
 import { CitationList } from "@/components/source/CitationList";
 import { InlineSourceRefs } from "@/components/source/InlineSourceRefs";
 import { SourceBadge } from "@/components/source/SourceBadge";
 import { TrustNotice } from "@/components/ui/TrustNotice";
-import { demoProcedures, findProcedureBySlug } from "@dossierbj/core";
+import { getProcedureBySlug, getProcedureClaimsBySlug } from "@/lib/data";
 
 type ProcedurePageProps = {
   params: Promise<{
@@ -18,15 +19,11 @@ type ProcedurePageProps = {
   }>;
 };
 
-export async function generateStaticParams() {
-  return demoProcedures.map((procedure) => ({
-    slug: procedure.slug,
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: ProcedurePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const procedure = findProcedureBySlug(slug);
+  const procedure = await getProcedureBySlug(slug);
 
   return {
     title: procedure ? procedure.title : "Démarche introuvable",
@@ -35,7 +32,10 @@ export async function generateMetadata({ params }: ProcedurePageProps): Promise<
 
 export default async function ProcedureDetailPage({ params }: ProcedurePageProps) {
   const { slug } = await params;
-  const procedure = findProcedureBySlug(slug);
+  const [procedure, claims] = await Promise.all([
+    getProcedureBySlug(slug),
+    getProcedureClaimsBySlug(slug),
+  ]);
 
   if (!procedure) {
     notFound();
@@ -102,24 +102,28 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
           </section>
 
           <ProcedureFactList facts={procedure.verifiedFacts} />
+          <ProcedureClaimList claims={claims} />
 
-          <section className="mt-8 grid gap-4 md:grid-cols-2">
-            <div className="rounded-md border border-line bg-surface p-5">
-              <h2 className="text-xl font-semibold">Points à vérifier</h2>
-              <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
-                {procedure.pointsToVerify.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-md border border-line bg-surface p-5">
-              <h2 className="text-xl font-semibold">Préparation prudente</h2>
-              <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
-                {procedure.preparationHints.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
+          <section className="mt-8 rounded-md border border-line bg-surface p-5">
+            <h2 className="text-xl font-semibold">Préparation prudente</h2>
+            <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
+              {procedure.preparationHints.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="mt-8 rounded-md border border-line bg-surface p-5">
+            <h2 className="text-xl font-semibold">Ce qui reste à vérifier</h2>
+            <p className="mt-2 text-sm leading-6 text-muted">
+              Ces points doivent être confirmés directement sur la plateforme officielle avant toute
+              décision ou paiement.
+            </p>
+            <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
+              {procedure.pointsToVerify.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
           </section>
 
           <section className="mt-8 rounded-md border border-line bg-surface p-5">

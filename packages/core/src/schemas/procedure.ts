@@ -16,6 +16,17 @@ export const claimStatusSchema = z.enum([
   "not_applicable",
 ]);
 
+export const claimTypeSchema = z.enum([
+  "general",
+  "official_channel",
+  "cost",
+  "duration",
+  "required_document",
+  "procedure_step",
+  "eligibility",
+  "warning",
+]);
+
 export const procedureFactSchema = z.object({
   id: z.string().min(1),
   label: z.string().min(1),
@@ -40,6 +51,19 @@ export const procedureStepSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
   sourceRefs: z.array(sourceReferenceSchema),
+});
+
+export const procedureClaimSchema = z.object({
+  id: z.string().min(1),
+  procedureId: z.string().min(1),
+  procedureSlug: z.string().min(1),
+  type: claimTypeSchema,
+  label: z.string().min(1),
+  value: z.string().min(1),
+  status: claimStatusSchema,
+  sourceRefs: z.array(sourceReferenceSchema),
+  note: z.string().optional(),
+  sourceField: z.string().optional(),
 });
 
 export const procedureSchema = z.object({
@@ -70,7 +94,9 @@ export const procedureSchema = z.object({
 
 export type VerificationStatus = z.infer<typeof verificationStatusSchema>;
 export type ClaimStatus = z.infer<typeof claimStatusSchema>;
+export type ClaimType = z.infer<typeof claimTypeSchema>;
 export type ProcedureFact = z.infer<typeof procedureFactSchema>;
+export type ProcedureClaim = z.infer<typeof procedureClaimSchema>;
 export type RequiredDocument = z.infer<typeof requiredDocumentSchema>;
 export type ProcedureStep = z.infer<typeof procedureStepSchema>;
 export type Procedure = z.infer<typeof procedureSchema>;

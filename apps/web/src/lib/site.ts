@@ -9,6 +9,7 @@ export const navItems = [
   { href: "/", label: "Accueil" },
   { href: "/demarches", label: "Démarches" },
   { href: "/sources", label: "Sources" },
+  { href: "/methode-verification", label: "Méthode" },
   { href: "/assistant", label: "Assistant" },
   { href: "/pulse", label: "Pulse" },
   { href: "/ux-lab", label: "UX Lab" },

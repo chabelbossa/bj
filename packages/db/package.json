@@ -5,17 +5,27 @@
   "type": "module",
   "exports": {
     ".": "./src/client.ts",
+    "./repository": "./src/repository.ts",
     "./schema": "./src/schema.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:postgres": "RUN_POSTGRES_TESTS=true DATA_MODE=postgres AI_PROVIDER=mock vitest run src/postgresRepository.test.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:seed": "tsx src/seed.ts",
+    "db:reset:dev": "tsx src/resetDev.ts"
   },
   "dependencies": {
+    "@dossierbj/core": "workspace:*",
     "drizzle-orm": "^0.45.1",
     "postgres": "^3.4.7"
   },
   "devDependencies": {
+    "@dossierbj/rag": "workspace:*",
     "drizzle-kit": "^0.31.8",
+    "tsx": "^4.21.0",
     "typescript": "^5",
     "vitest": "^4.0.15"
   }

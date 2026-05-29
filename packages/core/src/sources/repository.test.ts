@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { getManualIngestionReadiness } from "./manualIngestion";
+import {
+  createSourceCandidateDraft,
+  formatSourceCandidateSeedSnippet,
+  getManualIngestionReadiness,
+} from "./manualIngestion";
 import { getOfficialSources, getSourceReviewItems, getSourceReviewSummary } from "./repository";
 
 describe("source review repository", () => {
@@ -39,5 +43,24 @@ describe("source review repository", () => {
       expect(getManualIngestionReadiness(verifiedItem).readyForVerifiedStatus).toBe(true);
       expect(getManualIngestionReadiness(toConnectItem).readyForVerifiedStatus).toBe(false);
     }
+  });
+
+  it("creates local source candidate drafts for manual review", () => {
+    const draft = createSourceCandidateDraft({
+      title: "Portail test",
+      module: "DossierBJ Core",
+      country: "bj",
+      authority: "Institution test",
+      candidateUrl: "https://example.org/source",
+      priority: "medium",
+      relatedProcedureSlugs: ["creation-entreprise"],
+      notes: ["À lire manuellement"],
+      createdAt: "2026-05-19",
+    });
+    const snippet = formatSourceCandidateSeedSnippet(draft);
+
+    expect(draft.id).toContain("source-candidate-portail-test");
+    expect(draft.country).toBe("BJ");
+    expect(snippet).toContain('"status": "to_connect"');
   });
 });

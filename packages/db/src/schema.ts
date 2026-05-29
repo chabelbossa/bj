@@ -21,6 +21,24 @@ export const verificationStatusEnum = pgEnum("verification_status", [
   "demo_unverified",
 ]);
 
+export const claimStatusEnum = pgEnum("claim_status", [
+  "verified",
+  "partially_verified",
+  "unverified",
+  "not_applicable",
+]);
+
+export const claimTypeEnum = pgEnum("claim_type", [
+  "general",
+  "official_channel",
+  "cost",
+  "duration",
+  "required_document",
+  "procedure_step",
+  "eligibility",
+  "warning",
+]);
+
 export const recordStatusEnum = pgEnum("record_status", [
   "active",
   "pending_review",
@@ -81,13 +99,20 @@ export const procedures = pgTable("procedures", {
   slug: text("slug").notNull().unique(),
   country: text("country").notNull(),
   category: text("category").notNull(),
+  aliases: jsonb("aliases").$type<string[]>().default([]).notNull(),
   targetUsers: jsonb("target_users").$type<string[]>().default([]).notNull(),
   summary: text("summary").notNull(),
+  userNeed: text("user_need").notNull(),
+  expectedOutcome: text("expected_outcome").notNull(),
   officialUrl: text("official_url"),
   estimatedDuration: text("estimated_duration"),
   officialCost: text("official_cost"),
+  preparationHints: jsonb("preparation_hints").$type<string[]>().default([]).notNull(),
+  pointsToVerify: jsonb("points_to_verify").$type<string[]>().default([]).notNull(),
+  verifiedFacts: jsonb("verified_facts").$type<unknown[]>().default([]).notNull(),
   warnings: jsonb("warnings").$type<string[]>().default([]).notNull(),
   sources: jsonb("sources").$type<unknown[]>().default([]).notNull(),
+  sourceStatusNote: text("source_status_note").notNull(),
   lastVerifiedAt: timestamp("last_verified_at", { mode: "date" }).notNull(),
   verificationStatus: verificationStatusEnum("verification_status").notNull(),
 });
@@ -113,6 +138,22 @@ export const procedureSteps = pgTable("procedure_steps", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   sourceRefs: jsonb("source_refs").$type<unknown[]>().default([]).notNull(),
+});
+
+export const procedureClaims = pgTable("procedure_claims", {
+  id: text("id").primaryKey(),
+  procedureId: text("procedure_id")
+    .notNull()
+    .references(() => procedures.id),
+  procedureSlug: text("procedure_slug").notNull(),
+  type: claimTypeEnum("claim_type").notNull(),
+  label: text("label").notNull(),
+  value: text("value").notNull(),
+  status: claimStatusEnum("status").notNull(),
+  sourceRefs: jsonb("source_refs").$type<unknown[]>().default([]).notNull(),
+  note: text("note"),
+  sourceField: text("source_field"),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
 export const sourceReferences = pgTable("source_references", {
@@ -153,6 +194,31 @@ export const assistantQueries = pgTable("assistant_queries", {
   confidence: text("confidence").notNull(),
   citations: jsonb("citations").$type<unknown[]>().default([]).notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+export const sourceReviewItems = pgTable("source_review_items", {
+  id: text("id").primaryKey(),
+  title: text("title").notNull(),
+  module: text("module").notNull(),
+  country: text("country").notNull(),
+  authority: text("authority").notNull(),
+  candidateUrl: text("candidate_url").notNull(),
+  status: text("status").notNull(),
+  priority: text("priority").notNull(),
+  notes: jsonb("notes").$type<string[]>().default([]).notNull(),
+  relatedProcedureSlugs: jsonb("related_procedure_slugs").$type<string[]>().default([]).notNull(),
+  lastReviewedAt: timestamp("last_reviewed_at", { mode: "date" }),
+});
+
+export const sourceReviewEvents = pgTable("source_review_events", {
+  id: text("id").primaryKey(),
+  reviewItemId: text("review_item_id")
+    .notNull()
+    .references(() => sourceReviewItems.id),
+  status: text("status").notNull(),
+  note: text("note").notNull(),
+  reviewedAt: timestamp("reviewed_at", { mode: "date" }).notNull(),
+  actor: text("actor").notNull(),
 });
 
 export const opportunities = pgTable("opportunities", {

@@ -1,4 +1,6 @@
 import { getManualIngestionReadiness, type SourceReviewItem } from "@dossierbj/core";
+import type { Route } from "next";
+import Link from "next/link";
 
 import { SourceReviewStatusBadge, sourceReviewStatusLabels } from "./SourceReviewStatusBadge";
 
@@ -29,15 +31,27 @@ export function SourceReviewCard({ item }: { item: SourceReviewItem }) {
           <dt className="font-medium">Fiches liées</dt>
           <dd className="text-muted">{item.relatedProcedureSlugs.join(", ")}</dd>
         </div>
+        <div>
+          <dt className="font-medium">Dernière revue</dt>
+          <dd className="text-muted">{item.lastReviewedAt ?? "Non revue"}</dd>
+        </div>
       </dl>
-      <a
-        className="mt-4 inline-flex text-sm font-semibold text-brand-strong hover:underline"
-        href={item.candidateUrl}
-        target="_blank"
-        rel="noreferrer"
-      >
-        Ouvrir la source candidate
-      </a>
+      <div className="mt-4 flex flex-wrap gap-3">
+        <Link
+          className="inline-flex text-sm font-semibold text-brand-strong hover:underline"
+          href={`/sources/${item.id}` as Route}
+        >
+          Voir la revue
+        </Link>
+        <a
+          className="inline-flex text-sm font-semibold text-brand-strong hover:underline"
+          href={item.candidateUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Ouvrir la source candidate
+        </a>
+      </div>
       <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
         {item.notes.map((note) => (
           <li key={note}>{note}</li>

@@ -7,12 +7,14 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "validate:sources": "tsx src/sources/validateSourcesCli.ts"
   },
   "dependencies": {
     "zod": "^4.2.1"
   },
   "devDependencies": {
+    "tsx": "^4.21.0",
     "typescript": "^5",
     "vitest": "^4.0.15"
   }

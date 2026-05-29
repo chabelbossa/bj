@@ -3,12 +3,8 @@ import Link from "next/link";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ProcedureResultCard } from "@/components/procedure/ProcedureResultCard";
 import { TrustNotice } from "@/components/ui/TrustNotice";
-import {
-  getProcedureCategories,
-  getProcedureTargetUsers,
-  searchProcedures,
-  verificationStatusSchema,
-} from "@dossierbj/core";
+import { getProcedureFilterData, searchProcedureData } from "@/lib/data";
+import { verificationStatusSchema } from "@dossierbj/core";
 
 type DemarchesPageProps = {
   searchParams: Promise<{
@@ -34,14 +30,15 @@ export default async function DemarchesPage({ searchParams }: DemarchesPageProps
   const rawStatus = firstParam(params.status);
   const parsedStatus = rawStatus ? verificationStatusSchema.safeParse(rawStatus) : undefined;
   const status = parsedStatus?.success ? parsedStatus.data : undefined;
-  const results = searchProcedures({
-    query,
-    category,
-    targetUser: target,
-    verificationStatus: status,
-  });
-  const categories = getProcedureCategories();
-  const targets = getProcedureTargetUsers();
+  const [results, filters] = await Promise.all([
+    searchProcedureData({
+      query,
+      category,
+      targetUser: target,
+      verificationStatus: status,
+    }),
+    getProcedureFilterData(),
+  ]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
@@ -51,8 +48,8 @@ export default async function DemarchesPage({ searchParams }: DemarchesPageProps
         </p>
         <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Démarches disponibles</h1>
         <p className="mt-4 leading-7 text-muted">
-          Recherche dans les fiches de démonstration. Les sources officielles devront être
-          connectées avant tout usage réel.
+          Recherche dans les fiches disponibles. Les informations sensibles restent reliées aux
+          citations ou marquées comme non confirmées.
         </p>
       </div>
 
@@ -85,7 +82,7 @@ export default async function DemarchesPage({ searchParams }: DemarchesPageProps
                 className="mt-2 min-h-11 w-full rounded-md border border-line bg-background px-3 font-normal"
               >
                 <option value="">Toutes</option>
-                {categories.map((item) => (
+                {filters.categories.map((item) => (
                   <option key={item} value={item}>
                     {item}
                   </option>
@@ -102,7 +99,7 @@ export default async function DemarchesPage({ searchParams }: DemarchesPageProps
                 className="mt-2 min-h-11 w-full rounded-md border border-line bg-background px-3 font-normal"
               >
                 <option value="">Tous</option>
-                {targets.map((item) => (
+                {filters.targets.map((item) => (
                   <option key={item} value={item}>
                     {item}
                   </option>

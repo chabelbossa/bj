@@ -4,7 +4,7 @@ import { ModuleCard } from "@/components/ui/ModuleCard";
 import { TrustNotice } from "@/components/ui/TrustNotice";
 import { SearchBox } from "@/components/procedure/SearchBox";
 import { ProcedureCard } from "@/components/procedure/ProcedureCard";
-import { getProcedures } from "@dossierbj/core";
+import { listProcedures } from "@/lib/data";
 
 const modules = [
   {
@@ -29,8 +29,8 @@ const modules = [
   },
 ];
 
-export default function HomePage() {
-  const featuredProcedures = getProcedures().slice(0, 3);
+export default async function HomePage() {
+  const featuredProcedures = (await listProcedures()).slice(0, 3);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">

@@ -285,6 +285,14 @@ const businessCreationProcedure: Procedure = {
       "Toujours revérifier le tarif au moment du paiement.",
     ),
     createFact(
+      "business-fact-duration",
+      "Délai visible",
+      "La page connectée indique un délai de traitement de 3 heures ouvrables après paiement.",
+      "verified",
+      [monEntrepriseCostsRef],
+      "Toujours revérifier le délai au moment du dépôt.",
+    ),
+    createFact(
       "business-fact-documents",
       "Pièces visibles",
       "La page connectée liste des pièces pour l'enregistrement d'un établissement.",

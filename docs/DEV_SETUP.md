@@ -26,7 +26,18 @@ Ouvrir `http://localhost:3000`.
 pnpm lint
 pnpm typecheck
 pnpm test
+pnpm test:e2e
 ```
+
+Test optionnel avec une base Postgres de développement :
+
+```bash
+pnpm db:reset:dev
+pnpm test:postgres
+pnpm test:e2e:postgres
+```
+
+Ces commandes supposent que `DATABASE_URL` pointe vers une base jetable.
 
 ## Variables D'environnement
 
@@ -41,19 +52,63 @@ PAYMENTS_ENABLED="false"
 ENABLE_AUTH="false"
 ```
 
-## Mode Postgres Futur
+## Mode Postgres Optionnel
 
-Pour préparer PostgreSQL :
+Pour activer PostgreSQL localement :
 
 ```env
 DATA_MODE="postgres"
-DATABASE_URL="postgres://..."
+DATABASE_URL="postgresql://..."
+AI_PROVIDER="mock"
 ```
 
-Le MVP ne doit pas exiger cette configuration.
+Commandes DB :
+
+```bash
+pnpm db:generate
+pnpm db:migrate
+pnpm db:seed
+pnpm db:reset:dev
+```
+
+`DATA_MODE=mock` reste le mode par défaut et ne doit jamais exiger cette configuration.
+
+`pnpm db:reset:dev` supprime aussi le schéma interne `drizzle` afin que les migrations soient
+rejouées proprement sur une base de développement jetable.
+
+## Brouillons De Sources
+
+La page `/sources/nouvelle` stocke les brouillons dans le navigateur avec la clé
+`dossierbj:source-candidates:v1`. Ces données ne sont pas synchronisées, ne prouvent rien
+officiellement et doivent être revues manuellement avant d'être ajoutées à
+`packages/core/src/seed/sourceRegistry.ts`.
+
+## Revue Locale Des Claims
+
+La page `/sources/claims` stocke les notes de revue dans le navigateur avec la clé
+`dossierbj:claim-review-notes:v1`. Les notes peuvent être copiées en JSON, mais elles ne modifient
+ni les seeds ni Postgres. Pour publier une correction, éditer les fiches ou le registre source,
+puis relancer :
+
+```bash
+pnpm validate:sources
+pnpm test
+pnpm test:e2e
+```
+
+## E2E Léger
+
+`pnpm test:e2e` démarre un serveur Next local sur `127.0.0.1:3107`, vérifie les pages critiques et
+poste une question à `/api/assistant`. Il ne dépend d'aucun navigateur, provider IA externe ou
+service payant. Pour changer de port :
+
+```bash
+E2E_PORT=3111 pnpm test:e2e
+```
 
 ## Troubleshooting
 
 - Si `pnpm install` échoue, vérifier le réseau puis relancer.
 - Si Next signale des types de route, lancer `pnpm --filter @dossierbj/web dev` ou `pnpm --filter @dossierbj/web build` pour régénérer les types.
 - Si l'assistant ne répond pas, vérifier que `AI_PROVIDER=mock` et que l'API `/api/health` retourne OK.
+- Si Drizzle signale une URL invalide, vérifier que `.env.local` contient seulement `DATABASE_URL="postgresql://..."` et pas une valeur imbriquée du type `DATABASE_URL="DATABASE_URL=..."`.

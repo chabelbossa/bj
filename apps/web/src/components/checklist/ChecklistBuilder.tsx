@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   generateProcedureChecklist,
   getChecklistProgress,
@@ -13,14 +13,18 @@ type ItemStatusMap = Record<string, ChecklistItem["status"]>;
 
 const profileOptions = ["Citoyen", "Entrepreneur", "PME", "Diaspora", "Consultant"];
 
+const createDefaultProfile = (procedure: Procedure): ChecklistProfile => ({
+  userType: procedure.targetUsers[0],
+  urgency: "unknown",
+  alreadyHasDocuments: false,
+  needsOfficialVerification: true,
+});
+
 export function ChecklistBuilder({ procedure }: { procedure: Procedure }) {
-  const [profile, setProfile] = useState<ChecklistProfile>({
-    userType: procedure.targetUsers[0],
-    urgency: "unknown",
-    alreadyHasDocuments: false,
-    needsOfficialVerification: true,
-  });
+  const storageKey = `dossierbj:checklist:v1:${procedure.slug}`;
+  const [profile, setProfile] = useState<ChecklistProfile>(() => createDefaultProfile(procedure));
   const [itemStatuses, setItemStatuses] = useState<ItemStatusMap>({});
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const checklist = useMemo(
     () => generateProcedureChecklist(procedure, profile),
@@ -32,11 +36,63 @@ export function ChecklistBuilder({ procedure }: { procedure: Procedure }) {
   }));
   const progress = getChecklistProgress(items);
 
+  useEffect(() => {
+    const frameId = window.requestAnimationFrame(() => {
+      const rawValue = window.localStorage.getItem(storageKey);
+
+      if (rawValue) {
+        try {
+          const parsed = JSON.parse(rawValue) as {
+            profile?: ChecklistProfile;
+            itemStatuses?: ItemStatusMap;
+          };
+
+          if (parsed.profile) {
+            setProfile((current) => ({
+              ...current,
+              ...parsed.profile,
+            }));
+          }
+
+          if (parsed.itemStatuses) {
+            setItemStatuses(parsed.itemStatuses);
+          }
+        } catch {
+          window.localStorage.removeItem(storageKey);
+        }
+      }
+
+      setIsLoaded(true);
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [storageKey]);
+
+  useEffect(() => {
+    if (!isLoaded) {
+      return;
+    }
+
+    window.localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        profile,
+        itemStatuses,
+      }),
+    );
+  }, [isLoaded, itemStatuses, profile, storageKey]);
+
   function updateStatus(itemId: string, done: boolean) {
     setItemStatuses((current) => ({
       ...current,
       [itemId]: done ? "done" : "todo",
     }));
+  }
+
+  function resetChecklist() {
+    setProfile(createDefaultProfile(procedure));
+    setItemStatuses({});
+    window.localStorage.removeItem(storageKey);
   }
 
   return (
@@ -52,6 +108,22 @@ export function ChecklistBuilder({ procedure }: { procedure: Procedure }) {
         <span className="rounded-sm bg-[#e6f2ec] px-2 py-1 text-xs font-semibold text-brand-strong">
           {progress}% terminé
         </span>
+      </div>
+      <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+        <button
+          type="button"
+          onClick={() => window.print()}
+          className="min-h-10 rounded-md border border-brand px-3 text-sm font-semibold text-brand-strong hover:bg-[#e6f2ec]"
+        >
+          Imprimer
+        </button>
+        <button
+          type="button"
+          onClick={resetChecklist}
+          className="min-h-10 rounded-md border border-line px-3 text-sm font-semibold text-muted hover:border-brand"
+        >
+          Réinitialiser
+        </button>
       </div>
 
       <div className="mt-5 grid gap-3">

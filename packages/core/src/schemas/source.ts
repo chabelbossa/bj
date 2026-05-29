@@ -70,6 +70,28 @@ export const sourceReviewItemSchema = z.object({
   lastReviewedAt: isoDateStringSchema.optional(),
 });
 
+export const sourceReviewEventSchema = z.object({
+  id: z.string().min(1),
+  reviewItemId: z.string().min(1),
+  status: sourceReviewStatusSchema,
+  note: z.string().min(1),
+  reviewedAt: isoDateStringSchema,
+  actor: z.string().min(1).default("local-operator"),
+});
+
+export const sourceCandidateDraftSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  module: z.string().min(1),
+  country: z.string().min(2),
+  authority: z.string().min(1),
+  candidateUrl: z.string().url(),
+  priority: sourceReviewPrioritySchema,
+  relatedProcedureSlugs: z.array(z.string().min(1)),
+  notes: z.array(z.string().min(1)),
+  createdAt: isoDateStringSchema,
+});
+
 export type SourceType = z.infer<typeof sourceTypeSchema>;
 export type ReliabilityLevel = z.infer<typeof reliabilityLevelSchema>;
 export type SourceStatus = z.infer<typeof sourceStatusSchema>;
@@ -79,3 +101,5 @@ export type OfficialSource = z.infer<typeof officialSourceSchema>;
 export type SourceDocument = z.infer<typeof sourceDocumentSchema>;
 export type SourceChunk = z.infer<typeof sourceChunkSchema>;
 export type SourceReviewItem = z.infer<typeof sourceReviewItemSchema>;
+export type SourceReviewEvent = z.infer<typeof sourceReviewEventSchema>;
+export type SourceCandidateDraft = z.infer<typeof sourceCandidateDraftSchema>;

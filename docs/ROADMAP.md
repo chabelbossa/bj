@@ -28,6 +28,7 @@
 - Assistant CivicRAG sourcé.
 - Recherche et filtres.
 - Première stratégie SEO sobre.
+- PostgreSQL optionnel pour les procédures, sources, chunks RAG et requêtes assistant.
 
 ### État MVP Core Actuel
 
@@ -36,8 +37,18 @@
 - Création d'entreprise, casier judiciaire et extrait RCCM sont passés en `partially_verified` avec sources connectées manuellement.
 - Les fiches partiellement vérifiées affichent une matrice "affirmation -> source" pour éviter les affirmations implicites.
 - Checklist interactive générée localement à partir de la fiche et du profil utilisateur.
+- Checklist sauvegardée dans `localStorage` et imprimable via la page démarche.
 - Assistant CivicRAG mock/keyword avec citations, confiance moyenne sur fiches partiellement sourcées et confiance faible sur données demo.
-- Page `/sources` pour suivre les sources candidates, les sources connectées et la checklist d'ingestion manuelle.
+- `DATA_MODE=postgres` lit les procédures, sources, documents, chunks et enregistre les requêtes assistant.
+- Migration Drizzle initiale, seed Postgres idempotent et test d'intégration `pnpm test:postgres`.
+- Page `/sources` pour suivre les sources candidates, les sources connectées, les erreurs de validation et la checklist d'ingestion manuelle.
+- Page `/sources/[id]` pour inspecter une revue source, son historique, sa checklist, les démarches liées et les claims associés.
+- Page `/sources/claims` pour prioriser les claims à revoir, filtrer par fiche/type/statut et annoter localement le travail éditorial.
+- Page `/sources/nouvelle` pour générer un brouillon local de source candidate sans auth, scraping ou base obligatoire.
+- Page `/methode-verification` pour expliquer la revue humaine, les citations et les niveaux de confiance.
+- Table `procedure_claims` et modèle `ProcedureClaim` pour sortir les affirmations vérifiées du JSON des fiches.
+- Résumé de couverture des claims par fiche, statut et type d'affirmation sur `/sources`.
+- Script e2e HTTP `pnpm test:e2e` pour vérifier les routes critiques, `/api/health` et `/api/assistant` en mode mock.
 - Registre fichier-based dans `packages/core/src/seed/sourceRegistry.ts` et workflow dans `packages/core/src/sources/manualIngestion.ts`.
 
 ### Prochain Critère De Sortie Phase 1
@@ -46,8 +57,9 @@
 - Casier judiciaire : extraire frais, délai actuel et pièces exactes depuis le service officiel après revue humaine.
 - Extrait RCCM : extraire frais, délai, critères et pièces exactes depuis le service officiel après revue humaine.
 - Chaque frais, délai, pièce et étape affiché avec `SourceReference`.
-- Historique minimal de dernière consultation et statut de vérification.
-- Tests couvrant ingestion manuelle, source officielle et réponse RAG sourcée sur donnée vérifiée.
+- Persistance optionnelle des notes claims et brouillons source côté Postgres quand un vrai back-office sera justifié.
+- Tests navigateur Playwright si le projet accepte cette dépendance ; le smoke e2e HTTP couvre déjà les routes critiques en frugal.
+- Revue responsive visuelle des nouvelles pages éditoriales sur mobile réel.
 
 ### Sources Connectées Manuellement
 
@@ -63,6 +75,7 @@
 - Checklists de soumission.
 - Préparation à la génération de réponses.
 - Ne pas automatiser d'ingestion massive tant que la politique source et les premiers flux Core ne sont pas validés.
+- Réutiliser les mêmes abstractions `SourceReference`, revue humaine et repository, sans implémenter AO Radar dans le Core.
 
 ## Phase 3 - Diaspora Desk / RootsTrip
 

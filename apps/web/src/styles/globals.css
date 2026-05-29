@@ -57,3 +57,21 @@ textarea {
 ::selection {
   background: #d9f2e7;
 }
+
+@media print {
+  header,
+  footer,
+  nav,
+  button {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}

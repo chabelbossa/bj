@@ -38,12 +38,15 @@ const scoreField = (label: string, value: string | string[], tokens: string[], w
   };
 };
 
-export const searchProcedures = (filters: ProcedureSearchFilters = {}): ProcedureSearchResult[] => {
+export const searchProcedureList = (
+  procedures: Procedure[],
+  filters: ProcedureSearchFilters = {},
+): ProcedureSearchResult[] => {
   const tokens = tokenizeSearchText(filters.query ?? "");
   const normalizedCategory = filters.category?.trim().toLowerCase();
   const normalizedTargetUser = filters.targetUser?.trim().toLowerCase();
 
-  return demoProcedures
+  return procedures
     .filter((procedure) => {
       const matchesCategory =
         !normalizedCategory || procedure.category.toLowerCase() === normalizedCategory;
@@ -95,8 +98,17 @@ export const searchProcedures = (filters: ProcedureSearchFilters = {}): Procedur
     .sort((a, b) => b.score - a.score || a.procedure.title.localeCompare(b.procedure.title));
 };
 
+export const searchProcedures = (filters: ProcedureSearchFilters = {}): ProcedureSearchResult[] =>
+  searchProcedureList(demoProcedures, filters);
+
 export const getProcedureCategories = () =>
   Array.from(new Set(demoProcedures.map((procedure) => procedure.category))).sort();
 
 export const getProcedureTargetUsers = () =>
   Array.from(new Set(demoProcedures.flatMap((procedure) => procedure.targetUsers))).sort();
+
+export const getProcedureCategoriesFromList = (procedures: Procedure[]) =>
+  Array.from(new Set(procedures.map((procedure) => procedure.category))).sort();
+
+export const getProcedureTargetUsersFromList = (procedures: Procedure[]) =>
+  Array.from(new Set(procedures.flatMap((procedure) => procedure.targetUsers))).sort();

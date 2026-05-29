@@ -22,10 +22,10 @@ export default async function AssistantPage({ searchParams }: AssistantPageProps
         <p className="text-sm font-semibold uppercase tracking-[0.08em] text-brand-strong">
           CivicRAG
         </p>
-        <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Assistant sourcé en mode mock</h1>
+        <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Assistant sourcé local</h1>
         <p className="mt-4 leading-7 text-muted">
-          Cette interface teste la structure de réponse : citations, confiance, informations
-          manquantes et vérification officielle recommandée.
+          Cette interface utilise CivicRAG avec le provider IA mock par défaut. Les sources viennent
+          des données mockées ou de Postgres selon le mode actif.
         </p>
       </div>
       <div className="mt-6">
