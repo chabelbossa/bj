@@ -5,9 +5,16 @@ import { Header } from "./Header";
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div
+      style={{
+        display: "flex",
+        minHeight: "100dvh",
+        flexDirection: "column",
+        background: "var(--canvas)",
+      }}
+    >
       <Header />
-      <main className="flex-1">{children}</main>
+      <main style={{ flex: 1 }}>{children}</main>
       <Footer />
     </div>
   );

@@ -9,11 +9,23 @@ const statusLabels: Record<ClaimStatus, string> = {
   not_applicable: "Notice",
 };
 
-const statusClassNames: Record<ClaimStatus, string> = {
-  verified: "bg-[#e6f2ec] text-brand-strong",
-  partially_verified: "bg-[#fff8e8] text-[#5d4318]",
-  unverified: "bg-[#fff1d6] text-[#774d08]",
-  not_applicable: "bg-background text-muted",
+const statusStyles: Record<ClaimStatus, { background: string; color: string }> = {
+  verified: {
+    background: "color-mix(in srgb, var(--success) 15%, var(--canvas))",
+    color: "color-mix(in srgb, var(--success) 70%, var(--ink))",
+  },
+  partially_verified: {
+    background: "color-mix(in srgb, var(--accent-amber) 18%, var(--canvas))",
+    color: "color-mix(in srgb, var(--accent-amber) 80%, var(--ink))",
+  },
+  unverified: {
+    background: "var(--primary)",
+    color: "var(--on-primary)",
+  },
+  not_applicable: {
+    background: "var(--surface-card)",
+    color: "var(--muted-soft)",
+  },
 };
 
 const typeLabels: Record<ClaimType, string> = {
@@ -33,46 +45,179 @@ export function ProcedureClaimList({ claims }: { claims: ProcedureClaim[] }) {
   }
 
   return (
-    <section className="mt-8 rounded-md border border-line bg-surface p-5">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+    <section
+      style={{
+        marginTop: 32,
+        background: "var(--surface-card)",
+        borderRadius: "var(--radius-lg)",
+        padding: "var(--space-xl)",
+      }}
+    >
+      {/* Header */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 12,
+          marginBottom: 24,
+        }}
+      >
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-brand-strong">
+          <p
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 12,
+              fontWeight: 500,
+              letterSpacing: "1.5px",
+              textTransform: "uppercase",
+              color: "var(--primary)",
+              margin: "0 0 8px",
+            }}
+          >
             Registre de claims
           </p>
-          <h2 className="mt-2 text-xl font-semibold">Affirmations traçables</h2>
-          <p className="mt-2 text-sm leading-6 text-muted">
+          <h2
+            style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: 24,
+              fontWeight: 400,
+              lineHeight: 1.2,
+              letterSpacing: "-0.3px",
+              color: "var(--ink)",
+              margin: "0 0 8px",
+            }}
+          >
+            Affirmations traçables
+          </h2>
+          <p
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 14,
+              lineHeight: 1.6,
+              color: "var(--muted)",
+              margin: 0,
+            }}
+          >
             Chaque frais, délai, pièce ou étape est traité comme une affirmation indépendante avec
             statut et sources.
           </p>
         </div>
-        <span className="w-fit rounded-sm bg-background px-2 py-1 text-xs font-semibold text-muted">
+        <span
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 12,
+            fontWeight: 500,
+            padding: "4px 12px",
+            borderRadius: "var(--radius-pill)",
+            background: "var(--surface-cream-strong)",
+            color: "var(--muted)",
+            whiteSpace: "nowrap",
+          }}
+        >
           {claims.length} claim(s)
         </span>
       </div>
 
-      <div className="mt-5 grid gap-4 md:grid-cols-2">
-        {claims.map((claim) => (
-          <article key={claim.id} className="rounded-md border border-line bg-background p-4">
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
-                  {typeLabels[claim.type]}
-                </p>
-                <h3 className="mt-1 font-semibold">{claim.label}</h3>
-              </div>
-              <span
-                className={`inline-flex w-fit rounded-sm px-2 py-1 text-xs font-semibold ${
-                  statusClassNames[claim.status]
-                }`}
+      {/* Claims grid */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: 16,
+        }}
+      >
+        {claims.map((claim) => {
+          const s = statusStyles[claim.status];
+          return (
+            <article
+              key={claim.id}
+              style={{
+                background: "var(--canvas)",
+                border: "1px solid var(--hairline)",
+                borderRadius: "var(--radius-lg)",
+                padding: "var(--space-md)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "flex-start",
+                  justifyContent: "space-between",
+                  gap: 8,
+                  marginBottom: 10,
+                }}
               >
-                {statusLabels[claim.status]}
-              </span>
-            </div>
-            <p className="mt-3 text-sm leading-6 text-muted">{claim.value}</p>
-            {claim.note ? <p className="mt-2 text-xs text-danger">{claim.note}</p> : null}
-            <InlineSourceRefs sources={claim.sourceRefs} label="Sources du claim" />
-          </article>
-        ))}
+                <div>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize: 11,
+                      fontWeight: 500,
+                      letterSpacing: "1.2px",
+                      textTransform: "uppercase",
+                      color: "var(--muted-soft)",
+                      margin: "0 0 4px",
+                    }}
+                  >
+                    {typeLabels[claim.type]}
+                  </p>
+                  <h3
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize: 15,
+                      fontWeight: 500,
+                      color: "var(--ink)",
+                      margin: 0,
+                    }}
+                  >
+                    {claim.label}
+                  </h3>
+                </div>
+                <span
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 12,
+                    fontWeight: 500,
+                    padding: "4px 10px",
+                    borderRadius: "var(--radius-pill)",
+                    background: s.background,
+                    color: s.color,
+                    flexShrink: 0,
+                  }}
+                >
+                  {statusLabels[claim.status]}
+                </span>
+              </div>
+              <p
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: 13,
+                  lineHeight: 1.6,
+                  color: "var(--muted)",
+                  margin: "0 0 8px",
+                }}
+              >
+                {claim.value}
+              </p>
+              {claim.note ? (
+                <p
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 12,
+                    color: "var(--error)",
+                    margin: "0 0 8px",
+                  }}
+                >
+                  {claim.note}
+                </p>
+              ) : null}
+              <InlineSourceRefs sources={claim.sourceRefs} label="Sources du claim" />
+            </article>
+          );
+        })}
       </div>
     </section>
   );

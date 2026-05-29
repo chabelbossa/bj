@@ -8,68 +8,287 @@ export function SourceReviewCard({ item }: { item: SourceReviewItem }) {
   const readiness = getManualIngestionReadiness(item);
 
   return (
-    <article className="rounded-md border border-line bg-surface p-5">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+    <article
+      style={{
+        background: "var(--surface-card)",
+        borderRadius: "var(--radius-lg)",
+        padding: "var(--space-xl)",
+      }}
+    >
+      {/* Header */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 12,
+          marginBottom: 16,
+        }}
+      >
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-brand-strong">
+          <p
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 11,
+              fontWeight: 500,
+              letterSpacing: "1.2px",
+              textTransform: "uppercase",
+              color: "var(--primary)",
+              margin: "0 0 6px",
+            }}
+          >
             {item.module}
           </p>
-          <h2 className="mt-2 text-xl font-semibold">{item.title}</h2>
-          <p className="mt-2 text-sm text-muted">{item.authority}</p>
+          <h2
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 18,
+              fontWeight: 500,
+              lineHeight: 1.4,
+              color: "var(--ink)",
+              margin: "0 0 4px",
+            }}
+          >
+            {item.title}
+          </h2>
+          <p
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 13,
+              color: "var(--muted)",
+              margin: 0,
+            }}
+          >
+            {item.authority}
+          </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
           <SourceReviewStatusBadge status={item.status} />
           <SourceReviewStatusBadge status={item.status} priority={item.priority} />
         </div>
       </div>
-      <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+
+      {/* Details */}
+      <dl
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: 12,
+          marginBottom: 16,
+        }}
+      >
         <div>
-          <dt className="font-medium">Statut</dt>
-          <dd className="text-muted">{sourceReviewStatusLabels[item.status]}</dd>
+          <dt
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 12,
+              fontWeight: 500,
+              color: "var(--muted-soft)",
+              marginBottom: 4,
+            }}
+          >
+            Statut
+          </dt>
+          <dd
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 13,
+              color: "var(--body)",
+              margin: 0,
+            }}
+          >
+            {sourceReviewStatusLabels[item.status]}
+          </dd>
         </div>
         <div>
-          <dt className="font-medium">Fiches liées</dt>
-          <dd className="text-muted">{item.relatedProcedureSlugs.join(", ")}</dd>
+          <dt
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 12,
+              fontWeight: 500,
+              color: "var(--muted-soft)",
+              marginBottom: 4,
+            }}
+          >
+            Fiches liées
+          </dt>
+          <dd
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 13,
+              color: "var(--body)",
+              margin: 0,
+            }}
+          >
+            {item.relatedProcedureSlugs.join(", ")}
+          </dd>
         </div>
         <div>
-          <dt className="font-medium">Dernière revue</dt>
-          <dd className="text-muted">{item.lastReviewedAt ?? "Non revue"}</dd>
+          <dt
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 12,
+              fontWeight: 500,
+              color: "var(--muted-soft)",
+              marginBottom: 4,
+            }}
+          >
+            Dernière revue
+          </dt>
+          <dd
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 13,
+              color: "var(--body)",
+              margin: 0,
+            }}
+          >
+            {item.lastReviewedAt ?? "Non revue"}
+          </dd>
         </div>
       </dl>
-      <div className="mt-4 flex flex-wrap gap-3">
+
+      {/* Actions */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 16 }}>
         <Link
-          className="inline-flex text-sm font-semibold text-brand-strong hover:underline"
           href={`/sources/${item.id}` as Route}
+          className="hover-underline"
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 13,
+            fontWeight: 500,
+            color: "var(--primary)",
+            textDecoration: "none",
+          }}
         >
           Voir la revue
         </Link>
         <a
-          className="inline-flex text-sm font-semibold text-brand-strong hover:underline"
           href={item.candidateUrl}
           target="_blank"
           rel="noreferrer"
+          className="hover-underline"
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 13,
+            fontWeight: 500,
+            color: "var(--primary)",
+            textDecoration: "none",
+          }}
         >
           Ouvrir la source candidate
         </a>
       </div>
-      <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
-        {item.notes.map((note) => (
-          <li key={note}>{note}</li>
-        ))}
-      </ul>
-      <div className="mt-4 rounded-md border border-line bg-background p-3">
-        <p className="text-sm font-semibold">Checklist revue locale</p>
-        <ul className="mt-3 space-y-2 text-sm text-muted">
-          {readiness.checklist.map((step) => (
-            <li key={step.id} className="flex gap-2">
-              <span className="font-medium" aria-hidden="true">
-                {step.done ? "OK" : "-"}
-              </span>
-              <span>{step.label}</span>
+
+      {/* Notes */}
+      {item.notes.length > 0 && (
+        <ul
+          style={{
+            listStyle: "disc",
+            paddingLeft: 20,
+            margin: "0 0 16px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 6,
+          }}
+        >
+          {item.notes.map((note) => (
+            <li
+              key={note}
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: 13,
+                lineHeight: 1.6,
+                color: "var(--muted)",
+              }}
+            >
+              {note}
             </li>
           ))}
         </ul>
-        <p className="mt-3 text-xs text-brand-strong">Prochaine action : {readiness.nextAction}</p>
+      )}
+
+      {/* Checklist */}
+      <div
+        style={{
+          background: "var(--canvas)",
+          border: "1px solid var(--hairline)",
+          borderRadius: "var(--radius-md)",
+          padding: "var(--space-md)",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 13,
+            fontWeight: 500,
+            color: "var(--ink)",
+            margin: "0 0 12px",
+          }}
+        >
+          Checklist revue locale
+        </p>
+        <ul
+          style={{
+            listStyle: "none",
+            padding: 0,
+            margin: "0 0 12px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+          }}
+        >
+          {readiness.checklist.map((step) => (
+            <li
+              key={step.id}
+              style={{ display: "flex", gap: 8, alignItems: "flex-start" }}
+            >
+              <span
+                aria-hidden="true"
+                style={{
+                  width: 18,
+                  height: 18,
+                  borderRadius: "var(--radius-xs)",
+                  background: step.done
+                    ? "color-mix(in srgb, var(--success) 15%, var(--canvas))"
+                    : "var(--surface-card)",
+                  border: "1px solid var(--hairline)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  fontSize: 10,
+                  fontWeight: 700,
+                  color: step.done ? "color-mix(in srgb, var(--success) 70%, var(--ink))" : "var(--muted-soft)",
+                }}
+              >
+                {step.done ? "✓" : "·"}
+              </span>
+              <span
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: 13,
+                  lineHeight: 1.5,
+                  color: "var(--muted)",
+                }}
+              >
+                {step.label}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 12,
+            fontWeight: 500,
+            color: "var(--primary)",
+            margin: 0,
+          }}
+        >
+          Prochaine action : {readiness.nextAction}
+        </p>
       </div>
     </article>
   );

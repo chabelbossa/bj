@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
-      <body>
+    <html lang="fr" suppressHydrationWarning>
+      <body style={{ fontFamily: "var(--font-sans)" }}>
         <AppShell>{children}</AppShell>
       </body>
     </html>

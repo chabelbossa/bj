@@ -105,7 +105,7 @@ export function ChecklistBuilder({ procedure }: { procedure: Procedure }) {
             vérifications, pas à remplacer la liste officielle.
           </p>
         </div>
-        <span className="rounded-sm bg-[#e6f2ec] px-2 py-1 text-xs font-semibold text-brand-strong">
+        <span className="rounded-sm bg-brand-soft px-2 py-1 text-xs font-semibold text-brand-strong">
           {progress}% terminé
         </span>
       </div>
@@ -113,7 +113,7 @@ export function ChecklistBuilder({ procedure }: { procedure: Procedure }) {
         <button
           type="button"
           onClick={() => window.print()}
-          className="min-h-10 rounded-md border border-brand px-3 text-sm font-semibold text-brand-strong hover:bg-[#e6f2ec]"
+          className="min-h-10 rounded-md border border-brand px-3 text-sm font-semibold text-brand-strong hover:bg-brand-soft"
         >
           Imprimer
         </button>

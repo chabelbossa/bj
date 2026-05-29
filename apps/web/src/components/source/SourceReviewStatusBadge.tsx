@@ -14,6 +14,29 @@ const priorityLabels: Record<SourceReviewPriority, string> = {
   high: "Priorité haute",
 };
 
+const statusStyles: Record<SourceReviewStatus, { background: string; color: string }> = {
+  verified: {
+    background: "color-mix(in srgb, var(--success) 15%, var(--canvas))",
+    color: "color-mix(in srgb, var(--success) 70%, var(--ink))",
+  },
+  demo_connected: {
+    background: "color-mix(in srgb, var(--accent-amber) 18%, var(--canvas))",
+    color: "color-mix(in srgb, var(--accent-amber) 80%, var(--ink))",
+  },
+  needs_human_review: {
+    background: "color-mix(in srgb, var(--accent-amber) 18%, var(--canvas))",
+    color: "color-mix(in srgb, var(--accent-amber) 80%, var(--ink))",
+  },
+  to_connect: {
+    background: "var(--surface-card)",
+    color: "var(--muted)",
+  },
+  rejected: {
+    background: "color-mix(in srgb, var(--error) 10%, var(--canvas))",
+    color: "var(--error)",
+  },
+};
+
 export function SourceReviewStatusBadge({
   status,
   priority,
@@ -21,13 +44,21 @@ export function SourceReviewStatusBadge({
   status: SourceReviewStatus;
   priority?: SourceReviewPriority;
 }) {
-  const className =
-    status === "verified" && !priority
-      ? "bg-[#e6f2ec] text-brand-strong"
-      : "bg-[#fff1d6] text-[#774d08]";
-
+  const s = statusStyles[status];
   return (
-    <span className={`inline-flex rounded-sm px-2 py-1 text-xs font-semibold ${className}`}>
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        background: s.background,
+        color: s.color,
+        fontFamily: "var(--font-sans)",
+        fontSize: 12,
+        fontWeight: 500,
+        padding: "4px 10px",
+        borderRadius: "var(--radius-pill)",
+      }}
+    >
       {priority ? priorityLabels[priority] : statusLabels[status]}
     </span>
   );

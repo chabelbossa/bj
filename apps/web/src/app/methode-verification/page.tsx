@@ -35,7 +35,7 @@ export default function VerificationMethodPage() {
         <ol className="mt-5 space-y-4">
           {steps.map((step, index) => (
             <li key={step} className="grid grid-cols-[32px_1fr] gap-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[#e6f2ec] text-sm font-bold text-brand-strong">
+              <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand-soft text-sm font-bold text-brand-strong">
                 {index + 1}
               </span>
               <span className="text-sm leading-6 text-muted">{step}</span>

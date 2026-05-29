@@ -6,30 +6,107 @@ import { ProcedureStatusBadge } from "./ProcedureStatusBadge";
 
 export function ProcedureCard({ procedure }: { procedure: Procedure }) {
   return (
-    <article className="rounded-md border border-line bg-surface p-5">
-      <div className="flex flex-col gap-3">
-        <ProcedureStatusBadge status={procedure.verificationStatus} />
-        <h2 className="text-xl font-semibold">{procedure.title}</h2>
-        <p className="text-sm leading-6 text-muted">{procedure.summary}</p>
-        <p className="text-sm leading-6 text-foreground">{procedure.userNeed}</p>
-        <p className="text-xs font-medium text-brand-strong">
-          {procedure.verifiedFacts.length} affirmation(s) suivie(s) avec sources
-        </p>
-        <div className="flex flex-wrap gap-2 text-xs text-muted">
-          <span className="rounded-sm bg-background px-2 py-1">{procedure.category}</span>
-          {procedure.targetUsers.map((target) => (
-            <span key={target} className="rounded-sm bg-background px-2 py-1">
-              {target}
-            </span>
-          ))}
-        </div>
-        <Link
-          href={`/demarches/${procedure.slug}` as Route}
-          className="mt-1 inline-flex min-h-10 items-center justify-center rounded-md border border-brand px-4 text-sm font-semibold text-brand-strong hover:bg-[#e6f2ec] sm:w-fit"
+    <article
+      style={{
+        background: "var(--surface-card)",
+        borderRadius: "var(--radius-lg)",
+        padding: "var(--space-xl)",
+        display: "flex",
+        flexDirection: "column",
+        gap: 14,
+      }}
+    >
+      <ProcedureStatusBadge status={procedure.verificationStatus} />
+
+      <h2
+        style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: 18,
+          fontWeight: 500,
+          lineHeight: 1.4,
+          color: "var(--ink)",
+          margin: 0,
+        }}
+      >
+        {procedure.title}
+      </h2>
+
+      <p
+        style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: 14,
+          lineHeight: 1.6,
+          color: "var(--muted)",
+          margin: 0,
+        }}
+      >
+        {procedure.summary}
+      </p>
+
+      <p
+        style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: 13,
+          lineHeight: 1.5,
+          color: "var(--body)",
+          margin: 0,
+        }}
+      >
+        {procedure.userNeed}
+      </p>
+
+      <p
+        style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: 12,
+          fontWeight: 500,
+          color: "var(--primary)",
+          margin: 0,
+        }}
+      >
+        {procedure.verifiedFacts.length} affirmation(s) avec sources
+      </p>
+
+      {/* Tags */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+        <span
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 12,
+            fontWeight: 500,
+            padding: "4px 10px",
+            borderRadius: "var(--radius-pill)",
+            background: "var(--surface-cream-strong)",
+            color: "var(--muted)",
+          }}
         >
-          Voir la fiche
-        </Link>
+          {procedure.category}
+        </span>
+        {procedure.targetUsers.map((target) => (
+          <span
+            key={target}
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 12,
+              padding: "4px 10px",
+              borderRadius: "var(--radius-pill)",
+              background: "var(--surface-cream-strong)",
+              color: "var(--muted)",
+            }}
+          >
+            {target}
+          </span>
+        ))}
       </div>
+
+      {/* CTA */}
+      <Link
+        href={`/demarches/${procedure.slug}` as Route}
+        className="btn-primary"
+        style={{ alignSelf: "flex-start" }}
+      >
+        Voir la fiche
+      </Link>
     </article>
   );
 }

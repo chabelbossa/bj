@@ -229,7 +229,7 @@ export function ClaimReviewWorkspace({ items, procedures }: ClaimReviewWorkspace
           <button
             type="button"
             onClick={exportNotes}
-            className="min-h-10 rounded-md border border-brand px-3 text-sm font-semibold text-brand-strong hover:bg-[#e6f2ec]"
+            className="min-h-10 rounded-md border border-brand px-3 text-sm font-semibold text-brand-strong hover:bg-brand-soft"
           >
             Copier les notes
           </button>

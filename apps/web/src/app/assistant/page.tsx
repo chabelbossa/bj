@@ -17,21 +17,59 @@ export default async function AssistantPage({ searchParams }: AssistantPageProps
   const initialQuestion = query ? `Quelles informations vérifier pour : ${query} ?` : undefined;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
-      <div className="max-w-3xl">
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-brand-strong">
+    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "64px 24px" }}>
+      {/* Page header */}
+      <div style={{ maxWidth: 600, marginBottom: 32 }}>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            background: "var(--primary)",
+            color: "var(--on-primary)",
+            fontFamily: "var(--font-sans)",
+            fontSize: 12,
+            fontWeight: 500,
+            letterSpacing: "1.5px",
+            textTransform: "uppercase",
+            padding: "4px 12px",
+            borderRadius: "var(--radius-pill)",
+            marginBottom: 20,
+          }}
+        >
           CivicRAG
-        </p>
-        <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Assistant sourcé local</h1>
-        <p className="mt-4 leading-7 text-muted">
+        </span>
+        <h1
+          style={{
+            fontFamily: "var(--font-serif)",
+            fontSize: "clamp(28px, 4vw, 36px)",
+            fontWeight: 400,
+            lineHeight: 1.15,
+            letterSpacing: "-0.5px",
+            color: "var(--ink)",
+            margin: "0 0 14px",
+          }}
+        >
+          Assistant sourcé local
+        </h1>
+        <p
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 15,
+            lineHeight: 1.7,
+            color: "var(--muted)",
+            margin: 0,
+          }}
+        >
           Cette interface utilise CivicRAG avec le provider IA mock par défaut. Les sources viennent
           des données mockées ou de Postgres selon le mode actif.
         </p>
       </div>
-      <div className="mt-6">
+
+      <div style={{ marginBottom: 32 }}>
         <TrustNotice compact />
       </div>
-      <div className="mt-8">
+
+      <div>
         <AssistantPanel initialQuestion={initialQuestion} />
       </div>
     </div>

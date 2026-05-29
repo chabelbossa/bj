@@ -104,7 +104,7 @@ export default async function SourceReviewDetailPage({ params }: SourceReviewPag
               href={item.candidateUrl}
               target="_blank"
               rel="noreferrer"
-              className="mt-5 inline-flex min-h-11 items-center justify-center rounded-md border border-brand px-4 text-sm font-semibold text-brand-strong hover:bg-[#e6f2ec]"
+              className="mt-5 inline-flex min-h-11 items-center justify-center rounded-md border border-brand px-4 text-sm font-semibold text-brand-strong hover:bg-brand-soft"
             >
               Ouvrir la source candidate
             </a>
@@ -130,7 +130,7 @@ export default async function SourceReviewDetailPage({ params }: SourceReviewPag
               </div>
               <Link
                 href={"/sources/claims" as Route}
-                className="inline-flex min-h-10 w-fit items-center rounded-md border border-brand px-3 text-sm font-semibold text-brand-strong hover:bg-[#e6f2ec]"
+                className="inline-flex min-h-10 w-fit items-center rounded-md border border-brand px-3 text-sm font-semibold text-brand-strong hover:bg-brand-soft"
               >
                 Ouvrir la file claims
               </Link>

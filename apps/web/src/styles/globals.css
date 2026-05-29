@@ -1,45 +1,130 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap");
 @import "tailwindcss";
 
+/* ─── Design Tokens — DossierBJ (DESIGN.md) ─────────────────────────── */
 :root {
-  --background: #f7f7f2;
-  --foreground: #17211b;
-  --muted: #5a655e;
-  --surface: #ffffff;
-  --line: #d9ded7;
-  --brand: #12664f;
-  --brand-strong: #0d4f3e;
-  --accent: #b7791f;
-  --danger: #9f2d2d;
+  /* Brand & Accent */
+  --primary:              #cc785c;
+  --primary-active:       #a9583e;
+  --primary-disabled:     #e6dfd8;
+
+  /* Text */
+  --ink:                  #141413;
+  --body:                 #3d3d3a;
+  --body-strong:          #252523;
+  --muted:                #6c6a64;
+  --muted-soft:           #8e8b82;
+
+  /* Surfaces */
+  --canvas:               #faf9f5;
+  --surface-soft:         #f5f0e8;
+  --surface-card:         #efe9de;
+  --surface-cream-strong: #e8e0d2;
+  --surface-dark:         #181715;
+  --surface-dark-elevated:#252320;
+  --surface-dark-soft:    #1f1e1b;
+
+  /* Borders */
+  --hairline:             #e6dfd8;
+  --hairline-soft:        #ebe6df;
+
+  /* On-surface */
+  --on-primary:           #ffffff;
+  --on-dark:              #faf9f5;
+  --on-dark-soft:         #a09d96;
+
+  /* Accent */
+  --accent-teal:          #5db8a6;
+  --accent-amber:         #e8a55a;
+
+  /* Semantic */
+  --success:              #5db872;
+  --warning:              #d4a017;
+  --error:                #c64545;
+
+  /* Spacing */
+  --space-xxs:  4px;
+  --space-xs:   8px;
+  --space-sm:   12px;
+  --space-md:   16px;
+  --space-lg:   24px;
+  --space-xl:   32px;
+  --space-xxl:  48px;
+  --space-section: 96px;
+
+  /* Radius */
+  --radius-xs:  4px;
+  --radius-sm:  6px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-pill: 9999px;
+
+  /* Typography */
+  --font-serif: "Cormorant Garamond", "Garamond", "Times New Roman", serif;
+  --font-sans:  "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono:  "JetBrains Mono", ui-monospace, monospace;
 }
 
+/* ─── Tailwind theme mapping ─────────────────────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
-  --color-surface: var(--surface);
-  --color-line: var(--line);
-  --color-brand: var(--brand);
-  --color-brand-strong: var(--brand-strong);
-  --color-accent: var(--accent);
-  --color-danger: var(--danger);
-  --font-sans: Arial, Helvetica, sans-serif;
+  --color-canvas:               var(--canvas);
+  --color-surface-soft:         var(--surface-soft);
+  --color-surface-card:         var(--surface-card);
+  --color-surface-cream-strong: var(--surface-cream-strong);
+  --color-surface-dark:         var(--surface-dark);
+  --color-surface-dark-elevated:var(--surface-dark-elevated);
+  --color-surface-dark-soft:    var(--surface-dark-soft);
+  --color-primary:              var(--primary);
+  --color-primary-active:       var(--primary-active);
+  --color-primary-disabled:     var(--primary-disabled);
+  --color-ink:                  var(--ink);
+  --color-body:                 var(--body);
+  --color-body-strong:          var(--body-strong);
+  --color-muted:                var(--muted);
+  --color-muted-soft:           var(--muted-soft);
+  --color-hairline:             var(--hairline);
+  --color-hairline-soft:        var(--hairline-soft);
+  --color-on-primary:           var(--on-primary);
+  --color-on-dark:              var(--on-dark);
+  --color-on-dark-soft:         var(--on-dark-soft);
+  --color-accent-teal:          var(--accent-teal);
+  --color-accent-amber:         var(--accent-amber);
+  --color-success:              var(--success);
+  --color-warning:              var(--warning);
+  --color-error:                var(--error);
+  --color-brand:                var(--primary);
+  --color-brand-strong:         var(--primary-active);
+  --color-brand-soft:           #f7eae1;
+  --color-line:                 var(--hairline);
+  --color-surface:              var(--surface-soft);
+  --color-danger:               var(--error);
+  --font-serif: var(--font-serif);
+  --font-sans:  var(--font-sans);
+  --font-mono:  var(--font-mono);
 }
 
-* {
+/* ─── Base reset ─────────────────────────────────────────────────────── */
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
 html {
   min-height: 100%;
-  background: var(--background);
+  background: var(--canvas);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   min-height: 100%;
   margin: 0;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--canvas);
+  color: var(--body);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -47,31 +132,420 @@ a {
   text-decoration: none;
 }
 
-button,
-input,
-select,
-textarea {
+button, input, select, textarea {
   font: inherit;
 }
 
 ::selection {
-  background: #d9f2e7;
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
+/* ─── Typography classes ─────────────────────────────────────────────── */
+
+/* Display — Cormorant Garamond, weight 400, negative tracking */
+.display-xl {
+  font-family: var(--font-serif);
+  font-size: 64px;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--ink);
+}
+
+.display-lg {
+  font-family: var(--font-serif);
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  color: var(--ink);
+}
+
+.display-md {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+}
+
+.display-sm {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+}
+
+/* Title — Inter, weight 500 */
+.title-lg {
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.title-md {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.title-sm {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+/* Body — Inter, weight 400 */
+.body-md {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--body);
+}
+
+.body-sm {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--body);
+}
+
+/* Caption */
+.caption {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.caption-uppercase {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* Nav link */
+.nav-link-style {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Code */
+.code-text {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* ─── Component classes ──────────────────────────────────────────────── */
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 12px 20px;
+  min-height: 40px;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+.btn-primary:hover {
+  background: var(--primary-active);
+}
+.btn-primary:disabled {
+  background: var(--primary-disabled);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 12px 20px;
+  min-height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  white-space: nowrap;
+}
+.btn-secondary:hover {
+  border-color: var(--primary);
+  background: var(--surface-soft);
+}
+
+.btn-secondary-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-dark-elevated);
+  color: var(--on-dark);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 12px 20px;
+  min-height: 40px;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+.btn-secondary-dark:hover {
+  background: color-mix(in srgb, var(--surface-dark-elevated) 80%, var(--on-dark) 20%);
+}
+
+/* Cards */
+.card-feature {
+  background: var(--surface-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+}
+
+.card-surface {
+  background: var(--canvas);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+}
+
+.card-dark {
+  background: var(--surface-dark);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  color: var(--on-dark);
+}
+
+.card-inner-dark {
+  background: var(--surface-dark-soft);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  color: var(--on-dark);
+}
+
+/* Badges */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface-card);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.badge-coral {
+  display: inline-flex;
+  align-items: center;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.badge-success {
+  display: inline-flex;
+  align-items: center;
+  background: color-mix(in srgb, var(--success) 15%, var(--canvas));
+  color: color-mix(in srgb, var(--success) 70%, var(--ink));
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.badge-amber {
+  display: inline-flex;
+  align-items: center;
+  background: color-mix(in srgb, var(--accent-amber) 18%, var(--canvas));
+  color: color-mix(in srgb, var(--accent-amber) 80%, var(--ink));
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.badge-neutral {
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface-card);
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+}
+
+/* Text inputs */
+.input-text {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+  padding: 10px 14px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.input-text:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
+}
+
+.input-text-lg {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  padding: 12px 16px;
+  min-height: 48px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.input-text-lg:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
+}
+
+/* CTA bands */
+.cta-band-coral {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-radius: var(--radius-lg);
+  padding: 64px;
+}
+
+.cta-band-dark {
+  background: var(--surface-dark);
+  color: var(--on-dark);
+  border-radius: var(--radius-lg);
+  padding: 64px;
+}
+
+/* Category tabs */
+.tab-item {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.tab-item:hover {
+  background: var(--surface-soft);
+  color: var(--body-strong);
+}
+.tab-item-active {
+  background: var(--surface-card);
+  color: var(--ink);
+}
+
+/* Section rhythm */
+.section-gap {
+  padding-top: var(--space-section);
+  padding-bottom: var(--space-section);
+}
+
+/* Hairline divider */
+.hairline-divider {
+  border: none;
+  border-top: 1px solid var(--hairline);
+  margin: 0;
+}
+
+/* ─── Print ──────────────────────────────────────────────────────────── */
 @media print {
-  header,
-  footer,
-  nav,
-  button {
-    display: none !important;
-  }
-
-  body {
-    background: #ffffff;
-    color: #000000;
-  }
-
-  a {
-    text-decoration: underline;
-  }
+  header, footer, nav, button { display: none !important; }
+  body { background: #ffffff; color: #000000; }
+  a { text-decoration: underline; }
 }
+
+/* ─── Responsive — display type scaling ─────────────────────────────── */
+@media (max-width: 767px) {
+  .display-xl { font-size: 36px; letter-spacing: -0.8px; }
+  .display-lg { font-size: 32px; letter-spacing: -0.5px; }
+  .display-md { font-size: 26px; letter-spacing: -0.3px; }
+  .display-sm { font-size: 22px; letter-spacing: -0.2px; }
+  .cta-band-coral, .cta-band-dark { padding: 40px 24px; }
+}
+
+/* ─── Interactive hover helpers for Server Components ─────────────────── */
+.hover-underline {
+  transition: text-decoration 0.15s ease;
+}
+.hover-underline:hover {
+  text-decoration: underline !important;
+}
+
+.hover-color-on-dark {
+  transition: color 0.12s ease;
+}
+.hover-color-on-dark:hover {
+  color: var(--on-dark) !important;
+}
+
+.hover-border-primary {
+  transition: border-color 0.12s ease;
+}
+.hover-border-primary:hover {
+  border-color: var(--primary) !important;
+}
+

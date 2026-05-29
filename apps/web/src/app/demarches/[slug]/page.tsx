@@ -30,6 +30,41 @@ export async function generateMetadata({ params }: ProcedurePageProps): Promise<
   };
 }
 
+const sectionStyle: React.CSSProperties = {
+  background: "var(--surface-card)",
+  borderRadius: "var(--radius-lg)",
+  padding: "var(--space-xl)",
+  marginTop: 24,
+};
+
+const sectionTitleStyle: React.CSSProperties = {
+  fontFamily: "var(--font-serif)",
+  fontSize: 22,
+  fontWeight: 400,
+  lineHeight: 1.2,
+  letterSpacing: "-0.2px",
+  color: "var(--ink)",
+  margin: "0 0 16px",
+};
+
+const dtStyle: React.CSSProperties = {
+  fontFamily: "var(--font-sans)",
+  fontSize: 12,
+  fontWeight: 500,
+  color: "var(--muted-soft)",
+  marginBottom: 4,
+  textTransform: "uppercase",
+  letterSpacing: "0.8px",
+};
+
+const ddStyle: React.CSSProperties = {
+  fontFamily: "var(--font-sans)",
+  fontSize: 14,
+  lineHeight: 1.6,
+  color: "var(--body)",
+  margin: 0,
+};
+
 export default async function ProcedureDetailPage({ params }: ProcedurePageProps) {
   const { slug } = await params;
   const [procedure, claims] = await Promise.all([
@@ -42,51 +77,89 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "64px 24px" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr",
+          gap: 32,
+          alignItems: "start",
+        }}
+        className="procedure-detail-grid"
+      >
+        {/* ── Main article ── */}
         <article>
+          {/* Status + title */}
           <ProcedureStatusBadge status={procedure.verificationStatus} />
-          <h1 className="mt-4 text-3xl font-bold sm:text-4xl">{procedure.title}</h1>
-          <p className="mt-4 leading-7 text-muted">{procedure.summary}</p>
+          <h1
+            style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: "clamp(28px, 4vw, 40px)",
+              fontWeight: 400,
+              lineHeight: 1.1,
+              letterSpacing: "-0.8px",
+              color: "var(--ink)",
+              margin: "16px 0 14px",
+            }}
+          >
+            {procedure.title}
+          </h1>
+          <p
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 16,
+              lineHeight: 1.7,
+              color: "var(--muted)",
+              margin: "0 0 24px",
+            }}
+          >
+            {procedure.summary}
+          </p>
 
-          <div className="mt-6">
-            <TrustNotice compact />
-          </div>
+          <TrustNotice compact />
 
-          <section className="mt-8 rounded-md border border-line bg-surface p-5">
-            <h2 className="text-xl font-semibold">Informations clés</h2>
-            <dl className="mt-4 grid gap-4 sm:grid-cols-2">
+          {/* Key info section */}
+          <section style={sectionStyle}>
+            <h2 style={sectionTitleStyle}>Informations clés</h2>
+            <dl
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                gap: 20,
+                marginBottom: 20,
+              }}
+            >
               <div>
-                <dt className="text-sm font-medium">Besoin utilisateur</dt>
-                <dd className="mt-1 text-sm text-muted">{procedure.userNeed}</dd>
+                <dt style={dtStyle}>Besoin utilisateur</dt>
+                <dd style={ddStyle}>{procedure.userNeed}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium">Résultat attendu</dt>
-                <dd className="mt-1 text-sm text-muted">{procedure.expectedOutcome}</dd>
+                <dt style={dtStyle}>Résultat attendu</dt>
+                <dd style={ddStyle}>{procedure.expectedOutcome}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium">Frais</dt>
-                <dd className="mt-1 text-sm text-muted">{procedure.officialCost}</dd>
+                <dt style={dtStyle}>Frais</dt>
+                <dd style={ddStyle}>{procedure.officialCost}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium">Délais</dt>
-                <dd className="mt-1 text-sm text-muted">{procedure.estimatedDuration}</dd>
+                <dt style={dtStyle}>Délais</dt>
+                <dd style={ddStyle}>{procedure.estimatedDuration}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium">Dernière vérification</dt>
-                <dd className="mt-1 text-sm text-muted">{procedure.lastVerifiedAt}</dd>
+                <dt style={dtStyle}>Dernière vérification</dt>
+                <dd style={ddStyle}>{procedure.lastVerifiedAt}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium">Source principale</dt>
-                <dd className="mt-1">
+                <dt style={dtStyle}>Source principale</dt>
+                <dd style={{ ...ddStyle, display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {procedure.sources.map((source) => (
                     <SourceBadge key={`${source.sourceId}-${source.url}`} source={source} />
                   ))}
                 </dd>
               </div>
               <div>
-                <dt className="text-sm font-medium">État source</dt>
-                <dd className="mt-1 text-sm text-muted">{procedure.sourceStatusNote}</dd>
+                <dt style={dtStyle}>État source</dt>
+                <dd style={ddStyle}>{procedure.sourceStatusNote}</dd>
               </div>
             </dl>
             {procedure.officialUrl ? (
@@ -94,9 +167,10 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
                 href={procedure.officialUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-5 inline-flex min-h-11 items-center justify-center rounded-md border border-brand px-4 text-sm font-semibold text-brand-strong hover:bg-[#e6f2ec]"
+                className="btn-secondary"
+                style={{ display: "inline-flex" }}
               >
-                Ouvrir la plateforme officielle
+                Ouvrir la plateforme officielle ↗
               </a>
             ) : null}
           </section>
@@ -104,40 +178,96 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
           <ProcedureFactList facts={procedure.verifiedFacts} />
           <ProcedureClaimList claims={claims} />
 
-          <section className="mt-8 rounded-md border border-line bg-surface p-5">
-            <h2 className="text-xl font-semibold">Préparation prudente</h2>
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
-              {procedure.preparationHints.map((item) => (
-                <li key={item}>{item}</li>
+          {/* Preparation hints */}
+          <section style={sectionStyle}>
+            <h2 style={sectionTitleStyle}>Préparation prudente</h2>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+              {procedure.preparationHints.map((item, i) => (
+                <li
+                  key={item}
+                  style={{ display: "flex", gap: 12, alignItems: "flex-start" }}
+                >
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: 22,
+                      height: 22,
+                      borderRadius: "50%",
+                      background: "color-mix(in srgb, var(--primary) 10%, var(--canvas))",
+                      color: "var(--primary)",
+                      fontFamily: "var(--font-sans)",
+                      fontSize: 11,
+                      fontWeight: 600,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {i + 1}
+                  </span>
+                  <span style={{ fontFamily: "var(--font-sans)", fontSize: 14, lineHeight: 1.6, color: "var(--muted)" }}>
+                    {item}
+                  </span>
+                </li>
               ))}
             </ul>
           </section>
 
-          <section className="mt-8 rounded-md border border-line bg-surface p-5">
-            <h2 className="text-xl font-semibold">Ce qui reste à vérifier</h2>
-            <p className="mt-2 text-sm leading-6 text-muted">
+          {/* Points to verify */}
+          <section style={sectionStyle}>
+            <h2 style={sectionTitleStyle}>Ce qui reste à vérifier</h2>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, lineHeight: 1.6, color: "var(--muted)", margin: "0 0 16px" }}>
               Ces points doivent être confirmés directement sur la plateforme officielle avant toute
               décision ou paiement.
             </p>
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-muted">
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
               {procedure.pointsToVerify.map((item) => (
-                <li key={item}>{item}</li>
+                <li
+                  key={item}
+                  style={{ display: "flex", gap: 10, alignItems: "flex-start" }}
+                >
+                  <span
+                    style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: "50%",
+                      background: "var(--primary)",
+                      marginTop: 7,
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span style={{ fontFamily: "var(--font-sans)", fontSize: 14, lineHeight: 1.6, color: "var(--muted)" }}>
+                    {item}
+                  </span>
+                </li>
               ))}
             </ul>
           </section>
 
-          <section className="mt-8 rounded-md border border-line bg-surface p-5">
-            <h2 className="text-xl font-semibold">Pièces à fournir</h2>
-            <ul className="mt-4 space-y-4">
-              {procedure.requiredDocuments.map((document) => (
+          {/* Required documents */}
+          <section style={sectionStyle}>
+            <h2 style={sectionTitleStyle}>Pièces à fournir</h2>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 0 }}>
+              {procedure.requiredDocuments.map((document, i) => (
                 <li
                   key={document.id}
-                  className="border-b border-line pb-4 last:border-b-0 last:pb-0"
+                  style={{
+                    padding: "16px 0",
+                    borderBottom: i < procedure.requiredDocuments.length - 1
+                      ? "1px solid var(--hairline)"
+                      : "none",
+                  }}
                 >
-                  <h3 className="font-semibold">{document.name}</h3>
-                  <p className="mt-1 text-sm leading-6 text-muted">{document.description}</p>
+                  <h3 style={{ fontFamily: "var(--font-sans)", fontSize: 15, fontWeight: 500, color: "var(--ink)", margin: "0 0 6px" }}>
+                    {document.name}
+                  </h3>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, lineHeight: 1.6, color: "var(--muted)", margin: 0 }}>
+                    {document.description}
+                  </p>
                   {document.condition ? (
-                    <p className="mt-2 text-xs text-danger">{document.condition}</p>
+                    <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--error)", margin: "6px 0 0" }}>
+                      {document.condition}
+                    </p>
                   ) : null}
                   <InlineSourceRefs sources={document.sourceRefs} label="Sources de cette pièce" />
                 </li>
@@ -145,17 +275,35 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
             </ul>
           </section>
 
-          <section className="mt-8 rounded-md border border-line bg-surface p-5">
-            <h2 className="text-xl font-semibold">Étapes</h2>
-            <ol className="mt-4 space-y-4">
+          {/* Steps */}
+          <section style={sectionStyle}>
+            <h2 style={sectionTitleStyle}>Étapes</h2>
+            <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 20 }}>
               {procedure.steps.map((step) => (
-                <li key={step.id} className="grid grid-cols-[32px_1fr] gap-3">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[#e6f2ec] text-sm font-bold text-brand-strong">
+                <li key={step.id} style={{ display: "grid", gridTemplateColumns: "36px 1fr", gap: 14 }}>
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      background: "var(--primary)",
+                      color: "var(--on-primary)",
+                      fontFamily: "var(--font-sans)",
+                      fontSize: 14,
+                      fontWeight: 600,
+                      flexShrink: 0,
+                    }}
+                  >
                     {step.order}
                   </span>
                   <div>
-                    <span className="block font-semibold">{step.title}</span>
-                    <span className="mt-1 block text-sm leading-6 text-muted">
+                    <span style={{ fontFamily: "var(--font-sans)", fontSize: 15, fontWeight: 500, color: "var(--ink)", display: "block", marginBottom: 4 }}>
+                      {step.title}
+                    </span>
+                    <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, lineHeight: 1.6, color: "var(--muted)", display: "block" }}>
                       {step.description}
                     </span>
                     <InlineSourceRefs sources={step.sourceRefs} label="Sources de cette étape" />
@@ -165,36 +313,90 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
             </ol>
           </section>
 
-          <section className="mt-8">
-            <h2 className="mb-4 text-xl font-semibold">Sources et citations</h2>
+          {/* Citations */}
+          <section style={{ marginTop: 32 }}>
+            <h2 style={{ ...sectionTitleStyle, marginBottom: 20 }}>Sources et citations</h2>
             <CitationList citations={procedure.sources} />
           </section>
         </article>
 
-        <aside className="space-y-5">
+        {/* ── Aside ── */}
+        <aside style={{ display: "flex", flexDirection: "column", gap: 16 }} className="procedure-aside">
           <ChecklistBuilder procedure={procedure} />
+
           <Link
             href={`/assistant?q=${encodeURIComponent(procedure.title)}`}
-            className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-brand px-4 font-semibold text-white hover:bg-brand-strong"
+            className="btn-primary"
+            style={{ width: "100%", justifyContent: "center" }}
           >
             Poser une question à l&apos;assistant
           </Link>
+
           <Link
             href={"/sources" as Route}
-            className="inline-flex min-h-11 w-full items-center justify-center rounded-md border border-brand px-4 font-semibold text-brand-strong hover:bg-[#e6f2ec]"
+            className="btn-secondary"
+            style={{ width: "100%", justifyContent: "center" }}
           >
             Voir les sources à vérifier
           </Link>
-          <section className="rounded-md border border-line bg-surface p-5">
-            <h2 className="text-lg font-semibold">Avertissements</h2>
-            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-muted">
+
+          {/* Warnings */}
+          <section
+            style={{
+              background: "var(--surface-dark)",
+              borderRadius: "var(--radius-lg)",
+              padding: "var(--space-lg)",
+              color: "var(--on-dark)",
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: 15,
+                fontWeight: 500,
+                color: "var(--on-dark)",
+                margin: "0 0 12px",
+              }}
+            >
+              Avertissements
+            </h2>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
               {procedure.warnings.map((warning) => (
-                <li key={warning}>{warning}</li>
+                <li
+                  key={warning}
+                  style={{ display: "flex", gap: 8, alignItems: "flex-start" }}
+                >
+                  <span
+                    style={{
+                      width: 5,
+                      height: 5,
+                      borderRadius: "50%",
+                      background: "var(--accent-amber)",
+                      marginTop: 6,
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, lineHeight: 1.6, color: "var(--on-dark-soft)" }}>
+                    {warning}
+                  </span>
+                </li>
               ))}
             </ul>
           </section>
         </aside>
       </div>
+
+      <style>{`
+        @media (min-width: 900px) {
+          .procedure-detail-grid {
+            grid-template-columns: minmax(0, 1fr) 320px !important;
+          }
+          .procedure-aside {
+            position: sticky;
+            top: 88px;
+          }
+        }
+      `}</style>
     </div>
   );
 }

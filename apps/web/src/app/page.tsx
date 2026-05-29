@@ -33,90 +33,380 @@ export default async function HomePage() {
   const featuredProcedures = (await listProcedures()).slice(0, 3);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
-      <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.08em] text-brand-strong">
-            CivicRAG en mode local
-          </p>
-          <h1 className="mt-4 max-w-3xl text-4xl font-bold leading-tight sm:text-5xl">
+    <div>
+      {/* ── Hero band ───────────────────────────────────────────── */}
+      <section
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "96px 24px",
+          display: "grid",
+          gridTemplateColumns: "1fr",
+          gap: 48,
+          alignItems: "start",
+        }}
+        className="hero-section"
+      >
+        {/* Left — copy */}
+        <div style={{ maxWidth: 640 }}>
+          <span
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 12,
+              fontWeight: 500,
+              letterSpacing: "1.5px",
+              textTransform: "uppercase",
+              color: "var(--primary)",
+              display: "block",
+              marginBottom: 20,
+            }}
+          >
+            CivicRAG · Mode local
+          </span>
+
+          <h1
+            style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: "clamp(36px, 5vw, 48px)",
+              fontWeight: 400,
+              lineHeight: 1.1,
+              letterSpacing: "-1px",
+              color: "var(--ink)",
+              margin: "0 0 24px",
+            }}
+          >
             Comprendre et préparer ses démarches avec des sources vérifiables.
           </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-muted">
+
+          <p
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 17,
+              lineHeight: 1.65,
+              color: "var(--muted)",
+              margin: "0 0 36px",
+              maxWidth: 520,
+            }}
+          >
             DossierBJ combine des fiches demo clairement marquées et quelques sources officielles
             connectées manuellement pour tester un parcours vraiment exploitable.
           </p>
-          <div className="mt-7">
+
+          <div style={{ marginBottom: 28 }}>
             <SearchBox />
           </div>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/demarches"
-              className="inline-flex min-h-11 items-center justify-center rounded-md bg-brand px-5 font-semibold text-white hover:bg-brand-strong"
-            >
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+            <Link href="/demarches" className="btn-primary">
               Voir les démarches
             </Link>
-            <Link
-              href="/assistant"
-              className="inline-flex min-h-11 items-center justify-center rounded-md border border-brand px-5 font-semibold text-brand-strong hover:bg-[#e6f2ec]"
-            >
+            <Link href="/assistant" className="btn-secondary">
               Tester l&apos;assistant
             </Link>
           </div>
         </div>
-        <div className="rounded-md border border-line bg-surface p-5">
-          <h2 className="text-lg font-semibold">Statut MVP</h2>
-          <dl className="mt-4 space-y-4 text-sm">
-            <div>
-              <dt className="font-medium">Données</dt>
-              <dd className="text-muted">Seedées localement, avec preuves et statuts visibles</dd>
-            </div>
-            <div>
-              <dt className="font-medium">IA</dt>
-              <dd className="text-muted">Provider mock, aucun appel externe</dd>
-            </div>
-            <div>
-              <dt className="font-medium">Base</dt>
-              <dd className="text-muted">PostgreSQL préparé, non obligatoire</dd>
-            </div>
+
+        {/* Right — MVP status card (dark) */}
+        <div
+          style={{
+            background: "var(--surface-dark)",
+            borderRadius: "var(--radius-xl)",
+            padding: "var(--space-xl)",
+            color: "var(--on-dark)",
+          }}
+          className="hero-dark-card"
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 11,
+              fontWeight: 500,
+              letterSpacing: "1.5px",
+              textTransform: "uppercase",
+              color: "var(--on-dark-soft)",
+              marginBottom: 16,
+            }}
+          >
+            Statut MVP
+          </p>
+          <dl style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+            {[
+              { dt: "Données", dd: "Seedées localement, avec preuves et statuts visibles" },
+              { dt: "IA", dd: "Provider mock, aucun appel externe" },
+              { dt: "Base", dd: "PostgreSQL préparé, non obligatoire" },
+            ].map(({ dt, dd }) => (
+              <div key={dt} style={{ borderBottom: "1px solid color-mix(in srgb, var(--on-dark) 10%, transparent)", paddingBottom: 16 }}>
+                <dt
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 13,
+                    fontWeight: 500,
+                    color: "var(--on-dark)",
+                    marginBottom: 4,
+                  }}
+                >
+                  {dt}
+                </dt>
+                <dd
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 13,
+                    lineHeight: 1.6,
+                    color: "var(--on-dark-soft)",
+                    margin: 0,
+                  }}
+                >
+                  {dd}
+                </dd>
+              </div>
+            ))}
           </dl>
+          <div style={{ marginTop: 20 }}>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontFamily: "var(--font-sans)",
+                fontSize: 12,
+                color: "var(--accent-teal)",
+              }}
+            >
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "var(--accent-teal)",
+                  display: "inline-block",
+                }}
+              />
+              Opérationnel en local
+            </span>
+          </div>
         </div>
       </section>
 
-      <div className="mt-8">
+      {/* ── Trust notice ────────────────────────────────────────── */}
+      <div
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "0 24px 48px",
+        }}
+      >
         <TrustNotice />
       </div>
 
-      <section className="mt-12">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+      {/* ── Hairline divider ────────────────────────────────────── */}
+      <hr
+        style={{
+          border: "none",
+          borderTop: "1px solid var(--hairline)",
+          maxWidth: 1200,
+          margin: "0 auto",
+        }}
+      />
+
+      {/* ── Featured procedures ─────────────────────────────────── */}
+      <section
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "96px 24px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            gap: 16,
+            marginBottom: 40,
+          }}
+        >
           <div>
-            <h2 className="text-2xl font-bold">Démarches prioritaires</h2>
-            <p className="mt-2 text-sm text-muted">
+            <h2
+              style={{
+                fontFamily: "var(--font-serif)",
+                fontSize: "clamp(28px, 3vw, 36px)",
+                fontWeight: 400,
+                lineHeight: 1.15,
+                letterSpacing: "-0.5px",
+                color: "var(--ink)",
+                margin: "0 0 10px",
+              }}
+            >
+              Démarches prioritaires
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: 15,
+                lineHeight: 1.6,
+                color: "var(--muted)",
+                margin: 0,
+              }}
+            >
               Les fiches indiquent clairement ce qui est partiellement vérifié et ce qui reste demo.
             </p>
           </div>
           <Link
             href="/demarches"
-            className="text-sm font-semibold text-brand-strong hover:underline"
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 14,
+              fontWeight: 500,
+              color: "var(--primary)",
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
           >
-            Tout voir
+            Tout voir →
           </Link>
         </div>
-        <div className="mt-5 grid gap-4 md:grid-cols-3">
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: 20,
+          }}
+        >
           {featuredProcedures.map((procedure) => (
             <ProcedureCard key={procedure.id} procedure={procedure} />
           ))}
         </div>
       </section>
 
-      <section className="mt-12">
-        <h2 className="text-2xl font-bold">Modules préparés</h2>
-        <div className="mt-5 grid gap-4 md:grid-cols-2">
-          {modules.map((module) => (
-            <ModuleCard key={module.title} {...module} />
-          ))}
+      {/* ── CTA coral band ──────────────────────────────────────── */}
+      <div
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "0 24px 96px",
+        }}
+      >
+        <div
+          style={{
+            background: "var(--primary)",
+            borderRadius: "var(--radius-lg)",
+            padding: "64px 48px",
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 32,
+          }}
+        >
+          <div>
+            <h2
+              style={{
+                fontFamily: "var(--font-serif)",
+                fontSize: "clamp(22px, 2.5vw, 28px)",
+                fontWeight: 400,
+                lineHeight: 1.2,
+                letterSpacing: "-0.3px",
+                color: "var(--on-primary)",
+                margin: "0 0 10px",
+              }}
+            >
+              Posez une question à l&apos;assistant sourcé.
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: 15,
+                lineHeight: 1.6,
+                color: "rgba(255,255,255,0.8)",
+                margin: 0,
+              }}
+            >
+              CivicRAG en mode local — IA mock, aucune donnée envoyée.
+            </p>
+          </div>
+          <Link
+            href="/assistant"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              background: "var(--canvas)",
+              color: "var(--ink)",
+              fontFamily: "var(--font-sans)",
+              fontSize: 14,
+              fontWeight: 500,
+              padding: "12px 24px",
+              borderRadius: "var(--radius-md)",
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+              flexShrink: 0,
+            }}
+          >
+            Tester l&apos;assistant
+          </Link>
+        </div>
+      </div>
+
+      {/* ── Modules ─────────────────────────────────────────────── */}
+      <section
+        style={{
+          background: "var(--surface-dark)",
+          padding: "96px 24px",
+        }}
+      >
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{ marginBottom: 40 }}>
+            <h2
+              style={{
+                fontFamily: "var(--font-serif)",
+                fontSize: "clamp(28px, 3vw, 36px)",
+                fontWeight: 400,
+                lineHeight: 1.15,
+                letterSpacing: "-0.5px",
+                color: "var(--on-dark)",
+                margin: "0 0 10px",
+              }}
+            >
+              Modules préparés
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: 15,
+                lineHeight: 1.6,
+                color: "var(--on-dark-soft)",
+                margin: 0,
+              }}
+            >
+              Architecture modulaire — seul DossierBJ Core est actif en MVP.
+            </p>
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: 20,
+            }}
+          >
+            {modules.map((module) => (
+              <ModuleCard key={module.title} {...module} />
+            ))}
+          </div>
         </div>
       </section>
+
+      <style>{`
+        @media (min-width: 900px) {
+          .hero-section {
+            grid-template-columns: minmax(0, 1fr) 360px !important;
+          }
+          .hero-dark-card {
+            position: sticky;
+            top: 88px;
+          }
+        }
+      `}</style>
     </div>
   );
 }

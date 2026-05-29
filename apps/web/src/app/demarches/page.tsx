@@ -22,6 +22,28 @@ export const metadata = {
 const firstParam = (value: string | string[] | undefined) =>
   Array.isArray(value) ? value[0] : value;
 
+const inputStyle: React.CSSProperties = {
+  background: "var(--canvas)",
+  color: "var(--ink)",
+  fontFamily: "var(--font-sans)",
+  fontSize: 14,
+  padding: "10px 14px",
+  minHeight: 42,
+  borderRadius: "var(--radius-md)",
+  border: "1px solid var(--hairline)",
+  outline: "none",
+  width: "100%",
+};
+
+const labelStyle: React.CSSProperties = {
+  fontFamily: "var(--font-sans)",
+  fontSize: 13,
+  fontWeight: 500,
+  color: "var(--muted)",
+  display: "block",
+  marginBottom: 6,
+};
+
 export default async function DemarchesPage({ searchParams }: DemarchesPageProps) {
   const params = await searchParams;
   const query = firstParam(params.q) ?? "";
@@ -41,45 +63,95 @@ export default async function DemarchesPage({ searchParams }: DemarchesPageProps
   ]);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
-      <div className="max-w-3xl">
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-brand-strong">
+    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "64px 24px" }}>
+      {/* Page header */}
+      <div style={{ maxWidth: 600, marginBottom: 32 }}>
+        <span
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 12,
+            fontWeight: 500,
+            letterSpacing: "1.5px",
+            textTransform: "uppercase",
+            color: "var(--primary)",
+            display: "block",
+            marginBottom: 14,
+          }}
+        >
           DossierBJ Core
-        </p>
-        <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Démarches disponibles</h1>
-        <p className="mt-4 leading-7 text-muted">
+        </span>
+        <h1
+          style={{
+            fontFamily: "var(--font-serif)",
+            fontSize: "clamp(28px, 4vw, 36px)",
+            fontWeight: 400,
+            lineHeight: 1.15,
+            letterSpacing: "-0.5px",
+            color: "var(--ink)",
+            margin: "0 0 14px",
+          }}
+        >
+          Démarches disponibles
+        </h1>
+        <p
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 15,
+            lineHeight: 1.7,
+            color: "var(--muted)",
+            margin: 0,
+          }}
+        >
           Recherche dans les fiches disponibles. Les informations sensibles restent reliées aux
           citations ou marquées comme non confirmées.
         </p>
       </div>
 
-      <div className="mt-6">
+      <div style={{ marginBottom: 32 }}>
         <TrustNotice compact />
       </div>
 
-      <div className="mt-8 rounded-md border border-line bg-surface p-4">
-        <form action="/demarches" className="grid gap-4">
+      {/* Filter panel */}
+      <div
+        style={{
+          background: "var(--surface-card)",
+          borderRadius: "var(--radius-lg)",
+          padding: "var(--space-xl)",
+          marginBottom: 40,
+        }}
+      >
+        <form action="/demarches" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          {/* Search input */}
           <div>
-            <label className="text-sm font-semibold" htmlFor="procedure-search">
+            <label htmlFor="procedure-search" style={labelStyle}>
               Recherche
             </label>
             <input
               id="procedure-search"
               name="q"
               defaultValue={query}
-              placeholder="Ex: entreprise, casier, état civil..."
-              className="mt-2 min-h-12 w-full rounded-md border border-line bg-background px-4 text-base outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              placeholder="Ex : entreprise, casier, état civil..."
+              style={{ ...inputStyle, minHeight: 48, fontSize: 15 }}
             />
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3">
-            <label className="text-sm font-semibold" htmlFor="category-filter">
-              Catégorie
+          {/* Filters row */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+              gap: 16,
+            }}
+          >
+            <div>
+              <label htmlFor="category-filter" style={labelStyle}>
+                Catégorie
+              </label>
               <select
                 id="category-filter"
                 name="category"
                 defaultValue={category ?? ""}
-                className="mt-2 min-h-11 w-full rounded-md border border-line bg-background px-3 font-normal"
+                style={inputStyle}
               >
                 <option value="">Toutes</option>
                 {filters.categories.map((item) => (
@@ -88,15 +160,17 @@ export default async function DemarchesPage({ searchParams }: DemarchesPageProps
                   </option>
                 ))}
               </select>
-            </label>
+            </div>
 
-            <label className="text-sm font-semibold" htmlFor="target-filter">
-              Profil
+            <div>
+              <label htmlFor="target-filter" style={labelStyle}>
+                Profil
+              </label>
               <select
                 id="target-filter"
                 name="target"
                 defaultValue={target ?? ""}
-                className="mt-2 min-h-11 w-full rounded-md border border-line bg-background px-3 font-normal"
+                style={inputStyle}
               >
                 <option value="">Tous</option>
                 {filters.targets.map((item) => (
@@ -105,51 +179,83 @@ export default async function DemarchesPage({ searchParams }: DemarchesPageProps
                   </option>
                 ))}
               </select>
-            </label>
+            </div>
 
-            <label className="text-sm font-semibold" htmlFor="status-filter">
-              Statut
+            <div>
+              <label htmlFor="status-filter" style={labelStyle}>
+                Statut
+              </label>
               <select
                 id="status-filter"
                 name="status"
                 defaultValue={status ?? ""}
-                className="mt-2 min-h-11 w-full rounded-md border border-line bg-background px-3 font-normal"
+                style={inputStyle}
               >
                 <option value="">Tous</option>
                 <option value="partially_verified">Partiellement vérifié</option>
                 <option value="demo_unverified">Demo non officielle</option>
               </select>
-            </label>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <button
-              type="submit"
-              className="min-h-11 rounded-md bg-brand px-5 font-semibold text-white hover:bg-brand-strong"
-            >
+          {/* Actions */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+            <button type="submit" className="btn-primary">
               Rechercher
             </button>
-            <Link
-              href="/demarches"
-              className="inline-flex min-h-11 items-center justify-center rounded-md border border-line px-5 font-semibold text-brand-strong hover:border-brand"
-            >
+            <Link href="/demarches" className="btn-secondary">
               Réinitialiser
             </Link>
           </div>
         </form>
       </div>
 
-      <section className="mt-8">
-        <div className="mb-4 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
+      {/* Results */}
+      <section>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            gap: 8,
+            marginBottom: 24,
+          }}
+        >
           <div>
-            <h2 className="text-xl font-semibold">{results.length} résultat(s)</h2>
-            <p className="mt-1 text-sm text-muted">
+            <h2
+              style={{
+                fontFamily: "var(--font-serif)",
+                fontSize: 22,
+                fontWeight: 400,
+                letterSpacing: "-0.2px",
+                color: "var(--ink)",
+                margin: "0 0 4px",
+              }}
+            >
+              {results.length} résultat(s)
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: 13,
+                color: "var(--muted)",
+                margin: 0,
+              }}
+            >
               Classement keyword local, sans API externe ni base distante.
             </p>
           </div>
         </div>
+
         {results.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: 20,
+            }}
+          >
             {results.map((result) => (
               <ProcedureResultCard key={result.procedure.id} result={result} />
             ))}

@@ -256,7 +256,7 @@ export function SourceCandidateForm() {
               <button
                 type="button"
                 onClick={copySnippet}
-                className="min-h-10 rounded-md border border-brand px-3 text-sm font-semibold text-brand-strong hover:bg-[#e6f2ec]"
+                className="min-h-10 rounded-md border border-brand px-3 text-sm font-semibold text-brand-strong hover:bg-brand-soft"
               >
                 Copier le JSON
               </button>

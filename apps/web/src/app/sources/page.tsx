@@ -99,7 +99,7 @@ export default async function SourcesPage() {
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h3 className="font-semibold">{item.procedureSlug}</h3>
-                <span className="rounded-sm bg-[#e6f2ec] px-2 py-1 text-xs font-semibold text-brand-strong">
+                <span className="rounded-sm bg-brand-soft px-2 py-1 text-xs font-semibold text-brand-strong">
                   {item.sourceCoveragePercent}% sourcé
                 </span>
               </div>
@@ -123,7 +123,7 @@ export default async function SourcesPage() {
             className={
               validation.summary.errors > 0
                 ? "rounded-sm bg-[#fff1d6] px-2 py-1 text-xs font-semibold text-[#774d08]"
-                : "rounded-sm bg-[#e6f2ec] px-2 py-1 text-xs font-semibold text-brand-strong"
+                : "rounded-sm bg-brand-soft px-2 py-1 text-xs font-semibold text-brand-strong"
             }
           >
             {validation.summary.errors} erreur(s), {validation.summary.warnings} alerte(s)
@@ -164,7 +164,7 @@ export default async function SourcesPage() {
           </Link>
           <Link
             href={"/sources/nouvelle" as Route}
-            className="inline-flex min-h-10 items-center rounded-md border border-brand px-3 text-sm font-semibold text-brand-strong hover:bg-[#e6f2ec]"
+            className="inline-flex min-h-10 items-center rounded-md border border-brand px-3 text-sm font-semibold text-brand-strong hover:bg-brand-soft"
           >
             Proposer une source candidate
           </Link>
@@ -172,7 +172,7 @@ export default async function SourcesPage() {
         <ol className="mt-5 grid gap-3 md:grid-cols-2">
           {manualIngestionWorkflow.map((step, index) => (
             <li key={step} className="grid grid-cols-[28px_1fr] gap-3 text-sm text-muted">
-              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-[#e6f2ec] text-xs font-bold text-brand-strong">
+              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-brand-soft text-xs font-bold text-brand-strong">
                 {index + 1}
               </span>
               <span>{step}</span>

@@ -1,15 +1,46 @@
-import { formatVerificationStatus, type VerificationStatus } from "@dossierbj/core";
+import type { VerificationStatus } from "@dossierbj/core";
+import { formatVerificationStatus } from "@dossierbj/core";
+
+const styles: Record<VerificationStatus, { background: string; color: string }> = {
+  verified: {
+    background: "color-mix(in srgb, var(--success) 15%, var(--canvas))",
+    color: "color-mix(in srgb, var(--success) 70%, var(--ink))",
+  },
+  partially_verified: {
+    background: "color-mix(in srgb, var(--accent-amber) 18%, var(--canvas))",
+    color: "color-mix(in srgb, var(--accent-amber) 80%, var(--ink))",
+  },
+  pending_verification: {
+    background: "var(--surface-card)",
+    color: "var(--muted)",
+  },
+  demo_unverified: {
+    background: "var(--primary)",
+    color: "var(--on-primary)",
+  },
+};
 
 export function ProcedureStatusBadge({ status }: { status: VerificationStatus }) {
-  const classNames: Record<VerificationStatus, string> = {
-    verified: "bg-[#e6f2ec] text-brand-strong",
-    partially_verified: "bg-[#fff8e8] text-[#5d4318]",
-    pending_verification: "bg-background text-muted",
-    demo_unverified: "bg-[#fff1d6] text-[#774d08]",
-  };
-
+  const s = styles[status];
   return (
-    <span className={`rounded-sm px-2 py-1 text-xs font-semibold ${classNames[status]}`}>
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: s.background,
+        color: s.color,
+        fontFamily: "var(--font-sans)",
+        fontSize: status === "demo_unverified" ? 10.5 : 12,
+        fontWeight: 600,
+        letterSpacing: status === "demo_unverified" ? "1px" : 0,
+        textTransform: status === "demo_unverified" ? "uppercase" : "none",
+        padding: status === "demo_unverified" ? "6px 12px" : "4px 12px",
+        borderRadius: status === "demo_unverified" ? "var(--radius-sm)" : "var(--radius-pill)",
+        lineHeight: 1.3,
+        textAlign: "center",
+      }}
+    >
       {formatVerificationStatus(status)}
     </span>
   );

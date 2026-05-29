@@ -11,16 +11,35 @@ export function InlineSourceRefs({
 }) {
   if (sources.length === 0) {
     return (
-      <p className="mt-2 text-xs text-danger">
+      <p
+        style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: 12,
+          color: "var(--error)",
+          margin: "8px 0 0",
+        }}
+      >
         Aucune source liée : information à vérifier avant usage.
       </p>
     );
   }
 
   return (
-    <div className="mt-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{label}</p>
-      <div className="mt-2 flex flex-wrap gap-2">
+    <div style={{ marginTop: 10 }}>
+      <p
+        style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: 11,
+          fontWeight: 500,
+          letterSpacing: "1.2px",
+          textTransform: "uppercase",
+          color: "var(--muted-soft)",
+          margin: "0 0 6px",
+        }}
+      >
+        {label}
+      </p>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
         {sources.map((source) => (
           <SourceBadge
             key={`${source.sourceId}-${source.documentId ?? source.url}`}

@@ -9,11 +9,23 @@ const statusLabels: Record<ClaimStatus, string> = {
   not_applicable: "Non applicable",
 };
 
-const statusClassNames: Record<ClaimStatus, string> = {
-  verified: "bg-[#e6f2ec] text-brand-strong",
-  partially_verified: "bg-[#fff8e8] text-[#5d4318]",
-  unverified: "bg-[#fff1d6] text-[#774d08]",
-  not_applicable: "bg-background text-muted",
+const statusStyles: Record<ClaimStatus, { background: string; color: string }> = {
+  verified: {
+    background: "color-mix(in srgb, var(--success) 15%, var(--canvas))",
+    color: "color-mix(in srgb, var(--success) 70%, var(--ink))",
+  },
+  partially_verified: {
+    background: "color-mix(in srgb, var(--accent-amber) 18%, var(--canvas))",
+    color: "color-mix(in srgb, var(--accent-amber) 80%, var(--ink))",
+  },
+  unverified: {
+    background: "var(--primary)",
+    color: "var(--on-primary)",
+  },
+  not_applicable: {
+    background: "var(--surface-card)",
+    color: "var(--muted-soft)",
+  },
 };
 
 export function ProcedureFactList({ facts }: { facts: ProcedureFact[] }) {
@@ -22,33 +34,129 @@ export function ProcedureFactList({ facts }: { facts: ProcedureFact[] }) {
   }
 
   return (
-    <section className="mt-8 rounded-md border border-line bg-surface p-5">
-      <div>
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-brand-strong">
+    <section
+      style={{
+        marginTop: 32,
+        background: "var(--surface-card)",
+        borderRadius: "var(--radius-lg)",
+        padding: "var(--space-xl)",
+      }}
+    >
+      <div style={{ marginBottom: 24 }}>
+        <p
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 12,
+            fontWeight: 500,
+            letterSpacing: "1.5px",
+            textTransform: "uppercase",
+            color: "var(--primary)",
+            margin: "0 0 8px",
+          }}
+        >
           Preuves par affirmation
         </p>
-        <h2 className="mt-2 text-xl font-semibold">Ce que la fiche peut affirmer</h2>
-        <p className="mt-2 text-sm leading-6 text-muted">
+        <h2
+          style={{
+            fontFamily: "var(--font-serif)",
+            fontSize: 24,
+            fontWeight: 400,
+            lineHeight: 1.2,
+            letterSpacing: "-0.3px",
+            color: "var(--ink)",
+            margin: "0 0 8px",
+          }}
+        >
+          Ce que la fiche peut affirmer
+        </h2>
+        <p
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 14,
+            lineHeight: 1.6,
+            color: "var(--muted)",
+            margin: 0,
+          }}
+        >
           Chaque point important est relié à une source ou reste explicitement marqué à vérifier.
         </p>
       </div>
 
-      <div className="mt-5 grid gap-4 md:grid-cols-2">
-        {facts.map((fact) => (
-          <article key={fact.id} className="rounded-md border border-line bg-background p-4">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-              <h3 className="font-semibold">{fact.label}</h3>
-              <span
-                className={`inline-flex w-fit rounded-sm px-2 py-1 text-xs font-semibold ${statusClassNames[fact.status]}`}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: 16,
+        }}
+      >
+        {facts.map((fact) => {
+          const s = statusStyles[fact.status];
+          return (
+            <article
+              key={fact.id}
+              style={{
+                background: "var(--canvas)",
+                border: "1px solid var(--hairline)",
+                borderRadius: "var(--radius-lg)",
+                padding: "var(--space-md)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "flex-start",
+                  justifyContent: "space-between",
+                  gap: 8,
+                  marginBottom: 10,
+                }}
               >
-                {statusLabels[fact.status]}
-              </span>
-            </div>
-            <p className="mt-3 text-sm leading-6 text-muted">{fact.value}</p>
-            {fact.note ? <p className="mt-2 text-xs text-danger">{fact.note}</p> : null}
-            <InlineSourceRefs sources={fact.sourceRefs} label="Preuves" />
-          </article>
-        ))}
+                <h3
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 15,
+                    fontWeight: 500,
+                    color: "var(--ink)",
+                    margin: 0,
+                  }}
+                >
+                  {fact.label}
+                </h3>
+                <span
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 12,
+                    fontWeight: 500,
+                    padding: "4px 10px",
+                    borderRadius: "var(--radius-pill)",
+                    background: s.background,
+                    color: s.color,
+                    flexShrink: 0,
+                  }}
+                >
+                  {statusLabels[fact.status]}
+                </span>
+              </div>
+              <p
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: 13,
+                  lineHeight: 1.6,
+                  color: "var(--muted)",
+                  margin: "0 0 8px",
+                }}
+              >
+                {fact.value}
+              </p>
+              {fact.note ? (
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--error)", margin: "0 0 8px" }}>
+                  {fact.note}
+                </p>
+              ) : null}
+              <InlineSourceRefs sources={fact.sourceRefs} label="Preuves" />
+            </article>
+          );
+        })}
       </div>
     </section>
   );
