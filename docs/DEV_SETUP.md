@@ -47,6 +47,8 @@ Le mode par défaut est :
 ```env
 DATA_MODE="mock"
 AI_PROVIDER="mock"
+OPENAI_API_KEY=""
+OPENAI_MODEL="gpt-5.4-mini"
 ENABLE_VECTOR_SEARCH="false"
 PAYMENTS_PROVIDER="manual"
 PAYMENTS_ENABLED="false"
@@ -62,6 +64,18 @@ DATA_MODE="postgres"
 DATABASE_URL="postgresql://..."
 AI_PROVIDER="mock"
 ```
+
+## Provider IA Optionnel
+
+Le provider gratuit/local reste `AI_PROVIDER=mock`. Pour tester une vraie génération IA sourcée :
+
+```env
+AI_PROVIDER="openai"
+OPENAI_API_KEY="sk-..."
+OPENAI_MODEL="gpt-5.4-mini"
+```
+
+L'API `/api/assistant` continue de récupérer les chunks depuis le repository actif, puis demande une réponse JSON structurée. Les tests automatisés simulent `fetch` et ne consomment aucune API externe.
 
 Commandes DB :
 
@@ -119,5 +133,5 @@ E2E_PORT=3111 pnpm test:e2e
 
 - Si `pnpm install` échoue, vérifier le réseau puis relancer.
 - Si Next signale des types de route, lancer `pnpm --filter @dossierbj/web dev` ou `pnpm --filter @dossierbj/web build` pour régénérer les types.
-- Si l'assistant ne répond pas, vérifier que `AI_PROVIDER=mock` et que l'API `/api/health` retourne OK.
+- Si l'assistant ne répond pas, vérifier `/api/health`, puis `AI_PROVIDER`. Avec `AI_PROVIDER=openai`, `OPENAI_API_KEY` doit être défini.
 - Si Drizzle signale une URL invalide, vérifier que `.env.local` contient seulement `DATABASE_URL="postgresql://..."` et pas une valeur imbriquée du type `DATABASE_URL="DATABASE_URL=..."`.

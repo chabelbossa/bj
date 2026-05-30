@@ -17,7 +17,15 @@ export async function POST(request: Request) {
 
   const answer = await Promise.all([
     listSourceChunks(),
-    Promise.resolve(resolveAiProvider({ AI_PROVIDER: process.env.AI_PROVIDER ?? "mock" })),
+    Promise.resolve(
+      resolveAiProvider({
+        AI_PROVIDER: process.env.AI_PROVIDER ?? "mock",
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+        OPENAI_BASE_URL: process.env.OPENAI_BASE_URL,
+        OPENAI_MODEL: process.env.OPENAI_MODEL,
+        OPENAI_TIMEOUT_MS: process.env.OPENAI_TIMEOUT_MS,
+      }),
+    ),
   ])
     .then(([chunks, provider]) =>
       createCivicRag({
@@ -26,14 +34,28 @@ export async function POST(request: Request) {
       }).answerQuestion({ question }),
     )
     .catch((error: unknown) => {
-      if (error instanceof Error && error.message.includes("AI_PROVIDER")) {
+      if (
+        error instanceof Error &&
+        (error.message.includes("AI_PROVIDER") || error.message.includes("OPENAI_API_KEY"))
+      ) {
         return Response.json(
           {
-            error: "ai_provider_not_enabled",
+            error: "ai_provider_not_configured",
             message:
-              "Seul AI_PROVIDER=mock est activé dans ce MVP. Aucun provider payant n'est appelé.",
+              "Le provider IA demandé n'est pas configuré. Utilisez AI_PROVIDER=mock ou configurez AI_PROVIDER=openai avec OPENAI_API_KEY.",
           },
-          { status: 501 },
+          { status: 503 },
+        );
+      }
+
+      if (error instanceof Error && error.message.includes("OpenAI Responses API")) {
+        return Response.json(
+          {
+            error: "ai_provider_failed",
+            message:
+              "Le provider IA externe n'a pas pu répondre. Repassez temporairement en AI_PROVIDER=mock ou vérifiez la configuration OpenAI.",
+          },
+          { status: 502 },
         );
       }
 

@@ -45,6 +45,10 @@ Si aucune source pertinente n'est trouvée :
 - proposer de vérifier sur les plateformes officielles ;
 - ne pas produire de checklist précise.
 
+## Providers IA
+
+`AI_PROVIDER=mock` reste le défaut sans coût. `AI_PROVIDER=openai` peut reformuler et structurer la réponse, mais il reçoit uniquement les chunks récupérés par CivicRAG et doit produire le même contrat `GroundedAnswer` avec citations issues des `SourceReference` fournies.
+
 ## Logs
 
 Les futures versions devront journaliser les requêtes assistant, sources utilisées, scores de confiance et refus, sans stocker de données personnelles inutiles.

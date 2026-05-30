@@ -15,6 +15,10 @@ export default async function AssistantPage({ searchParams }: AssistantPageProps
   const params = await searchParams;
   const query = Array.isArray(params.q) ? params.q[0] : params.q;
   const initialQuestion = query ? `Quelles informations vérifier pour : ${query} ?` : undefined;
+  const assistantMode =
+    process.env.AI_PROVIDER === "openai"
+      ? "Cette interface utilise CivicRAG avec OpenAI, en réponse structurée et strictement bornée aux sources fournies. Les sources viennent du corpus seedé ou de PostgreSQL selon le mode actif."
+      : "Cette interface utilise CivicRAG avec un provider IA local contrôlé. Les sources viennent du corpus seedé ou de PostgreSQL selon le mode actif.";
 
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto", padding: "64px 24px" }}>
@@ -60,8 +64,7 @@ export default async function AssistantPage({ searchParams }: AssistantPageProps
             margin: 0,
           }}
         >
-          Cette interface utilise CivicRAG avec un provider IA local contrôlé. Les sources viennent
-          du corpus seedé ou de PostgreSQL selon le mode actif.
+          {assistantMode}
         </p>
       </div>
 

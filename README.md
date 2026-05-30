@@ -6,13 +6,13 @@ DossierBJ Platform est une base de plateforme documentaire civique et économiqu
 
 ## Statut
 
-Beta Core DossierBJ en mode frugal : monorepo pnpm, app web Next.js, recherche locale de démarches, cinq fiches partiellement sourcées, checklist personnalisée sauvegardée dans le navigateur, assistant CivicRAG mock/keyword, page sources à vérifier, revue éditoriale locale des claims, Digital Pulse, pilote AO Radar, OpenCivic Kit consommé par l'app et tests sans API payante.
+Beta Core DossierBJ en mode frugal : monorepo pnpm, app web Next.js, recherche locale de démarches, cinq fiches partiellement sourcées, checklist personnalisée sauvegardée dans le navigateur, assistant CivicRAG keyword avec provider local par défaut et provider OpenAI optionnel, page sources à vérifier, revue éditoriale locale des claims, Digital Pulse, pilote AO Radar, OpenCivic Kit consommé par l'app et tests sans API payante.
 
-Audit critique initial effectué : le dépôt démarre en mode mock sans API payante, `AI_PROVIDER=mock` est résolu explicitement, et `DATA_MODE=mock` est testé sans `DATABASE_URL`.
+Audit critique initial effectué : le dépôt démarre en mode mock sans API payante, `AI_PROVIDER=mock` est résolu explicitement, `AI_PROVIDER=openai` demande une clé explicite, et `DATA_MODE=mock` est testé sans `DATABASE_URL`.
 
 Sprint Core concret ajouté : création d'entreprise, casier judiciaire, extrait RCCM, certificat d'identification personnelle et attestation de régularité fiscale foncière disposent maintenant de sources connectées, de statuts `partially_verified`, et d'une matrice "affirmation -> source". Les fiches `service-public.bj` incluent les coûts, délais, publics et pièces visibles au 2026-05-30.
 
-PostgreSQL est optionnel mais fonctionnel : `DATA_MODE=mock` reste le défaut, tandis que `DATA_MODE=postgres` lit les procédures, sources, claims, opportunités AO Radar, chunks RAG et requêtes assistant depuis la base après migration et seed. Les notes de claims et brouillons source passent par les audit logs quand PostgreSQL est activé.
+PostgreSQL est optionnel mais fonctionnel : `DATA_MODE=mock` reste le défaut, tandis que `DATA_MODE=postgres` lit les procédures, sources, claims, opportunités AO Radar, chunks RAG et requêtes assistant depuis la base après migration et seed. Les notes de claims, brouillons source, requêtes assistant et audit logs donnent une vraie piste de contribution même si le corpus public de départ reste versionné dans Git.
 
 Le dépôt est prêt pour contribution publique : licence MIT, guide de contribution, code de conduite, politique sécurité, templates GitHub, Dependabot et workflow CI mock/PostgreSQL.
 
@@ -76,9 +76,10 @@ pnpm test:e2e:postgres
 
 Résultats observés :
 
-- Tests unitaires/domaines : 52 tests passés, 2 tests ignorés volontairement.
-- Tests PostgreSQL : 2 tests d'intégration passés sur la base locale `bj`.
+- Tests unitaires/domaines : 56 tests passés, 2 tests ignorés volontairement.
+- Tests PostgreSQL : 2 tests d'intégration passés sur la base locale de développement.
 - Smoke e2e mock et PostgreSQL : `/api/health`, `/demarches`, `/demarches/creation-entreprise`, `/sources`, `/sources/claims`, `/sources/nouvelle`, `/sources/source-review-business-creation`, `/pulse`, `/ao-radar`, `/open-civic-kit`, `/api/assistant`, `/api/source-candidates` et `/api/claim-review-notes` répondent en `200`.
+- Provider OpenAI optionnel : chemin `AI_PROVIDER=openai` testé avec `fetch` simulé, sans appel externe.
 - Build Next.js production : réussi avec 20 routes app générées, dont `/ao-radar`, `/pulse`, `/open-civic-kit` et les deux API éditoriales.
 - Validation sources : 0 erreur, 0 avertissement.
 - Moniteur sources : 4 services `service-public.bj` contrôlés, 0 changement détecté.
@@ -103,7 +104,7 @@ Captures de référence :
 ```text
 apps/web        Application Next.js mobile-first
 packages/core   Schémas domaine, recherche, checklists, sources, moniteur et helpers
-packages/rag    CivicRAG mocké, retrievers, policies, providers
+packages/rag    CivicRAG, retrievers, policies, providers local et OpenAI optionnel
 packages/db     Schéma Drizzle, migrations, seed et repositories mock/postgres
 packages/ui     OpenCivic Kit MVP consommé par l'app web
 docs            Vision, architecture, politiques et roadmap
@@ -113,7 +114,7 @@ docs            Vision, architecture, politiques et roadmap
 
 - `/demarches` : recherche keyword locale, filtres par catégorie, profil et statut.
 - `/demarches/[slug]` : fiche démarche avec besoin utilisateur, faits sourcés, registre de claims, points à vérifier, sources par pièce/étape, avertissements et checklist interactive.
-- `/assistant` : assistant mock/keyword avec citations, confiance et informations manquantes.
+- `/assistant` : assistant CivicRAG keyword avec citations, confiance, informations manquantes et provider OpenAI optionnel.
 - `/sources` : mini back-office versionné pour les sources connectées, la validation et la couverture des claims.
 - `/sources/[id]` : détail de revue source avec checklist, historique, démarches liées et claims associés.
 - `/sources/claims` : cockpit éditorial pour prioriser les claims à revoir, noter localement et synchroniser en audit logs PostgreSQL quand disponible.
@@ -123,7 +124,7 @@ docs            Vision, architecture, politiques et roadmap
 - `/ao-radar` : pilote appels d'offres avec source officielle `gouv.bj`, dates à revérifier et checklist de pré-soumission.
 - `/open-civic-kit` : manifest du package `@dossierbj/ui` réellement consommé par l'application.
 - `/api/health` : indique le mode actif et l'état DB.
-- `/api/assistant` : endpoint local sans provider IA payant.
+- `/api/assistant` : endpoint sourcé, local par défaut, compatible `AI_PROVIDER=openai` si `OPENAI_API_KEY` est fournie.
 - `/api/source-candidates` et `/api/claim-review-notes` : persistance éditoriale optionnelle via audit logs PostgreSQL.
 
 ## Mode Mock
@@ -140,9 +141,21 @@ ENABLE_AUTH="false"
 
 Les pages et l'API `/api/assistant` utilisent le corpus seedé et conservent les réserves de vérification sur les informations sensibles.
 
-`AI_PROVIDER=mock` est le seul provider activé dans le MVP. Un provider réel comme OpenAI doit être ajouté via un adapter explicite avant utilisation ; il ne sera pas appelé silencieusement.
+`AI_PROVIDER=mock` reste le provider par défaut. Aucun appel IA payant n'est fait sans configuration explicite.
 
 `DATA_MODE=mock` ne crée aucun client base de données et ne demande pas `DATABASE_URL`.
+
+## Mode IA OpenAI Optionnel
+
+Pour activer une génération IA réelle tout en gardant le grounding CivicRAG :
+
+```env
+AI_PROVIDER="openai"
+OPENAI_API_KEY="sk-..."
+OPENAI_MODEL="gpt-5.4-mini"
+```
+
+L'adapter utilise l'API Responses avec sortie JSON structurée, refuse de répondre sans sources et recopie uniquement les citations déjà fournies par le retriever. Les tests couvrent ce chemin avec un `fetch` simulé ; la CI ne consomme jamais d'API externe.
 
 ## Mode Postgres Optionnel
 
@@ -231,7 +244,7 @@ OpenCivic Kit expose déjà des helpers publics (`cn`, `formatFcfa`, `verificati
 
 ## Partage Public
 
-Pitch court : DossierBJ est un MVP civictech open source pour préparer des démarches au Bénin avec sources, citations, checklists, assistant CivicRAG mock, Digital Pulse et pilote AO Radar, sans API payante obligatoire.
+Pitch court : DossierBJ est un MVP civictech open source pour préparer des démarches au Bénin avec sources, citations, checklists, assistant CivicRAG sourcé, Digital Pulse et pilote AO Radar, sans API payante obligatoire.
 
 Lien GitHub : `https://github.com/chabelbossa/bj`
 

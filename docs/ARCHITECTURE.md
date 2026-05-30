@@ -12,7 +12,7 @@ packages/core
   Schémas domaine, types, données seedées, helpers.
 
 packages/rag
-  CivicRAG mocké : retrievers, grounding policy, providers IA.
+  CivicRAG : retrievers, grounding policy, provider local et provider OpenAI optionnel.
 
 packages/db
   Schéma Drizzle, migrations, seed et repositories mock/postgres.
@@ -83,11 +83,11 @@ Question utilisateur
   -> retriever keyword/mock
   -> résultats avec chunks et sourceRefs
   -> grounding policy
-  -> provider IA mock
+  -> provider IA local ou OpenAI optionnel
   -> GroundedAnswer avec citations, confiance et limites
 ```
 
-Le provider IA réel doit rester derrière une interface. `AI_PROVIDER=mock` est le défaut.
+Le provider IA réel reste derrière une interface. `AI_PROVIDER=mock` est le défaut et `AI_PROVIDER=openai` exige `OPENAI_API_KEY`.
 
 ## Séparation Mock / Production
 
@@ -95,7 +95,7 @@ Le provider IA réel doit rester derrière une interface. `AI_PROVIDER=mock` est
 - `DATA_MODE=postgres` : lecture via Drizzle et `DATABASE_URL`, avec procédures, sources, claims,
   opportunités, chunks, requêtes assistant et audit logs éditoriaux.
 - `AI_PROVIDER=mock` : réponses contrôlées sans coût.
-- Provider réel : uniquement si clé API disponible et tests isolés.
+- `AI_PROVIDER=openai` : génération via Responses API, sortie JSON structurée, citations recopiées depuis les sources récupérées.
 
 ## Futures Intégrations
 

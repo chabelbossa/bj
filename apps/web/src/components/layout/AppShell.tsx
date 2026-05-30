@@ -6,20 +6,22 @@ import { Footer } from "./Footer";
 import { Header } from "./Header";
 
 const getRuntimeLabels = async () => {
+  const aiLabel = process.env.AI_PROVIDER === "openai" ? "IA OpenAI" : "IA locale";
+
   try {
     const health = await getDataHealth();
 
     if (health.dataMode === "postgres" && health.database.reachable) {
       return {
         dataLabel: "PostgreSQL",
-        footerLabel: "Base PostgreSQL active · sources officielles partielles · IA locale",
+        footerLabel: `Base PostgreSQL active · sources officielles partielles · ${aiLabel}`,
       };
     }
 
     if (health.dataMode === "postgres") {
       return {
         dataLabel: "Postgres hors ligne",
-        footerLabel: "PostgreSQL configuré · connexion à vérifier · IA locale",
+        footerLabel: `PostgreSQL configuré · connexion à vérifier · ${aiLabel}`,
       };
     }
   } catch {
@@ -28,7 +30,7 @@ const getRuntimeLabels = async () => {
 
   return {
     dataLabel: "Local",
-    footerLabel: "Mode local · sources partielles · IA locale",
+    footerLabel: `Mode local · sources partielles · ${aiLabel}`,
   };
 };
 

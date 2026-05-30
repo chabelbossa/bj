@@ -17,6 +17,8 @@ Les providers payants sont optionnels et activés uniquement par variables d'env
 
 - `AI_PROVIDER`
 - `OPENAI_API_KEY`
+- `OPENAI_MODEL`
+- `OPENAI_BASE_URL`
 - `ENABLE_VECTOR_SEARCH`
 - `PAYMENTS_PROVIDER`
 - `PAYMENTS_ENABLED`

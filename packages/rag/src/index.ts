@@ -6,6 +6,7 @@ import type { AiProvider, GroundedAnswer, RagQuestion, Retriever } from "./types
 export * from "./policies/groundingPolicy";
 export * from "./prompts/systemPrompts";
 export * from "./providers/mockAiProvider";
+export * from "./providers/openAiProvider";
 export * from "./providers/providerFactory";
 export * from "./retrievers/keywordRetriever";
 export * from "./retrievers/mockRetriever";
@@ -35,6 +36,10 @@ export const answerWithConfiguredRag = async (
   question: string,
   env: AiProviderEnv = {
     AI_PROVIDER: process.env.AI_PROVIDER,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    OPENAI_BASE_URL: process.env.OPENAI_BASE_URL,
+    OPENAI_MODEL: process.env.OPENAI_MODEL,
+    OPENAI_TIMEOUT_MS: process.env.OPENAI_TIMEOUT_MS,
   },
 ) =>
   createCivicRag({

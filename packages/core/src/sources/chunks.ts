@@ -19,6 +19,7 @@ export const createProcedureSourceChunks = (
         procedure.expectedOutcome,
         procedure.estimatedDuration,
         procedure.officialCost,
+        ...procedure.aliases,
         ...procedure.targetUsers,
         ...procedure.sources.map((source) => `${source.title} ${source.excerpt ?? ""}`),
         ...procedure.verifiedFacts.map((fact) => `${fact.label} ${fact.value} ${fact.note ?? ""}`),
@@ -38,6 +39,7 @@ export const createProcedureSourceChunks = (
         title: procedure.title,
         slug: procedure.slug,
         category: procedure.category,
+        aliases: procedure.aliases,
         verificationStatus: procedure.verificationStatus,
         demo: procedure.verificationStatus === "demo_unverified",
         facts: procedure.verifiedFacts.map((fact) => ({

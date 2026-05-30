@@ -7,7 +7,7 @@
 - Lancer une app web locale.
 - Ajouter tests unitaires sans dépendance externe.
 - Vérifier que `DATA_MODE=mock` ne demande pas `DATABASE_URL`.
-- Vérifier que `AI_PROVIDER=mock` est le seul provider actif.
+- Vérifier que `AI_PROVIDER=mock` reste le défaut sans coût et que tout provider réel est optionnel.
 - Vérifier que toute donnée de test reste non officielle.
 - Supprimer les assets et dépendances non utilisés du scaffold.
 
@@ -39,7 +39,7 @@
 - Les fiches partiellement vérifiées affichent une matrice "affirmation -> source" pour éviter les affirmations implicites.
 - Checklist interactive générée localement à partir de la fiche et du profil utilisateur.
 - Checklist sauvegardée dans `localStorage` et imprimable via la page démarche.
-- Assistant CivicRAG mock/keyword avec citations, confiance moyenne sur fiches partiellement sourcées et confiance faible sur données de test.
+- Assistant CivicRAG keyword avec citations, confiance moyenne sur fiches partiellement sourcées, confiance faible sur données de test et provider OpenAI optionnel derrière `OPENAI_API_KEY`.
 - `DATA_MODE=postgres` lit les procédures, sources, documents, opportunités, chunks et enregistre les requêtes assistant.
 - Migration Drizzle initiale, seed Postgres idempotent et test d'intégration `pnpm test:postgres`.
 - Page `/sources` pour suivre les sources candidates, les sources connectées, les erreurs de validation et la checklist d'ingestion manuelle.
