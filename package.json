@@ -33,7 +33,7 @@
     "format:write": "prettier --write ."
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^25",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "prettier": "^3.6.2",
