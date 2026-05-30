@@ -68,7 +68,7 @@ export function AssistantPanel({
           {status === "loading" ? "Recherche dans les sources..." : "Poser la question"}
         </button>
         {status === "error" ? (
-          <p className="mt-3 text-sm text-danger">Impossible d&apos;obtenir une réponse mockée.</p>
+          <p className="mt-3 text-sm text-danger">Impossible d&apos;obtenir une réponse locale.</p>
         ) : null}
         <div className="mt-5 space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
@@ -115,7 +115,8 @@ export function AssistantPanel({
           </div>
         ) : (
           <p className="mt-4 text-sm leading-6 text-muted">
-            Posez une question. Le MVP utilise un provider mock et ne fait aucun appel externe.
+            Posez une question. Le MVP utilise un provider local contrôlé et ne fait aucun appel
+            externe.
           </p>
         )}
       </section>

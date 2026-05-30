@@ -132,8 +132,8 @@ export default async function HomePage() {
           <dl style={{ display: "flex", flexDirection: "column", gap: 18 }}>
             {[
               { dt: "Données", dd: "Seedées localement, avec preuves et statuts visibles" },
-              { dt: "IA", dd: "Provider mock, aucun appel externe" },
-              { dt: "Base", dd: "PostgreSQL préparé, non obligatoire" },
+              { dt: "IA", dd: "Provider local contrôlé, aucun appel externe" },
+              { dt: "Base", dd: "PostgreSQL activable et testé" },
             ].map(({ dt, dd }) => (
               <div
                 key={dt}
@@ -330,7 +330,7 @@ export default async function HomePage() {
                 margin: 0,
               }}
             >
-              CivicRAG en mode local — IA mock, aucune donnée envoyée.
+              CivicRAG en mode local — IA contrôlée, aucune donnée envoyée.
             </p>
           </div>
           <Link

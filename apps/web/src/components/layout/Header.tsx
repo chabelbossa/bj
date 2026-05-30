@@ -22,7 +22,7 @@ function SpikeMark({ className = "" }: { className?: string }) {
   );
 }
 
-export function Header() {
+export function Header({ dataLabel }: { dataLabel: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -86,7 +86,7 @@ export function Header() {
               marginLeft: 4,
             }}
           >
-            mock
+            {dataLabel}
           </span>
         </Link>
 

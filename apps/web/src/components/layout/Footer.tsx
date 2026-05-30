@@ -18,7 +18,7 @@ function SpikeMark() {
   );
 }
 
-export function Footer() {
+export function Footer({ runtimeLabel }: { runtimeLabel: string }) {
   return (
     <footer
       style={{
@@ -243,7 +243,7 @@ export function Footer() {
               whiteSpace: "nowrap",
             }}
           >
-            Mode local · sources partielles · IA mock
+            {runtimeLabel}
           </p>
         </div>
       </div>

@@ -34,13 +34,13 @@ export const metadata: Metadata = {
     siteName: "DossierBJ",
     title: "DossierBJ - Assistant documentaire indépendant",
     description:
-      "Un MVP civictech open source pour préparer des démarches au Bénin avec sources, citations et mode mock local.",
+      "Un MVP civictech open source pour préparer des démarches au Bénin avec sources, citations et base PostgreSQL optionnelle.",
   },
   twitter: {
     card: "summary",
     title: "DossierBJ - Assistant documentaire indépendant",
     description:
-      "Démarches, citations, checklists et assistant CivicRAG mock pour tester une civictech béninoise frugale.",
+      "Démarches, citations, checklists et assistant CivicRAG local pour tester une civictech béninoise frugale.",
   },
 };
 

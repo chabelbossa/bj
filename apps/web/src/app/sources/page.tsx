@@ -36,9 +36,9 @@ export default async function SourcesPage() {
         </p>
         <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Sources à vérifier</h1>
         <p className="mt-4 leading-7 text-muted">
-          Cette page sert de mini back-office local. Elle distingue les sources connectées, les
-          sources en revue et les candidates. Les notes et brouillons restent locaux en mode mock,
-          puis passent par PostgreSQL quand le mode base est actif.
+          Cette page sert de mini back-office éditorial. Elle distingue les sources connectées, les
+          sources en revue et les candidates. Quand PostgreSQL est actif, les notes et brouillons
+          passent par les audit logs de la base.
         </p>
       </div>
 

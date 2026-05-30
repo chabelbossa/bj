@@ -3,7 +3,7 @@ import type { SourceReviewPriority, SourceReviewStatus } from "@dossierbj/core";
 const statusLabels: Record<SourceReviewStatus, string> = {
   to_connect: "À connecter",
   needs_human_review: "Revue humaine",
-  demo_connected: "Demo connectée",
+  demo_connected: "Source connectée",
   verified: "Vérifiée",
   rejected: "Rejetée",
 };
