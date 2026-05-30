@@ -1,0 +1,52 @@
+name: Source review
+description: Proposer ou corriger une source officielle.
+title: "[Source]: "
+labels:
+  - source-review
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Les sources doivent être vérifiables. Ne collez pas de données personnelles ni de documents utilisateur.
+  - type: input
+    id: url
+    attributes:
+      label: URL officielle
+      placeholder: https://service-public.bj/...
+    validations:
+      required: true
+  - type: input
+    id: authority
+    attributes:
+      label: Institution ou autorité
+      placeholder: Ministère, agence, portail officiel...
+    validations:
+      required: true
+  - type: dropdown
+    id: claim_type
+    attributes:
+      label: Type d'information concernée
+      options:
+        - frais
+        - délai
+        - pièce
+        - étape
+        - condition
+        - canal officiel
+        - autre
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_change
+    attributes:
+      label: Changement proposé
+      description: Quelle fiche, affirmation ou source faut-il modifier ?
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Vérification
+      description: Date de consultation et méthode utilisée.
+    validations:
+      required: true

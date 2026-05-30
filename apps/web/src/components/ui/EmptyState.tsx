@@ -31,7 +31,7 @@ export function EmptyState({ title, description }: { title: string; description:
           fontSize: 22,
           fontWeight: 400,
           lineHeight: 1.3,
-          letterSpacing: "-0.3px",
+          letterSpacing: 0,
           color: "var(--ink)",
           margin: "0 0 8px",
         }}

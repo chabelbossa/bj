@@ -23,15 +23,16 @@ describe("procedure claims", () => {
     expect(sourcedClaims.every((claim) => claim.sourceRefs.length > 0)).toBe(true);
   });
 
-  it("marks unconfirmed fees and durations as unverified", () => {
+  it("marks newly confirmed RCCM fees and durations as sourced", () => {
     const rccmClaims = getProcedureClaimsBySlug("rccm");
 
-    expect(rccmClaims.find((claim) => claim.sourceField === "officialCost")?.status).toBe(
-      "unverified",
-    );
-    expect(rccmClaims.find((claim) => claim.sourceField === "estimatedDuration")?.status).toBe(
-      "unverified",
-    );
+    const costClaim = rccmClaims.find((claim) => claim.sourceField === "officialCost");
+    const durationClaim = rccmClaims.find((claim) => claim.sourceField === "estimatedDuration");
+
+    expect(costClaim?.status).toBe("verified");
+    expect(costClaim?.sourceRefs.length).toBeGreaterThan(0);
+    expect(durationClaim?.status).toBe("verified");
+    expect(durationClaim?.sourceRefs.length).toBeGreaterThan(0);
   });
 
   it("summarizes claim coverage for source review", () => {

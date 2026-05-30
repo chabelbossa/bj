@@ -1,0 +1,39 @@
+name: Feature request
+description: Proposer une amélioration du MVP.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problème utilisateur
+      description: Quel besoin concret cela résout-il ?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposition
+      description: Décrivez la solution souhaitée.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Zone concernée
+      options:
+        - DossierBJ Core
+        - CivicRAG
+        - Sources
+        - UX
+        - OpenCivic Kit
+        - Documentation
+        - CI / tooling
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Contraintes
+      description: Sources, budget, sécurité, confidentialité ou limites à respecter.

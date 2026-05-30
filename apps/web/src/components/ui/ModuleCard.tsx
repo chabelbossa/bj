@@ -13,7 +13,10 @@ export function ModuleCard({
   description: string;
   status: string;
 }) {
-  const style = statusStyles[status] ?? { background: "var(--surface-card)", color: "var(--muted)" };
+  const style = statusStyles[status] ?? {
+    background: "var(--surface-card)",
+    color: "var(--muted)",
+  };
 
   return (
     <article
@@ -26,7 +29,14 @@ export function ModuleCard({
         gap: 12,
       }}
     >
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 12,
+        }}
+      >
         <h3
           style={{
             fontFamily: "var(--font-sans)",

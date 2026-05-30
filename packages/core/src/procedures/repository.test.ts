@@ -36,4 +36,25 @@ describe("procedure search", () => {
     expect(getProcedureCategories()).toContain("Entreprise");
     expect(getProcedureTargetUsers()).toContain("Diaspora");
   });
+
+  it("keeps service-public.bj details cited for casier and RCCM", () => {
+    const [casier] = searchProcedures({ query: "casier judiciaire" });
+    const [rccm] = searchProcedures({ query: "rccm" });
+
+    expect(casier?.procedure.officialCost).toContain("1 900 FCFA");
+    expect(casier?.procedure.estimatedDuration).toContain("72h");
+    expect(
+      casier?.procedure.verifiedFacts.some(
+        (fact) => fact.id === "casier-fact-required-documents" && fact.sourceRefs.length > 0,
+      ),
+    ).toBe(true);
+
+    expect(rccm?.procedure.officialCost).toContain("5 000 FCFA");
+    expect(rccm?.procedure.estimatedDuration).toContain("Instantané en ligne");
+    expect(
+      rccm?.procedure.verifiedFacts.some(
+        (fact) => fact.id === "rccm-fact-online-documents" && fact.sourceRefs.length > 0,
+      ),
+    ).toBe(true);
+  });
 });

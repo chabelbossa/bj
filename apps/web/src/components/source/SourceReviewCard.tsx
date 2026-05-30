@@ -240,10 +240,7 @@ export function SourceReviewCard({ item }: { item: SourceReviewItem }) {
           }}
         >
           {readiness.checklist.map((step) => (
-            <li
-              key={step.id}
-              style={{ display: "flex", gap: 8, alignItems: "flex-start" }}
-            >
+            <li key={step.id} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
               <span
                 aria-hidden="true"
                 style={{
@@ -260,7 +257,9 @@ export function SourceReviewCard({ item }: { item: SourceReviewItem }) {
                   flexShrink: 0,
                   fontSize: 10,
                   fontWeight: 700,
-                  color: step.done ? "color-mix(in srgb, var(--success) 70%, var(--ink))" : "var(--muted-soft)",
+                  color: step.done
+                    ? "color-mix(in srgb, var(--success) 70%, var(--ink))"
+                    : "var(--muted-soft)",
                 }}
               >
                 {step.done ? "✓" : "·"}

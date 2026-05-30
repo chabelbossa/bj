@@ -336,24 +336,51 @@ const criminalRecordProcedure: Procedure = {
   aliases: ["casier", "extrait", "justice", "bulletin", "b3", "service-public"],
   targetUsers: ["Citoyens", "Diaspora"],
   summary:
-    "Fiche partiellement vérifiée à partir du Portail du Numérique et d'une URL service-public.bj. Elle confirme l'existence du service et certains points de prudence, pas la liste exhaustive des pièces.",
+    "Fiche partiellement vérifiée à partir du Portail du Numérique et de la fiche service-public.bj du casier judiciaire. Elle couvre le canal, le coût, le délai annoncé, la validité et les pièces principales visibles dans la source officielle.",
   userNeed:
-    "Identifier le bon canal public et les informations à préparer avant de demander un extrait B3.",
+    "Identifier le bon canal public, le coût annoncé, le délai et les documents à préparer avant de demander un extrait B3.",
   expectedOutcome:
-    "Une préparation prudente : vérifier la page officielle, renseigner correctement les informations personnelles et ne pas conclure sur les frais non sourcés.",
+    "Une préparation prudente : vérifier la page officielle, préparer le bon justificatif selon son profil et contrôler les informations personnelles avant paiement.",
   officialUrl: servicePublicCasierRef.url,
   estimatedDuration:
-    "Délai actuel non confirmé dans les sources connectées. À vérifier sur service-public.bj.",
-  officialCost: "Information non confirmée dans les sources connectées.",
+    "72h annoncées sur service-public.bj ; le délai peut être plus long en cas de forte demande.",
+  officialCost: "1 900 FCFA selon service-public.bj.",
   requiredDocuments: [
     {
-      id: "casier-doc-official-list",
-      name: "Liste officielle des champs et pièces",
+      id: "casier-doc-benin-born-in-benin",
+      name: "Extrait d'acte de naissance sécurisé ou légalisé",
       description:
-        "La liste exhaustive n'est pas encore extraite. Elle doit être vérifiée directement sur le service public avant toute demande.",
+        "Pièce indiquée pour les Béninois nés au Bénin. La fiche officielle demande aussi de préciser l'adresse du domicile, la profession, le nombre d'enfants à charge et la situation matrimoniale.",
       required: true,
-      condition: "Ne pas considérer cette fiche comme liste officielle de pièces.",
-      sourceRefs: [servicePublicCasierRef, numeriqueCasierServiceRef],
+      condition: "Profil : Béninois nés au Bénin.",
+      sourceRefs: [servicePublicCasierRef],
+    },
+    {
+      id: "casier-doc-benin-born-abroad",
+      name: "Certificat de nationalité béninoise",
+      description:
+        "Pièce indiquée en plus de l'extrait d'acte de naissance sécurisé ou légalisé pour les Béninois nés à l'étranger.",
+      required: true,
+      condition: "Profil : Béninois nés à l'étranger.",
+      sourceRefs: [servicePublicCasierRef],
+    },
+    {
+      id: "casier-doc-foreigners-recent-entry",
+      name: "Passeport et visa d'entrée",
+      description:
+        "Pour les étrangers avec date d'entrée inférieure à 3 mois, service-public.bj indique le passeport avec page identité et page tamponnée, plus le visa d'entrée. L'acte de naissance est indiqué comme optionnel.",
+      required: true,
+      condition: "Profil : étrangers, date d'entrée inférieure à 3 mois.",
+      sourceRefs: [servicePublicCasierRef],
+    },
+    {
+      id: "casier-doc-foreigners-residence-proof",
+      name: "Passeport et preuve de séjour",
+      description:
+        "Pour les étrangers avec date d'entrée supérieure à 3 mois, service-public.bj indique le passeport avec page identité et page tamponnée, plus une carte de résident ou CIPR. L'acte de naissance ou le certificat de nationalité est indiqué comme optionnel.",
+      required: true,
+      condition: "Profil : étrangers, date d'entrée supérieure à 3 mois.",
+      sourceRefs: [servicePublicCasierRef],
     },
     {
       id: "casier-doc-email",
@@ -361,7 +388,7 @@ const criminalRecordProcedure: Procedure = {
       description:
         "L'article du Portail du Numérique insiste sur le bon renseignement de l'adresse e-mail pour recevoir le casier judiciaire.",
       required: true,
-      condition: "Point de saisie, pas une pièce justificative.",
+      condition: "Point de saisie et de réception, pas une pièce justificative.",
       sourceRefs: [numeriqueCasierArticleRef],
     },
   ],
@@ -377,16 +404,25 @@ const criminalRecordProcedure: Procedure = {
     {
       id: "casier-step-check-identity",
       order: 2,
-      title: "Vérifier les informations saisies",
-      description: "Contrôler soigneusement nom, prénom et adresse e-mail avant soumission.",
-      sourceRefs: [numeriqueCasierArticleRef],
+      title: "Préparer la pièce selon le profil",
+      description:
+        "Choisir la catégorie applicable : Béninois né au Bénin, Béninois né à l'étranger, étranger entré récemment ou étranger résident.",
+      sourceRefs: [servicePublicCasierRef],
     },
     {
-      id: "casier-step-verify-fees",
+      id: "casier-step-check-identity",
       order: 3,
-      title: "Confirmer frais et délai sur la plateforme officielle",
+      title: "Vérifier les informations saisies",
       description:
-        "Les frais et le délai actuel ne sont pas confirmés dans les sources connectées au MVP.",
+        "Contrôler soigneusement nom, prénom, profil et adresse e-mail avant soumission.",
+      sourceRefs: [numeriqueCasierArticleRef, servicePublicCasierRef],
+    },
+    {
+      id: "casier-step-pay-and-follow",
+      order: 4,
+      title: "Payer et suivre le délai annoncé",
+      description:
+        "Le service-public.bj affiche 1 900 FCFA et 72h annoncées, avec une réserve en cas de forte demande.",
       sourceRefs: [servicePublicCasierRef],
     },
   ],
@@ -397,9 +433,9 @@ const criminalRecordProcedure: Procedure = {
     "Conserver la référence de demande si la plateforme en fournit une.",
   ],
   pointsToVerify: [
-    "Frais actuels",
-    "Délai actuel de délivrance",
-    "Liste exacte des pièces demandées par le formulaire",
+    "Changement éventuel du tarif avant paiement",
+    "Délai réel si la demande est forte",
+    "Cas particuliers non couverts par les profils listés",
     "Canal de support officiel en cas de problème",
   ],
   verifiedFacts: [
@@ -427,20 +463,35 @@ const criminalRecordProcedure: Procedure = {
     createFact(
       "casier-fact-fees",
       "Frais",
-      "Non confirmés dans les sources connectées au MVP.",
-      "unverified",
+      "La fiche service-public.bj indique 1 900 FCFA.",
+      "verified",
+      [servicePublicCasierRef],
+      "Revérifier le tarif juste avant paiement.",
+    ),
+    createFact(
+      "casier-fact-duration",
+      "Délai annoncé",
+      "La fiche service-public.bj indique 72h et précise que le délai peut être plus long en cas de forte demande.",
+      "verified",
+      [servicePublicCasierRef],
+    ),
+    createFact(
+      "casier-fact-required-documents",
+      "Pièces selon profil",
+      "La fiche officielle distingue Béninois nés au Bénin, Béninois nés à l'étranger et étrangers selon la date d'entrée.",
+      "verified",
       [servicePublicCasierRef],
     ),
   ],
   warnings: [
     "DossierBJ est indépendant et ne remplace pas service-public.bj.",
-    "Les frais, délais et pièces exactes doivent être vérifiés sur la page officielle avant demande.",
+    "Les frais, délais et pièces doivent être revérifiés sur la page officielle avant paiement.",
     "Ne saisissez pas de numéro d'identité ou document personnel dans DossierBJ.",
   ],
   sources: [numeriqueCasierServiceRef, numeriqueCasierArticleRef, servicePublicCasierRef],
   sourceStatusNote:
-    "Service et URL confirmés via sources officielles ; détails opérationnels encore à extraire manuellement depuis service-public.bj.",
-  lastVerifiedAt: DEMO_RETRIEVED_AT,
+    "Service, coût, délai annoncé et pièces principales extraits depuis la fiche service-public.bj le 2026-05-30. La fiche reste prudente car les valeurs peuvent changer.",
+  lastVerifiedAt: "2026-05-30",
   verificationStatus: "partially_verified",
 };
 
@@ -460,23 +511,41 @@ const rccmProcedure: Procedure = {
   ],
   targetUsers: ["Entrepreneurs", "PME"],
   summary:
-    "Fiche partiellement vérifiée : le Portail du Numérique signale un service d'extrait RCCM, et MonEntreprise.bj confirme que l'extrait RCCM fait partie des documents liés à la création d'entreprise.",
+    "Fiche partiellement vérifiée : service-public.bj détaille le service d'extrait RCCM, et MonEntreprise.bj confirme que l'extrait RCCM fait partie des documents liés à la création d'entreprise.",
   userNeed:
-    "Comprendre où vérifier l'existence du service RCCM et quelles informations restent à confirmer avant demande.",
+    "Comprendre où demander un extrait RCCM, combien coûte la demande, le délai attendu et les pièces affichées selon le canal.",
   expectedOutcome:
-    "Une checklist prudente pour identifier l'entreprise concernée, vérifier le statut non radié et confirmer frais, pièces et délai sur service-public.bj.",
+    "Une checklist prudente pour identifier l'entreprise concernée, vérifier le statut non radié, payer le bon tarif et récupérer l'extrait depuis le canal officiel.",
   officialUrl: servicePublicRccmRef.url,
-  estimatedDuration: "Information non confirmée dans les sources connectées.",
-  officialCost: "Information non confirmée dans les sources connectées.",
+  estimatedDuration: "Instantané en ligne selon service-public.bj ; 48 heures en présentiel.",
+  officialCost: "5 000 FCFA selon service-public.bj.",
   requiredDocuments: [
     {
-      id: "rccm-doc-company-info",
-      name: "Informations d'identification de l'entreprise",
+      id: "rccm-doc-online-none",
+      name: "Aucune pièce pour le service en ligne",
       description:
-        "À préparer avant la demande, mais la liste officielle des champs et justificatifs doit être confirmée sur service-public.bj.",
+        "La fiche service-public.bj indique qu'aucune pièce n'est nécessaire pour le service en ligne.",
       required: true,
-      condition: "Donnée de préparation, pas liste officielle exhaustive.",
-      sourceRefs: [servicePublicRccmRef, numeriqueRccmServiceRef],
+      condition: "Canal : service en ligne.",
+      sourceRefs: [servicePublicRccmRef],
+    },
+    {
+      id: "rccm-doc-in-person-copy",
+      name: "Copie de l'extrait RCCM",
+      description:
+        "Pour le service en présentiel, service-public.bj indique une copie de l'extrait RCCM.",
+      required: true,
+      condition: "Canal : présentiel.",
+      sourceRefs: [servicePublicRccmRef],
+    },
+    {
+      id: "rccm-doc-in-person-receipt",
+      name: "Quittance de paiement des frais",
+      description:
+        "Pour le service en présentiel, service-public.bj indique la quittance de paiement des frais.",
+      required: true,
+      condition: "Canal : présentiel.",
+      sourceRefs: [servicePublicRccmRef],
     },
   ],
   steps: [
@@ -496,24 +565,33 @@ const rccmProcedure: Procedure = {
       sourceRefs: [numeriqueRccmServiceRef],
     },
     {
-      id: "rccm-step-missing-info",
+      id: "rccm-step-online-search",
       order: 3,
-      title: "Confirmer frais, délai et pièces",
+      title: "Rechercher le nom de l'entreprise",
       description:
-        "Ces informations ne sont pas encore confirmées dans le MVP et doivent être vérifiées sur la plateforme officielle.",
+        "Le processus en ligne de service-public.bj commence par la recherche du nom de l'entreprise.",
+      sourceRefs: [servicePublicRccmRef],
+    },
+    {
+      id: "rccm-step-payment-download",
+      order: 4,
+      title: "Payer et télécharger l'extrait",
+      description:
+        "La fiche service-public.bj indique 5 000 FCFA, disponibilité instantanée en ligne et envoi du lien de téléchargement par e-mail.",
       sourceRefs: [servicePublicRccmRef],
     },
   ],
   preparationHints: [
     "Préparer le nom de l'entreprise et les références connues avant d'ouvrir le service.",
     "Vérifier que l'entreprise n'est pas radiée si cette condition est affichée sur le service officiel.",
-    "Ne pas supposer les frais ou délais depuis d'autres démarches.",
+    "Prévoir une adresse e-mail accessible pour recevoir le lien de téléchargement.",
+    "Revérifier le montant sur le portail officiel juste avant paiement.",
   ],
   pointsToVerify: [
-    "Frais de demande d'extrait RCCM",
-    "Délai de délivrance",
+    "Changement éventuel du tarif avant paiement",
+    "Disponibilité instantanée du service en ligne",
     "Critères exacts d'entreprise non radiée",
-    "Pièces ou champs demandés par le service-public.bj",
+    "Support officiel si le lien e-mail n'arrive pas",
   ],
   verifiedFacts: [
     createFact(
@@ -533,20 +611,27 @@ const rccmProcedure: Procedure = {
     createFact(
       "rccm-fact-fees-delay",
       "Frais et délai",
-      "Non confirmés dans les sources connectées au MVP.",
-      "unverified",
+      "La fiche service-public.bj indique 5 000 FCFA, instantané en ligne et 48 heures en présentiel.",
+      "verified",
+      [servicePublicRccmRef],
+    ),
+    createFact(
+      "rccm-fact-online-documents",
+      "Pièces en ligne",
+      "La fiche service-public.bj indique qu'aucune pièce n'est nécessaire pour le service en ligne.",
+      "verified",
       [servicePublicRccmRef],
     ),
   ],
   warnings: [
     "DossierBJ est indépendant et ne remplace pas service-public.bj ni MonEntreprise.bj.",
-    "Les frais, délais et pièces exactes ne sont pas encore confirmés dans cette fiche.",
+    "Les frais, délais et pièces doivent être revérifiés sur service-public.bj avant paiement.",
     "Ne transmettez aucun document d'entreprise sensible dans DossierBJ.",
   ],
   sources: [numeriqueRccmServiceRef, servicePublicRccmRef, monEntrepriseCertificatesRef],
   sourceStatusNote:
-    "Service repéré sur une source officielle ; détails de demande encore à vérifier manuellement.",
-  lastVerifiedAt: DEMO_RETRIEVED_AT,
+    "Service, coût, délai et pièces extraits depuis la fiche service-public.bj le 2026-05-30. La fiche reste prudente car les valeurs peuvent changer.",
+  lastVerifiedAt: "2026-05-30",
   verificationStatus: "partially_verified",
 };
 

@@ -22,7 +22,7 @@ describe("source review repository", () => {
     expect(summary.total).toBeGreaterThan(0);
     expect(summary.toConnect).toBeGreaterThan(0);
     expect(summary.verified).toBeGreaterThan(0);
-    expect(summary.needsHumanReview).toBeGreaterThan(0);
+    expect(summary.needsHumanReview).toBe(0);
   });
 
   it("exposes official and demo sources separately", () => {

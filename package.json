@@ -2,8 +2,17 @@
   "name": "dossierbj-platform",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "packageManager": "pnpm@10.24.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chabelbossa/bj.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chabelbossa/bj/issues"
+  },
+  "homepage": "https://github.com/chabelbossa/bj#readme",
   "scripts": {
     "dev": "pnpm --filter @dossierbj/web dev",
     "build": "pnpm --filter @dossierbj/web build",

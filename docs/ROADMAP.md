@@ -35,6 +35,7 @@
 - Recherche keyword locale pondérée par titre, alias, catégorie, public et points à vérifier.
 - Fiches démarches enrichies avec besoin utilisateur, résultat attendu, points à vérifier et préparation prudente.
 - Création d'entreprise, casier judiciaire et extrait RCCM sont passés en `partially_verified` avec sources connectées manuellement.
+- Casier judiciaire et extrait RCCM incluent maintenant les coûts, délais, pièces et étapes principales extraits depuis `service-public.bj` le 2026-05-30.
 - Les fiches partiellement vérifiées affichent une matrice "affirmation -> source" pour éviter les affirmations implicites.
 - Checklist interactive générée localement à partir de la fiche et du profil utilisateur.
 - Checklist sauvegardée dans `localStorage` et imprimable via la page démarche.
@@ -50,12 +51,14 @@
 - Résumé de couverture des claims par fiche, statut et type d'affirmation sur `/sources`.
 - Script e2e HTTP `pnpm test:e2e` pour vérifier les routes critiques, `/api/health` et `/api/assistant` en mode mock.
 - Registre fichier-based dans `packages/core/src/seed/sourceRegistry.ts` et workflow dans `packages/core/src/sources/manualIngestion.ts`.
+- Workflow CI GitHub avec validation mock, build, smoke e2e, puis job PostgreSQL avec migration, seed et smoke e2e.
+- Fichiers publics de contribution : licence MIT, guide de contribution, code de conduite, politique sécurité, templates issues/PR et Dependabot.
 
 ### Prochain Critère De Sortie Phase 1
 
 - Création d'entreprise : séparer les pièces, coûts et conditions par forme juridique.
-- Casier judiciaire : extraire frais, délai actuel et pièces exactes depuis le service officiel après revue humaine.
-- Extrait RCCM : extraire frais, délai, critères et pièces exactes depuis le service officiel après revue humaine.
+- Casier judiciaire : surveiller les changements de coût, délai et pièces sur service-public.bj.
+- Extrait RCCM : surveiller les changements de coût, délai, pièces et critères sur service-public.bj.
 - Chaque frais, délai, pièce et étape affiché avec `SourceReference`.
 - Persistance optionnelle des notes claims et brouillons source côté Postgres quand un vrai back-office sera justifié.
 - Tests navigateur Playwright si le projet accepte cette dépendance ; le smoke e2e HTTP couvre déjà les routes critiques en frugal.
@@ -65,7 +68,7 @@
 
 - MonEntreprise.bj : guide, processus, coûts/délais, pièces requises et certificats.
 - Portail du Numérique : repérage des services casier judiciaire et extrait RCCM.
-- Service-public.bj : URLs officielles liées, mais détails encore en revue humaine.
+- Service-public.bj : fiches casier judiciaire et extrait RCCM connectées avec coût, délai, pièces et étapes principales au 2026-05-30.
 
 ## Phase 2 - AO Radar / TenderCopilot
 

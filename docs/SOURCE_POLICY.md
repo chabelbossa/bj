@@ -24,11 +24,11 @@ Les documents sources doivent garder une trace de version. Si une page change, l
 
 ## Ingestion Manuelle MVP
 
-Le MVP utilise une ingestion manuelle fichier-based :
+Le MVP utilise une ingestion manuelle fichier-based. Une API publique officielle peut aider à lire une fiche, mais le résultat doit rester copié, cité et testé dans le registre :
 
 1. Ajouter une entrée dans `packages/core/src/seed/sourceRegistry.ts`.
 2. Confirmer l'autorité, le pays, l'URL et le statut.
-3. Lire la source sans scraping agressif.
+3. Lire la source sans scraping agressif, via page publique ou API officielle documentée/observable.
 4. Créer ou mettre à jour les `OfficialSource`, `SourceDocument` et `SourceReference`.
 5. Relier chaque affirmation importante à une citation.
 6. Ajouter un test avant de passer une source en `verified`.

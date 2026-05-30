@@ -1,6 +1,7 @@
 import type { OfficialSource, SourceDocument, SourceReference } from "../schemas";
 
 export const DEMO_RETRIEVED_AT = "2026-05-19";
+export const SERVICE_PUBLIC_RETRIEVED_AT = "2026-05-30";
 
 export const demoOfficialSource: OfficialSource = {
   id: "demo-official-source-to-connect",
@@ -66,8 +67,8 @@ export const servicePublicOfficialSource: OfficialSource = {
   url: "https://service-public.bj",
   sourceType: "official",
   reliabilityLevel: "high",
-  lastCheckedAt: DEMO_RETRIEVED_AT,
-  status: "pending_review",
+  lastCheckedAt: SERVICE_PUBLIC_RETRIEVED_AT,
+  status: "active",
 };
 
 export const monEntrepriseGuideDocument: SourceDocument = {
@@ -153,9 +154,9 @@ export const servicePublicCasierDocument: SourceDocument = {
   title: "Demande d'extrait B3 du casier judiciaire",
   url: "https://service-public.bj/public/services/service/PS00373",
   contentType: "text/html",
-  retrievedAt: DEMO_RETRIEVED_AT,
-  version: "2026-05-19-linked-from-numerique",
-  status: "pending_review",
+  retrievedAt: SERVICE_PUBLIC_RETRIEVED_AT,
+  version: "2026-05-30-service-public-api",
+  status: "active",
 };
 
 export const servicePublicRccmDocument: SourceDocument = {
@@ -164,9 +165,9 @@ export const servicePublicRccmDocument: SourceDocument = {
   title: "Extrait du Registre de Commerce et de Crédit Mobilier",
   url: "https://service-public.bj/public/services/service/PS00024",
   contentType: "text/html",
-  retrievedAt: DEMO_RETRIEVED_AT,
-  version: "2026-05-19-linked-from-numerique",
-  status: "pending_review",
+  retrievedAt: SERVICE_PUBLIC_RETRIEVED_AT,
+  version: "2026-05-30-service-public-api",
+  status: "active",
 };
 
 export const monEntrepriseGuideRef: SourceReference = {
@@ -255,8 +256,8 @@ export const servicePublicCasierRef: SourceReference = {
   url: servicePublicCasierDocument.url,
   title: servicePublicCasierDocument.title,
   excerpt:
-    "URL du service public liée depuis le portail du numérique. Le contenu détaillé doit rester soumis à revue humaine avant extraction exhaustive.",
-  retrievedAt: DEMO_RETRIEVED_AT,
+    "Le service-public.bj indique un extrait B3 actif, 1 900 FCFA, 72h annoncées, validité de 3 mois et des pièces variant selon le profil du demandeur.",
+  retrievedAt: SERVICE_PUBLIC_RETRIEVED_AT,
 };
 
 export const servicePublicRccmRef: SourceReference = {
@@ -265,8 +266,8 @@ export const servicePublicRccmRef: SourceReference = {
   url: servicePublicRccmDocument.url,
   title: servicePublicRccmDocument.title,
   excerpt:
-    "URL du service public liée depuis le portail du numérique pour l'extrait RCCM. Les frais et conditions restent à vérifier.",
-  retrievedAt: DEMO_RETRIEVED_AT,
+    "Le service-public.bj indique un service RCCM actif, 5 000 FCFA, un parcours en ligne instantané, et aucune pièce requise pour le service en ligne.",
+  retrievedAt: SERVICE_PUBLIC_RETRIEVED_AT,
 };
 
 export const officialSources: OfficialSource[] = [

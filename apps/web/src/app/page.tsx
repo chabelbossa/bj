@@ -70,7 +70,7 @@ export default async function HomePage() {
               fontSize: "clamp(36px, 5vw, 48px)",
               fontWeight: 400,
               lineHeight: 1.1,
-              letterSpacing: "-1px",
+              letterSpacing: 0,
               color: "var(--ink)",
               margin: "0 0 24px",
             }}
@@ -135,7 +135,13 @@ export default async function HomePage() {
               { dt: "IA", dd: "Provider mock, aucun appel externe" },
               { dt: "Base", dd: "PostgreSQL préparé, non obligatoire" },
             ].map(({ dt, dd }) => (
-              <div key={dt} style={{ borderBottom: "1px solid color-mix(in srgb, var(--on-dark) 10%, transparent)", paddingBottom: 16 }}>
+              <div
+                key={dt}
+                style={{
+                  borderBottom: "1px solid color-mix(in srgb, var(--on-dark) 10%, transparent)",
+                  paddingBottom: 16,
+                }}
+              >
                 <dt
                   style={{
                     fontFamily: "var(--font-sans)",
@@ -233,7 +239,7 @@ export default async function HomePage() {
                 fontSize: "clamp(28px, 3vw, 36px)",
                 fontWeight: 400,
                 lineHeight: 1.15,
-                letterSpacing: "-0.5px",
+                letterSpacing: 0,
                 color: "var(--ink)",
                 margin: "0 0 10px",
               }}
@@ -307,7 +313,7 @@ export default async function HomePage() {
                 fontSize: "clamp(22px, 2.5vw, 28px)",
                 fontWeight: 400,
                 lineHeight: 1.2,
-                letterSpacing: "-0.3px",
+                letterSpacing: 0,
                 color: "var(--on-primary)",
                 margin: "0 0 10px",
               }}
@@ -363,7 +369,7 @@ export default async function HomePage() {
                 fontSize: "clamp(28px, 3vw, 36px)",
                 fontWeight: 400,
                 lineHeight: 1.15,
-                letterSpacing: "-0.5px",
+                letterSpacing: 0,
                 color: "var(--on-dark)",
                 margin: "0 0 10px",
               }}

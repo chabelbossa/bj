@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  mock:
+    name: Mock mode
+    runs-on: ubuntu-latest
+    env:
+      DATA_MODE: mock
+      AI_PROVIDER: mock
+      NEXT_PUBLIC_APP_NAME: DossierBJ
+      NEXT_PUBLIC_APP_URL: http://127.0.0.1:3107
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm format
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Validate sources
+        run: pnpm validate:sources
+
+      - name: Build
+        run: pnpm build
+
+      - name: Smoke e2e
+        run: pnpm test:e2e
+
+  postgres:
+    name: PostgreSQL mode
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: dossierbj
+          POSTGRES_PASSWORD: dossierbj
+          POSTGRES_DB: dossierbj
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATA_MODE: postgres
+      DATABASE_URL: postgresql://dossierbj:dossierbj@localhost:5432/dossierbj
+      AI_PROVIDER: mock
+      NEXT_PUBLIC_APP_NAME: DossierBJ
+      NEXT_PUBLIC_APP_URL: http://127.0.0.1:3107
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Migrate and seed database
+        run: pnpm db:reset:dev
+
+      - name: PostgreSQL integration tests
+        run: pnpm test:postgres
+
+      - name: PostgreSQL smoke e2e
+        run: pnpm test:e2e:postgres

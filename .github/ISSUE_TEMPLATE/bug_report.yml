@@ -1,0 +1,49 @@
+name: Bug report
+description: Signaler un bug reproductible dans le MVP DossierBJ.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de ne pas partager de document personnel, numéro d'identité, secret ou donnée sensible.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Résumé
+      description: Que se passe-t-il ?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction
+      description: Étapes minimales pour reproduire le problème.
+      placeholder: |
+        1. Aller sur ...
+        2. Cliquer sur ...
+        3. Observer ...
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode
+      options:
+        - mock
+        - postgres
+        - unknown
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportement attendu
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Vérification locale
+      description: Commandes lancées, logs non sensibles ou captures.

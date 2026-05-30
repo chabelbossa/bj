@@ -10,9 +10,11 @@ Beta Core DossierBJ en mode frugal : monorepo pnpm, app web Next.js, recherche l
 
 Audit critique initial effectué : le dépôt démarre en mode mock sans API payante, les seeds demo utilisent des URLs réservées non officielles, `AI_PROVIDER=mock` est résolu explicitement, et `DATA_MODE=mock` est testé sans `DATABASE_URL`.
 
-Sprint Core concret ajouté : la création d'entreprise, le casier judiciaire et l'extrait RCCM disposent maintenant de sources connectées manuellement, de statuts `partially_verified`, et d'une matrice "affirmation -> source". Les autres fiches restent explicitement demo non officielles.
+Sprint Core concret ajouté : la création d'entreprise, le casier judiciaire et l'extrait RCCM disposent maintenant de sources connectées, de statuts `partially_verified`, et d'une matrice "affirmation -> source". Le casier judiciaire et l'extrait RCCM incluent les coûts, délais et pièces visibles sur `service-public.bj` au 2026-05-30. Les autres fiches restent explicitement demo non officielles.
 
 PostgreSQL est optionnel mais fonctionnel : `DATA_MODE=mock` reste le défaut, tandis que `DATA_MODE=postgres` lit les procédures, sources, claims, chunks RAG et requêtes assistant depuis la base après migration et seed.
+
+Le dépôt est prêt pour contribution publique : licence MIT, guide de contribution, code de conduite, politique sécurité, templates GitHub, Dependabot et workflow CI mock/PostgreSQL.
 
 ## Stack
 
@@ -44,6 +46,7 @@ pnpm build
 pnpm lint
 pnpm typecheck
 pnpm test
+pnpm validate:sources
 pnpm test:postgres
 pnpm test:e2e
 pnpm test:e2e:postgres
@@ -55,12 +58,14 @@ pnpm db:seed
 
 ## Vérification Locale
 
-Dernière vérification complète effectuée le 2026-05-29 en mode mock et PostgreSQL local :
+Dernière vérification complète effectuée le 2026-05-30 en mode mock et PostgreSQL local :
 
 ```bash
+pnpm format
 pnpm test
 pnpm typecheck
 pnpm lint
+pnpm validate:sources
 pnpm build
 pnpm test:e2e
 pnpm test:postgres
@@ -69,16 +74,22 @@ pnpm test:e2e:postgres
 
 Résultats observés :
 
-- Tests unitaires/domaines : 49 tests passés, 2 tests ignorés volontairement.
+- Tests unitaires/domaines : 50 tests passés, 2 tests ignorés volontairement.
 - Tests PostgreSQL : 2 tests d'intégration passés sur la base locale `bj`.
 - Smoke e2e mock et PostgreSQL : `/api/health`, `/demarches`, `/demarches/creation-entreprise`, `/sources`, `/sources/claims`, `/sources/nouvelle`, `/sources/source-review-business-creation` et `/api/assistant` répondent en `200`.
 - Build Next.js production : réussi avec les routes statiques et dynamiques attendues.
+- Validation sources : 0 erreur, 0 avertissement.
+- Captures Playwright prises depuis le serveur production local en mode PostgreSQL, avec contrôle responsive mobile sur la fiche casier judiciaire.
 
 Captures prises en mode PostgreSQL local :
 
 ![Accueil DossierBJ](docs/screenshots/home-postgres.png)
 
 ![Fiche création d'entreprise](docs/screenshots/creation-entreprise-postgres.png)
+
+![Fiche casier judiciaire](docs/screenshots/casier-postgres.png)
+
+![Fiche RCCM](docs/screenshots/rccm-postgres.png)
 
 ![Back-office sources](docs/screenshots/sources-postgres.png)
 
@@ -155,17 +166,17 @@ Le MVP ne scrape pas. Les sources sont ajoutées par revue humaine et gérées d
 packages/core/src/seed/sourceRegistry.ts
 ```
 
-La page `/sources` affiche cette file de revue, les sources exposées, les documents, la couverture des claims, l'état de validation et le workflow d'ingestion manuelle. Une source ne doit devenir vérifiée qu'après revue humaine, rattachement aux `SourceReference`, et tests mis à jour.
+La page `/sources` affiche cette file de revue, les sources exposées, les documents, la couverture des claims, l'état de validation et le workflow d'ingestion manuelle. Une source ne doit devenir vérifiée qu'après revue contrôlée, rattachement aux `SourceReference`, et tests mis à jour.
 
 La page `/sources/claims` crée une file de travail éditoriale : priorité critique/haute/moyenne/basse, filtres par fiche/type/statut, notes locales et export JSON. Elle ne modifie pas le corpus ; elle prépare la revue humaine avant édition des seeds ou d'un futur back-office.
 
-La page `/sources/nouvelle` génère un brouillon local en JSON à partir d'un formulaire. Ce brouillon reste dans le navigateur et doit être recopié manuellement dans le registre après revue humaine ; il ne rend aucune information officielle.
+La page `/sources/nouvelle` génère un brouillon local en JSON à partir d'un formulaire. Ce brouillon reste dans le navigateur et doit être recopié manuellement dans le registre après revue contrôlée ; il ne rend aucune information officielle.
 
-Sources connectées manuellement au 2026-05-19 :
+Sources connectées :
 
 - MonEntreprise.bj pour création d'entreprise, coûts/délais, pièces et certificats.
 - Portail du Numérique pour le service casier judiciaire et l'extrait RCCM.
-- URLs service-public.bj liées depuis le Portail du Numérique, encore en revue humaine pour les détails opérationnels.
+- Service-public.bj pour les fiches casier judiciaire et extrait RCCM, avec extraction prudente du coût, délai, public cible, pièces et étapes principales le 2026-05-30.
 
 ## Variables D'environnement
 
@@ -174,7 +185,7 @@ Voir `.env.example`. Les clés réelles ne doivent jamais être committées. Pos
 ## Roadmap Courte
 
 1. Extraire les pièces par forme juridique pour la création d'entreprise.
-2. Compléter la revue humaine service-public.bj pour casier judiciaire et extrait RCCM.
+2. Ajouter une surveillance légère des changements service-public.bj pour détecter les coûts/délais qui évoluent.
 3. Ajouter une persistance éditoriale optionnelle pour les notes de claims et brouillons sources.
 4. Ajouter de vrais tests navigateur quand le budget de dépendances Playwright est accepté.
 5. Enrichir CivicRAG avec un retrieval local indexé avant toute vector DB externe.
@@ -193,6 +204,20 @@ Voir `.env.example`. Les clés réelles ne doivent jamais être committées. Pos
 ## Stratégie Open Source
 
 OpenCivic Kit pourra exposer des composants UI, types TypeScript publics, helpers de citation/checklist et documentation. Le corpus enrichi, les prompts critiques, workflows premium, scoring et analytics business restent propriétaires.
+
+## Contribution
+
+- Lire `CONTRIBUTING.md` avant d'ouvrir une pull request.
+- Utiliser les templates GitHub pour bugs, sources et demandes de fonctionnalité.
+- Lancer `pnpm format`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm validate:sources`, `pnpm build` et `pnpm test:e2e` avant publication.
+- Pour les changements de données PostgreSQL : lancer aussi `pnpm db:reset:dev`, `pnpm test:postgres` et `pnpm test:e2e:postgres`.
+- Ne jamais ajouter de donnée personnelle, secret ou affirmation administrative non citée.
+
+## Partage Public
+
+Pitch court : DossierBJ est un MVP civictech open source pour préparer des démarches au Bénin avec sources, citations, checklists et assistant CivicRAG mock, sans API payante obligatoire.
+
+Lien GitHub : `https://github.com/chabelbossa/bj`
 
 ## Documents À Lire
 

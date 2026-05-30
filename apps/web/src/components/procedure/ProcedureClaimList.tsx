@@ -84,7 +84,7 @@ export function ProcedureClaimList({ claims }: { claims: ProcedureClaim[] }) {
               fontSize: 24,
               fontWeight: 400,
               lineHeight: 1.2,
-              letterSpacing: "-0.3px",
+              letterSpacing: 0,
               color: "var(--ink)",
               margin: "0 0 8px",
             }}

@@ -42,7 +42,7 @@ const sectionTitleStyle: React.CSSProperties = {
   fontSize: 22,
   fontWeight: 400,
   lineHeight: 1.2,
-  letterSpacing: "-0.2px",
+  letterSpacing: 0,
   color: "var(--ink)",
   margin: "0 0 16px",
 };
@@ -97,7 +97,7 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
               fontSize: "clamp(28px, 4vw, 40px)",
               fontWeight: 400,
               lineHeight: 1.1,
-              letterSpacing: "-0.8px",
+              letterSpacing: 0,
               color: "var(--ink)",
               margin: "16px 0 14px",
             }}
@@ -181,12 +181,18 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
           {/* Preparation hints */}
           <section style={sectionStyle}>
             <h2 style={sectionTitleStyle}>Préparation prudente</h2>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+            <ul
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
               {procedure.preparationHints.map((item, i) => (
-                <li
-                  key={item}
-                  style={{ display: "flex", gap: 12, alignItems: "flex-start" }}
-                >
+                <li key={item} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                   <span
                     style={{
                       display: "inline-flex",
@@ -205,7 +211,14 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
                   >
                     {i + 1}
                   </span>
-                  <span style={{ fontFamily: "var(--font-sans)", fontSize: 14, lineHeight: 1.6, color: "var(--muted)" }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize: 14,
+                      lineHeight: 1.6,
+                      color: "var(--muted)",
+                    }}
+                  >
                     {item}
                   </span>
                 </li>
@@ -216,16 +229,30 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
           {/* Points to verify */}
           <section style={sectionStyle}>
             <h2 style={sectionTitleStyle}>Ce qui reste à vérifier</h2>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, lineHeight: 1.6, color: "var(--muted)", margin: "0 0 16px" }}>
+            <p
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: 14,
+                lineHeight: 1.6,
+                color: "var(--muted)",
+                margin: "0 0 16px",
+              }}
+            >
               Ces points doivent être confirmés directement sur la plateforme officielle avant toute
               décision ou paiement.
             </p>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+            <ul
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+              }}
+            >
               {procedure.pointsToVerify.map((item) => (
-                <li
-                  key={item}
-                  style={{ display: "flex", gap: 10, alignItems: "flex-start" }}
-                >
+                <li key={item} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
                   <span
                     style={{
                       width: 6,
@@ -236,7 +263,14 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
                       flexShrink: 0,
                     }}
                   />
-                  <span style={{ fontFamily: "var(--font-sans)", fontSize: 14, lineHeight: 1.6, color: "var(--muted)" }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize: 14,
+                      lineHeight: 1.6,
+                      color: "var(--muted)",
+                    }}
+                  >
                     {item}
                   </span>
                 </li>
@@ -247,25 +281,58 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
           {/* Required documents */}
           <section style={sectionStyle}>
             <h2 style={sectionTitleStyle}>Pièces à fournir</h2>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 0 }}>
+            <ul
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 0,
+              }}
+            >
               {procedure.requiredDocuments.map((document, i) => (
                 <li
                   key={document.id}
                   style={{
                     padding: "16px 0",
-                    borderBottom: i < procedure.requiredDocuments.length - 1
-                      ? "1px solid var(--hairline)"
-                      : "none",
+                    borderBottom:
+                      i < procedure.requiredDocuments.length - 1
+                        ? "1px solid var(--hairline)"
+                        : "none",
                   }}
                 >
-                  <h3 style={{ fontFamily: "var(--font-sans)", fontSize: 15, fontWeight: 500, color: "var(--ink)", margin: "0 0 6px" }}>
+                  <h3
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize: 15,
+                      fontWeight: 500,
+                      color: "var(--ink)",
+                      margin: "0 0 6px",
+                    }}
+                  >
                     {document.name}
                   </h3>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, lineHeight: 1.6, color: "var(--muted)", margin: 0 }}>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize: 13,
+                      lineHeight: 1.6,
+                      color: "var(--muted)",
+                      margin: 0,
+                    }}
+                  >
                     {document.description}
                   </p>
                   {document.condition ? (
-                    <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--error)", margin: "6px 0 0" }}>
+                    <p
+                      style={{
+                        fontFamily: "var(--font-sans)",
+                        fontSize: 12,
+                        color: "var(--error)",
+                        margin: "6px 0 0",
+                      }}
+                    >
                       {document.condition}
                     </p>
                   ) : null}
@@ -278,9 +345,21 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
           {/* Steps */}
           <section style={sectionStyle}>
             <h2 style={sectionTitleStyle}>Étapes</h2>
-            <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 20 }}>
+            <ol
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 20,
+              }}
+            >
               {procedure.steps.map((step) => (
-                <li key={step.id} style={{ display: "grid", gridTemplateColumns: "36px 1fr", gap: 14 }}>
+                <li
+                  key={step.id}
+                  style={{ display: "grid", gridTemplateColumns: "36px 1fr", gap: 14 }}
+                >
                   <span
                     style={{
                       display: "flex",
@@ -300,10 +379,27 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
                     {step.order}
                   </span>
                   <div>
-                    <span style={{ fontFamily: "var(--font-sans)", fontSize: 15, fontWeight: 500, color: "var(--ink)", display: "block", marginBottom: 4 }}>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-sans)",
+                        fontSize: 15,
+                        fontWeight: 500,
+                        color: "var(--ink)",
+                        display: "block",
+                        marginBottom: 4,
+                      }}
+                    >
                       {step.title}
                     </span>
-                    <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, lineHeight: 1.6, color: "var(--muted)", display: "block" }}>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-sans)",
+                        fontSize: 13,
+                        lineHeight: 1.6,
+                        color: "var(--muted)",
+                        display: "block",
+                      }}
+                    >
                       {step.description}
                     </span>
                     <InlineSourceRefs sources={step.sourceRefs} label="Sources de cette étape" />
@@ -321,7 +417,10 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
         </article>
 
         {/* ── Aside ── */}
-        <aside style={{ display: "flex", flexDirection: "column", gap: 16 }} className="procedure-aside">
+        <aside
+          style={{ display: "flex", flexDirection: "column", gap: 16 }}
+          className="procedure-aside"
+        >
           <ChecklistBuilder procedure={procedure} />
 
           <Link
@@ -360,12 +459,18 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
             >
               Avertissements
             </h2>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+            <ul
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+              }}
+            >
               {procedure.warnings.map((warning) => (
-                <li
-                  key={warning}
-                  style={{ display: "flex", gap: 8, alignItems: "flex-start" }}
-                >
+                <li key={warning} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
                   <span
                     style={{
                       width: 5,
@@ -376,7 +481,14 @@ export default async function ProcedureDetailPage({ params }: ProcedurePageProps
                       flexShrink: 0,
                     }}
                   />
-                  <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, lineHeight: 1.6, color: "var(--on-dark-soft)" }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize: 13,
+                      lineHeight: 1.6,
+                      color: "var(--on-dark-soft)",
+                    }}
+                  >
                     {warning}
                   </span>
                 </li>

@@ -13,6 +13,17 @@ OpenCivic Kit peut exposer :
 - starter civictech ;
 - documentation non sensible.
 
+## Infrastructure Publique
+
+Le dépôt public doit conserver :
+
+- licence claire ;
+- guide de contribution ;
+- code de conduite ;
+- politique sécurité ;
+- templates issues/PR ;
+- CI qui prouve le mode mock et le mode PostgreSQL optionnel.
+
 ## À Garder Propriétaire
 
 - Corpus enrichi.

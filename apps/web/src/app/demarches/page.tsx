@@ -86,7 +86,7 @@ export default async function DemarchesPage({ searchParams }: DemarchesPageProps
             fontSize: "clamp(28px, 4vw, 36px)",
             fontWeight: 400,
             lineHeight: 1.15,
-            letterSpacing: "-0.5px",
+            letterSpacing: 0,
             color: "var(--ink)",
             margin: "0 0 14px",
           }}
@@ -228,7 +228,7 @@ export default async function DemarchesPage({ searchParams }: DemarchesPageProps
                 fontFamily: "var(--font-serif)",
                 fontSize: 22,
                 fontWeight: 400,
-                letterSpacing: "-0.2px",
+                letterSpacing: 0,
                 color: "var(--ink)",
                 margin: "0 0 4px",
               }}

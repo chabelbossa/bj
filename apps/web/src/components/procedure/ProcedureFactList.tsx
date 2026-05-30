@@ -62,7 +62,7 @@ export function ProcedureFactList({ facts }: { facts: ProcedureFact[] }) {
             fontSize: 24,
             fontWeight: 400,
             lineHeight: 1.2,
-            letterSpacing: "-0.3px",
+            letterSpacing: 0,
             color: "var(--ink)",
             margin: "0 0 8px",
           }}
@@ -149,7 +149,14 @@ export function ProcedureFactList({ facts }: { facts: ProcedureFact[] }) {
                 {fact.value}
               </p>
               {fact.note ? (
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--error)", margin: "0 0 8px" }}>
+                <p
+                  style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: 12,
+                    color: "var(--error)",
+                    margin: "0 0 8px",
+                  }}
+                >
                   {fact.note}
                 </p>
               ) : null}

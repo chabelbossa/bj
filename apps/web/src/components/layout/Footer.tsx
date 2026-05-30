@@ -81,7 +81,16 @@ export function Footer() {
             >
               Plateforme
             </p>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+            <ul
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
               {[
                 { href: "/demarches" as Route, label: "Démarches" },
                 { href: "/assistant" as Route, label: "Assistant" },
@@ -119,7 +128,16 @@ export function Footer() {
             >
               Modules
             </p>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+            <ul
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
               {[
                 { href: "/pulse" as Route, label: "Digital Pulse" },
                 { href: "/ux-lab" as Route, label: "CivicUX Lab" },
@@ -157,10 +175,17 @@ export function Footer() {
             >
               Ressources
             </p>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
-              {[
-                { href: "/methode-verification" as Route, label: "Méthode" },
-              ].map((item) => (
+            <ul
+              style={{
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
+              {[{ href: "/methode-verification" as Route, label: "Méthode" }].map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}

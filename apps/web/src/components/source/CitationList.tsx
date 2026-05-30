@@ -17,7 +17,16 @@ export function CitationList({ citations }: { citations: SourceReference[] }) {
   }
 
   return (
-    <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 12 }}>
+    <ol
+      style={{
+        listStyle: "none",
+        padding: 0,
+        margin: 0,
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+      }}
+    >
       {citations.map((citation, index) => (
         <li
           key={`${citation.sourceId}-${citation.documentId ?? citation.url}-${index}`}

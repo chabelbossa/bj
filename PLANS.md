@@ -7,8 +7,9 @@ Ce fichier sert de fil conducteur pour les prochains agents. Le but est de const
 1. Stabiliser la fondation monorepo, les schémas domaine et le RAG mocké.
 2. Remplacer progressivement les données demo par des sources officielles vérifiées.
 3. Construire DossierBJ Core autour des démarches, checklists, citations et assistant sourcé.
-4. Ajouter Digital Pulse et CivicUX Lab en modules légers d'observation, sans back-office complexe.
-5. Préparer AO Radar par les modèles et interfaces, sans ingestion massive au départ.
+4. Maintenir le dépôt public contribution-ready : CI, templates, guide contribution et politique source à jour.
+5. Ajouter Digital Pulse et CivicUX Lab en modules légers d'observation, sans back-office complexe.
+6. Préparer AO Radar par les modèles et interfaces, sans ingestion massive au départ.
 
 ## Décisions Fondatrices
 
