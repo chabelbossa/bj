@@ -16,6 +16,7 @@ Commandes :
 
 ```bash
 pnpm test
+pnpm monitor:sources
 pnpm test:e2e
 pnpm test:postgres
 pnpm test:e2e:postgres

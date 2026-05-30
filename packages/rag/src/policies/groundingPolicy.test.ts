@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
+import { demoSourceReference } from "@dossierbj/core";
+
 import { mockRetriever } from "../retrievers/mockRetriever";
+import type { RetrievalResult } from "../types";
 import {
   assertGroundedAnswerPolicy,
   createGroundedAnswerFromResults,
@@ -55,9 +58,24 @@ describe("grounding policy", () => {
   });
 
   it("does not confirm costs from demo-only results", async () => {
-    const results = (
-      await mockRetriever.retrieve({ question: "attestation administrative", maxResults: 10 })
-    ).filter((result) => result.chunk.metadata.demo === true);
+    const results: RetrievalResult[] = [
+      {
+        chunk: {
+          id: "chunk-demo-only",
+          documentId: "demo-source-document-to-connect",
+          content: "Attestation administrative coût frais à vérifier",
+          position: 0,
+          metadata: {
+            title: "Attestation administrative",
+            demo: true,
+            verificationStatus: "demo_unverified",
+          },
+          sourceRefs: [demoSourceReference],
+        },
+        score: 1,
+        matchedTerms: ["attestation", "administrative"],
+      },
+    ];
     const answer = createGroundedAnswerFromResults("coût attestation administrative", results);
 
     expect(results.length).toBeGreaterThan(0);

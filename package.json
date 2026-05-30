@@ -23,6 +23,7 @@
     "test:e2e": "DATA_MODE=mock AI_PROVIDER=mock node tests/e2e/smoke.mjs",
     "test:e2e:postgres": "DATA_MODE=postgres AI_PROVIDER=mock node tests/e2e/smoke.mjs",
     "typecheck": "pnpm -r typecheck",
+    "monitor:sources": "pnpm --filter @dossierbj/core monitor:sources",
     "validate:sources": "pnpm --filter @dossierbj/core validate:sources",
     "db:generate": "pnpm --filter @dossierbj/db db:generate",
     "db:migrate": "pnpm --filter @dossierbj/db db:migrate",

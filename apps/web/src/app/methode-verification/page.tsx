@@ -21,9 +21,9 @@ export default function VerificationMethodPage() {
       </p>
       <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Comment les fiches sont vérifiées</h1>
       <p className="mt-4 leading-7 text-muted">
-        DossierBJ sépare les données demo, les sources en revue et les affirmations partiellement
-        vérifiées. Une information administrative sensible n&apos;est affichée comme exploitable que
-        si elle est rattachée à une source.
+        DossierBJ sépare les sources vérifiées, les sources en revue et les affirmations
+        partiellement vérifiées. Une information administrative sensible n&apos;est affichée comme
+        exploitable que si elle est rattachée à une source.
       </p>
 
       <div className="mt-6">
@@ -50,7 +50,7 @@ export default function VerificationMethodPage() {
           <div>
             <dt className="font-semibold">Faible</dt>
             <dd className="mt-1 text-sm leading-6 text-muted">
-              Donnée demo, source absente ou information insuffisante.
+              Source absente, donnée de test ou information insuffisante.
             </dd>
           </div>
           <div>

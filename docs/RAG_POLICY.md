@@ -5,7 +5,7 @@
 - Une réponse administrative doit s'appuyer sur des sources.
 - Les frais, délais, pièces à fournir, étapes et conditions ne doivent jamais être inventés.
 - Quand les sources sont insuffisantes, l'assistant doit refuser de conclure et expliquer ce qui manque.
-- Les données de démonstration doivent rester identifiées comme non officielles.
+- Les données de test ou insuffisamment sourcées doivent rester identifiées comme non officielles.
 
 ## Citations
 
@@ -22,9 +22,9 @@ Chaque affirmation importante doit pouvoir être reliée à une `SourceReference
 
 - `high` : source officielle connectée et récente, information directe.
 - `medium` : source officielle ou semi-officielle, information partielle.
-- `low` : source absente, demo, ancienne ou insuffisante.
+- `low` : source absente, donnée de test, source ancienne ou information insuffisante.
 
-Le MVP retourne `low` sur les données demo et peut retourner `medium` sur une fiche `partially_verified` si les citations sont présentes. `high` reste réservé à une future fiche exhaustive, revue humainement et maintenue à jour.
+Le MVP retourne `low` sur les données de test et peut retourner `medium` sur une fiche `partially_verified` si les citations sont présentes. `high` reste réservé à une future fiche exhaustive, revue humainement et maintenue à jour.
 
 ## Matrice Des Affirmations
 

@@ -26,6 +26,7 @@ Ouvrir `http://localhost:3000`.
 pnpm lint
 pnpm typecheck
 pnpm test
+pnpm monitor:sources
 pnpm test:e2e
 ```
 
@@ -79,22 +80,30 @@ rejouées proprement sur une base de développement jetable.
 ## Brouillons De Sources
 
 La page `/sources/nouvelle` stocke les brouillons dans le navigateur avec la clé
-`dossierbj:source-candidates:v1`. Ces données ne sont pas synchronisées, ne prouvent rien
-officiellement et doivent être revues manuellement avant d'être ajoutées à
+`dossierbj:source-candidates:v1`. En mode Postgres, l'API `/api/source-candidates` conserve aussi
+ces brouillons dans `audit_logs`. Ces données ne prouvent rien officiellement et doivent être revues
+manuellement avant d'être ajoutées à
 `packages/core/src/seed/sourceRegistry.ts`.
 
 ## Revue Locale Des Claims
 
 La page `/sources/claims` stocke les notes de revue dans le navigateur avec la clé
-`dossierbj:claim-review-notes:v1`. Les notes peuvent être copiées en JSON, mais elles ne modifient
-ni les seeds ni Postgres. Pour publier une correction, éditer les fiches ou le registre source,
-puis relancer :
+`dossierbj:claim-review-notes:v1`. En mode Postgres, `/api/claim-review-notes` conserve aussi les
+notes dans `audit_logs`. Pour publier une correction, éditer les fiches ou le registre source, puis
+relancer :
 
 ```bash
 pnpm validate:sources
+pnpm monitor:sources
 pnpm test
 pnpm test:e2e
 ```
+
+## Surveillance Des Sources
+
+`pnpm monitor:sources` interroge les fiches publiques `service-public.bj` surveillées et échoue si
+statut, frais, délais ou pièces ne correspondent plus au snapshot attendu. Le test standard ne
+dépend pas de ce réseau externe.
 
 ## E2E Léger
 

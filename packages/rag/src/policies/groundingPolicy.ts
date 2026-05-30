@@ -74,19 +74,19 @@ const inferQuestionFocus = (question: string, hasOnlyDemoResults: boolean) => {
 
   if (/(frais|cout|coût|payer|tarif)/u.test(normalized)) {
     return hasOnlyDemoResults
-      ? "Les frais ne sont pas confirmés dans les sources demo."
+      ? "Les frais ne sont pas confirmés dans les données de test."
       : "Pour les frais, je reprends seulement les montants explicitement présents dans les sources citées.";
   }
 
   if (/(delai|délai|temps|jour|semaine)/u.test(normalized)) {
     return hasOnlyDemoResults
-      ? "Les délais ne sont pas confirmés dans les sources demo."
+      ? "Les délais ne sont pas confirmés dans les données de test."
       : "Pour les délais, je distingue les délais sourcés des délais encore à vérifier.";
   }
 
   if (/(piece|pièce|document|papier)/u.test(normalized)) {
     return hasOnlyDemoResults
-      ? "La liste officielle des pièces n'est pas confirmée dans les sources demo."
+      ? "La liste officielle des pièces n'est pas confirmée dans les données de test."
       : "Pour les pièces, je ne généralise pas au-delà du périmètre indiqué par les sources citées.";
   }
 

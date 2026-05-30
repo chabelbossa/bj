@@ -18,12 +18,12 @@ packages/db
   Schéma Drizzle, migrations, seed et repositories mock/postgres.
 
 packages/ui
-  Future base OpenCivic Kit.
+  OpenCivic Kit MVP consommé par l'application.
 ```
 
 ## Flux De Données MVP
 
-1. `packages/core/src/seed` expose des procédures demo et des procédures partiellement vérifiées.
+1. `packages/core/src/seed` expose les procédures partiellement vérifiées, sources et opportunités pilotes.
 2. `packages/db/src/repository.ts` fournit une API commune pour le mode mock et le mode Postgres.
 3. `apps/web` lit les données via `@dossierbj/db/repository`, pas directement depuis les seeds.
 4. Les pages affichent badges de statut, sources, faits vérifiables et avertissement indépendant.
@@ -43,15 +43,16 @@ Source candidate
   -> affichage public
 ```
 
-Ce flux reste volontairement fichier-based pour éviter une base obligatoire au MVP.
+Ce flux reste volontairement versionné dans le dépôt pour éviter une base obligatoire au MVP.
 
 La page `/sources/nouvelle` ajoute une couche de saisie locale : elle produit un brouillon JSON en
-`localStorage`, sans écrire en base et sans appeler de service externe. Le passage du brouillon au
-registre reste manuel pour garder une revue humaine avant toute exposition publique.
+`localStorage` et l'enregistre aussi en audit log quand `DATA_MODE=postgres`. Le passage du
+brouillon au registre reste manuel pour garder une revue humaine avant toute exposition publique.
 
 En mode Postgres, le seed idempotent transpose ces éléments dans les tables `official_sources`,
 `source_documents`, `procedures`, `required_documents`, `procedure_steps`, `source_references`,
-`procedure_claims`, `source_chunks`, `source_review_items` et `source_review_events`.
+`procedure_claims`, `source_chunks`, `source_review_items`, `source_review_events`,
+`opportunities` et `audit_logs`.
 
 Les `ProcedureClaim` constituent le registre exploitable des affirmations : un coût, un délai, une
 pièce, une étape ou un avertissement devient une ligne indépendante avec statut et sources. Cela
@@ -62,9 +63,18 @@ La page `/sources` agrège aussi la couverture des claims : volume total, pource
 nombre d'affirmations critiques non vérifiées et répartition par fiche. Cette vue sert de tableau
 de bord éditorial avant de construire un vrai back-office.
 
-La page `/sources/claims` ajoute un cockpit local de revue : priorité, filtres, action suivante et
-notes `localStorage`. Elle ne modifie pas les seeds ni Postgres ; elle réduit le risque éditorial
-avant de créer une interface persistante.
+La page `/sources/claims` ajoute un cockpit de revue : priorité, filtres, action suivante, notes
+`localStorage` et synchronisation audit-log optionnelle. Elle ne modifie pas les seeds ; elle réduit
+le risque éditorial avant de publier une correction par pull request.
+
+## Digital Pulse Et AO Radar
+
+Digital Pulse lit les métriques du corpus et la watchlist `service-public.bj` depuis le core. La
+commande `pnpm monitor:sources` compare frais, délais, statut et pièces des services connectés.
+
+AO Radar lit le modèle `Opportunity` depuis le même repository mock/Postgres. Le pilote utilise la
+page officielle `gouv.bj/opportunites/marches-publics` comme source d'entrée et reste en préparation
+de soumission, sans ingestion automatisée.
 
 ## Flux RAG
 
@@ -83,7 +93,7 @@ Le provider IA réel doit rester derrière une interface. `AI_PROVIDER=mock` est
 
 - `DATA_MODE=mock` : seed local, aucun Postgres.
 - `DATA_MODE=postgres` : lecture via Drizzle et `DATABASE_URL`, avec procédures, sources, claims,
-  chunks et requêtes assistant.
+  opportunités, chunks, requêtes assistant et audit logs éditoriaux.
 - `AI_PROVIDER=mock` : réponses contrôlées sans coût.
 - Provider réel : uniquement si clé API disponible et tests isolés.
 
@@ -94,7 +104,7 @@ Le provider IA réel doit rester derrière une interface. `AI_PROVIDER=mock` est
 - Embeddings locaux ou provider optionnel.
 - Paiements manuels puis provider réel.
 - Auth légère si nécessaire.
-- AO Radar via `Opportunity`.
+- AO Radar ingestion contrôlée après validation du pilote.
 
 ## Principes
 

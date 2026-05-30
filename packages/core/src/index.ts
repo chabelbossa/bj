@@ -7,6 +7,7 @@ export * from "./seed";
 export * from "./sources/chunks";
 export * from "./sources/manualIngestion";
 export * from "./sources/repository";
+export * from "./sources/sourceMonitor";
 export * from "./sources/validation";
 export * from "./utils/format";
 export * from "./utils/searchText";

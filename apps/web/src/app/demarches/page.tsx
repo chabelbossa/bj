@@ -192,8 +192,9 @@ export default async function DemarchesPage({ searchParams }: DemarchesPageProps
                 style={inputStyle}
               >
                 <option value="">Tous</option>
+                <option value="verified">Vérifié</option>
                 <option value="partially_verified">Partiellement vérifié</option>
-                <option value="demo_unverified">Demo non officielle</option>
+                <option value="pending_verification">Vérification en attente</option>
               </select>
             </div>
           </div>

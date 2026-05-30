@@ -20,7 +20,8 @@ CivicRAG doit être conçu comme une couche transversale :
 - score de confiance ;
 - refus quand la source manque.
 
-Cette architecture permet d'ajouter plus tard AO Radar, ExportReady ou FieldOps sans reconstruire le socle.
+Cette architecture soutient déjà un pilote AO Radar et permet d'ajouter plus tard ExportReady ou
+FieldOps sans reconstruire le socle.
 
 ## Visibilité
 

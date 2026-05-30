@@ -6,6 +6,7 @@ import {
   demoSourceDocument,
   demoSourceReviewItems,
   officialSources,
+  pilotOpportunities,
   sourceDocuments,
 } from "../seed";
 import {
@@ -20,7 +21,7 @@ import {
 } from "./index";
 
 describe("core schemas", () => {
-  it("validates demo procedures", () => {
+  it("validates seeded procedures", () => {
     for (const procedure of demoProcedures) {
       expect(() => procedureSchema.parse(procedure)).not.toThrow();
       expect(procedure.verifiedFacts.length).toBeGreaterThan(0);
@@ -30,9 +31,7 @@ describe("core schemas", () => {
       demoProcedures.some((procedure) => procedure.verificationStatus === "partially_verified"),
     ).toBe(true);
     expect(
-      demoProcedures
-        .filter((procedure) => procedure.verificationStatus === "demo_unverified")
-        .every((procedure) => procedure.officialUrl === undefined),
+      demoProcedures.every((procedure) => procedure.verificationStatus !== "demo_unverified"),
     ).toBe(true);
   });
 
@@ -61,10 +60,11 @@ describe("core schemas", () => {
     }
 
     expect(demoSourceReviewItems.some((item) => item.status === "verified")).toBe(true);
+    expect(demoSourceReviewItems.some((item) => item.status === "needs_human_review")).toBe(true);
     expect(
       demoSourceReviewItems
-        .filter((item) => item.status === "to_connect")
-        .every((item) => item.candidateUrl.includes("example.org")),
+        .filter((item) => item.status === "verified")
+        .every((item) => !item.candidateUrl.includes("example.org")),
     ).toBe(true);
   });
 
@@ -118,19 +118,7 @@ describe("core schemas", () => {
       ],
     });
 
-    const opportunityResult = opportunitySchema.safeParse({
-      id: "opportunity-demo",
-      title: "Appel d'offres demo",
-      sourceUrl: "https://example.org/dossierbj-demo/opportunity",
-      authority: "Autorité à vérifier",
-      country: "BJ",
-      sector: "Services",
-      deadline: "Information non encore vérifiée",
-      summary: "Donnée demo pour préparer AO Radar sans l'implémenter.",
-      requiredDocuments: firstDocument ? [firstDocument] : [],
-      eligibility: ["Information non encore vérifiée"],
-      status: "demo_unverified",
-    });
+    const opportunityResult = opportunitySchema.safeParse(pilotOpportunities[0]);
 
     expect(checklistResult.success).toBe(true);
     expect(opportunityResult.success).toBe(true);

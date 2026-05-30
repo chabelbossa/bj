@@ -31,9 +31,9 @@ Le coeur documentaire est **CivicRAG**, un moteur de réponse sourcée qui privi
 Le MVP se concentre sur :
 
 - DossierBJ Core : démarches, sources, checklists et assistant sourcé.
-- Digital Pulse léger : indicateurs publics mockés.
+- Digital Pulse léger : métriques du corpus et watchlist de services publics.
 - CivicUX Lab léger : grille simple de critères UX.
-- Préparation technique pour AO Radar.
+- AO Radar pilote : opportunités sourcées, dates à revérifier et checklist de pré-soumission.
 
 ## Non-Objectifs
 

@@ -195,6 +195,45 @@ const checkAssistant = async () => {
   };
 };
 
+const checkEditorialApis = async () => {
+  const sourceCandidate = await fetchText("/api/source-candidates", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      id: "source-candidate-smoke-test-2026-05-30",
+      title: "Source smoke",
+      module: "DossierBJ Core",
+      country: "BJ",
+      authority: "Institution smoke",
+      candidateUrl: "https://example.org/source-smoke",
+      priority: "medium",
+      relatedProcedureSlugs: ["creation-entreprise"],
+      notes: ["Smoke test"],
+      createdAt: "2026-05-30",
+    }),
+  });
+
+  if (!sourceCandidate.response.ok) {
+    throw new Error(`/api/source-candidates returned ${sourceCandidate.response.status}`);
+  }
+
+  const claimNote = await fetchText("/api/claim-review-notes", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      claimId: "claim-smoke",
+      procedureSlug: "creation-entreprise",
+      note: "Smoke note",
+    }),
+  });
+
+  if (!claimNote.response.ok) {
+    throw new Error(`/api/claim-review-notes returned ${claimNote.response.status}`);
+  }
+
+  return { path: "/api/editorial", status: 200, ok: true };
+};
+
 try {
   await waitForServer();
 
@@ -228,7 +267,11 @@ try {
       "Prêt pour vérification ?",
       "Historique",
     ]),
+    await checkPage("/pulse", ["Observatoire public léger", "Services suivis"]),
+    await checkPage("/ao-radar", ["Pilote appels d", "Checklist de pré-soumission"]),
+    await checkPage("/open-civic-kit", ["Manifest public", "formatFcfa"]),
     await checkAssistant(),
+    await checkEditorialApis(),
   ];
 
   console.log(JSON.stringify({ dataMode, aiProvider, results }, null, 2));

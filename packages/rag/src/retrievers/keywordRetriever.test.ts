@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { mockRetriever } from "./mockRetriever";
 
 describe("mock retriever", () => {
-  it("finds demo procedure chunks by keyword", async () => {
+  it("finds source-backed procedure chunks by keyword", async () => {
     const results = await mockRetriever.retrieve({ question: "création entreprise" });
 
     expect(results.length).toBeGreaterThan(0);

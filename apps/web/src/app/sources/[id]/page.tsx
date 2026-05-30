@@ -229,12 +229,12 @@ export default async function SourceReviewDetailPage({ params }: SourceReviewPag
           <section className="rounded-md border border-line bg-surface p-5">
             <h2 className="text-lg font-semibold">Gestion locale</h2>
             <p className="mt-2 text-sm leading-6 text-muted">
-              Les sources candidates restent fichier-based dans{" "}
+              Le registre public reste versionné dans{" "}
               <code className="rounded-sm bg-background px-1 py-0.5">
                 packages/core/src/seed/sourceRegistry.ts
               </code>
-              . Après modification, lancer validation, tests et seed Postgres si le mode DB est
-              utilisé.
+              . Les brouillons et notes passent aussi par les audit logs PostgreSQL quand le mode DB
+              est utilisé.
             </p>
           </section>
         </aside>

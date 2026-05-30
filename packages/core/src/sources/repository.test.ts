@@ -13,35 +13,35 @@ describe("source review repository", () => {
 
     expect(items.length).toBeGreaterThan(0);
     expect(items.some((item) => item.status === "verified")).toBe(true);
-    expect(items.some((item) => item.status === "to_connect")).toBe(true);
+    expect(items.some((item) => item.status === "needs_human_review")).toBe(true);
   });
 
   it("summarizes source review status", () => {
     const summary = getSourceReviewSummary();
 
     expect(summary.total).toBeGreaterThan(0);
-    expect(summary.toConnect).toBeGreaterThan(0);
+    expect(summary.toConnect).toBe(0);
     expect(summary.verified).toBeGreaterThan(0);
-    expect(summary.needsHumanReview).toBe(0);
+    expect(summary.needsHumanReview).toBeGreaterThan(0);
   });
 
-  it("exposes official and demo sources separately", () => {
+  it("exposes official sources in the active catalog", () => {
     const sources = getOfficialSources();
 
     expect(sources.some((source) => source.sourceType === "official")).toBe(true);
-    expect(sources.some((source) => source.sourceType === "demo")).toBe(true);
+    expect(sources.some((source) => source.sourceType === "demo")).toBe(false);
   });
 
   it("computes manual ingestion readiness for local source management", () => {
     const verifiedItem = getSourceReviewItems().find((item) => item.status === "verified");
-    const toConnectItem = getSourceReviewItems().find((item) => item.status === "to_connect");
+    const reviewItem = getSourceReviewItems().find((item) => item.status === "needs_human_review");
 
     expect(verifiedItem).toBeDefined();
-    expect(toConnectItem).toBeDefined();
+    expect(reviewItem).toBeDefined();
 
-    if (verifiedItem && toConnectItem) {
+    if (verifiedItem && reviewItem) {
       expect(getManualIngestionReadiness(verifiedItem).readyForVerifiedStatus).toBe(true);
-      expect(getManualIngestionReadiness(toConnectItem).readyForVerifiedStatus).toBe(false);
+      expect(getManualIngestionReadiness(reviewItem).readyForVerifiedStatus).toBe(false);
     }
   });
 

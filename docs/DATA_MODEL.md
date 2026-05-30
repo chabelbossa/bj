@@ -66,8 +66,11 @@ date de création. Le mode mock ne persiste rien.
 
 ## Opportunity
 
-Modèle futur pour AO Radar : titre, autorité, pays, secteur, deadline, résumé, documents requis, éligibilité et statut.
+Modèle AO Radar pilote : titre, autorité, pays, secteur, deadline, résumé, documents requis,
+éligibilité et statut. Les opportunités restent reliées à une source officielle et doivent être
+revérifiées avant réponse commerciale.
 
 ## AuditLog
 
-Journal futur pour actions sensibles : acteur, action, cible, métadonnées minimales et horodatage.
+Journal pour actions éditoriales optionnelles en mode Postgres : brouillons de sources, notes de
+claims, acteur, action, cible, métadonnées minimales et horodatage.

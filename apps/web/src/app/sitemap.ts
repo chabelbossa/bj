@@ -12,6 +12,7 @@ const staticRoutes = [
   "/sources/nouvelle",
   "/methode-verification",
   "/pulse",
+  "/ao-radar",
   "/ux-lab",
   "/open-civic-kit",
 ];

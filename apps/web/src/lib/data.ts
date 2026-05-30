@@ -10,10 +10,13 @@ export {
   getSourceValidationData,
   listProcedureClaims,
   listOfficialSources,
+  listOpportunities,
   listProcedures,
   listSourceChunks,
   listSourceDocuments,
   listSourceReviewItems,
   saveAssistantQuery,
+  saveClaimReviewNote,
+  saveSourceCandidateDraft,
   searchProcedureData,
 } from "@dossierbj/db/repository";

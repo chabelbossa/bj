@@ -2,6 +2,7 @@ import type { OfficialSource, SourceDocument, SourceReference } from "../schemas
 
 export const DEMO_RETRIEVED_AT = "2026-05-19";
 export const SERVICE_PUBLIC_RETRIEVED_AT = "2026-05-30";
+export const GOUV_BJ_RETRIEVED_AT = "2026-05-30";
 
 export const demoOfficialSource: OfficialSource = {
   id: "demo-official-source-to-connect",
@@ -68,6 +69,18 @@ export const servicePublicOfficialSource: OfficialSource = {
   sourceType: "official",
   reliabilityLevel: "high",
   lastCheckedAt: SERVICE_PUBLIC_RETRIEVED_AT,
+  status: "active",
+};
+
+export const gouvBjOfficialSource: OfficialSource = {
+  id: "official-source-gouv-bj",
+  name: "Gouvernement de la République du Bénin",
+  country: "BJ",
+  institution: "Gouvernement de la République du Bénin",
+  url: "https://www.gouv.bj",
+  sourceType: "official",
+  reliabilityLevel: "high",
+  lastCheckedAt: GOUV_BJ_RETRIEVED_AT,
   status: "active",
 };
 
@@ -167,6 +180,39 @@ export const servicePublicRccmDocument: SourceDocument = {
   contentType: "text/html",
   retrievedAt: SERVICE_PUBLIC_RETRIEVED_AT,
   version: "2026-05-30-service-public-api",
+  status: "active",
+};
+
+export const servicePublicCipDocument: SourceDocument = {
+  id: "source-document-service-public-cip",
+  sourceId: servicePublicOfficialSource.id,
+  title: "Certificat d'Identification Personnelle (CIP)",
+  url: "https://service-public.bj/public/services/service/PS00392",
+  contentType: "text/html",
+  retrievedAt: SERVICE_PUBLIC_RETRIEVED_AT,
+  version: "2026-05-30-service-public-api",
+  status: "active",
+};
+
+export const servicePublicTaxClearanceDocument: SourceDocument = {
+  id: "source-document-service-public-attestation-regularite-fiscale-fonciere",
+  sourceId: servicePublicOfficialSource.id,
+  title: "Attestation de régularité fiscale foncière",
+  url: "https://service-public.bj/public/services/service/PS01512",
+  contentType: "text/html",
+  retrievedAt: SERVICE_PUBLIC_RETRIEVED_AT,
+  version: "2026-05-30-service-public-api",
+  status: "active",
+};
+
+export const gouvBjPublicTendersDocument: SourceDocument = {
+  id: "source-document-gouv-bj-marches-publics",
+  sourceId: gouvBjOfficialSource.id,
+  title: "Opportunités - Marchés publics",
+  url: "https://www.gouv.bj/opportunites/marches-publics/",
+  contentType: "text/html",
+  retrievedAt: GOUV_BJ_RETRIEVED_AT,
+  version: "2026-05-30-manual-review",
   status: "active",
 };
 
@@ -270,11 +316,41 @@ export const servicePublicRccmRef: SourceReference = {
   retrievedAt: SERVICE_PUBLIC_RETRIEVED_AT,
 };
 
+export const servicePublicCipRef: SourceReference = {
+  sourceId: servicePublicOfficialSource.id,
+  documentId: servicePublicCipDocument.id,
+  url: servicePublicCipDocument.url,
+  title: servicePublicCipDocument.title,
+  excerpt:
+    "Le service-public.bj indique un CIP actif, 1 800 FCFA, 48h annoncées, et des pièces incluant récépissé RAVIP, acte de naissance, justificatif de résidence et quittance.",
+  retrievedAt: SERVICE_PUBLIC_RETRIEVED_AT,
+};
+
+export const servicePublicTaxClearanceRef: SourceReference = {
+  sourceId: servicePublicOfficialSource.id,
+  documentId: servicePublicTaxClearanceDocument.id,
+  url: servicePublicTaxClearanceDocument.url,
+  title: servicePublicTaxClearanceDocument.title,
+  excerpt:
+    "Le service-public.bj indique une attestation de régularité fiscale foncière active, gratuite, avec un délai annoncé de 72 heures et des prérequis fiscaux et fonciers.",
+  retrievedAt: SERVICE_PUBLIC_RETRIEVED_AT,
+};
+
+export const gouvBjPublicTendersRef: SourceReference = {
+  sourceId: gouvBjOfficialSource.id,
+  documentId: gouvBjPublicTendersDocument.id,
+  url: gouvBjPublicTendersDocument.url,
+  title: gouvBjPublicTendersDocument.title,
+  excerpt:
+    "La page officielle gouv.bj/opportunites/marches-publics liste des marchés publics et opportunités à revérifier avant toute réponse commerciale.",
+  retrievedAt: GOUV_BJ_RETRIEVED_AT,
+};
+
 export const officialSources: OfficialSource[] = [
   monEntrepriseOfficialSource,
   numeriqueOfficialSource,
   servicePublicOfficialSource,
-  demoOfficialSource,
+  gouvBjOfficialSource,
 ];
 
 export const sourceDocuments: SourceDocument[] = [
@@ -287,5 +363,7 @@ export const sourceDocuments: SourceDocument[] = [
   numeriqueCasierArticleDocument,
   servicePublicCasierDocument,
   servicePublicRccmDocument,
-  demoSourceDocument,
+  servicePublicCipDocument,
+  servicePublicTaxClearanceDocument,
+  gouvBjPublicTendersDocument,
 ];

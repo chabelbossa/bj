@@ -118,6 +118,27 @@ export function ClaimReviewWorkspace({ items, procedures }: ClaimReviewWorkspace
     }));
   }
 
+  async function syncNote(claimId: string, procedureSlug: string) {
+    const note = notes[claimId]?.trim();
+
+    if (!note) {
+      return;
+    }
+
+    const response = await fetch("/api/claim-review-notes", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ claimId, procedureSlug, note }),
+    });
+    const result = (await response.json().catch(() => null)) as { persisted?: boolean } | null;
+
+    setSaveStatus(
+      result?.persisted
+        ? "Note synchronisée dans PostgreSQL et conservée localement."
+        : "Note conservée localement ; PostgreSQL optionnel non actif.",
+    );
+  }
+
   async function exportNotes() {
     const payload = {
       exportedAt: new Date().toISOString(),
@@ -141,8 +162,8 @@ export function ClaimReviewWorkspace({ items, procedures }: ClaimReviewWorkspace
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
-      <aside className="rounded-md border border-line bg-surface p-5 lg:sticky lg:top-4 lg:self-start">
+    <div className="grid min-w-0 gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
+      <aside className="min-w-0 rounded-md border border-line bg-surface p-5 lg:sticky lg:top-4 lg:self-start">
         <h2 className="text-lg font-semibold">Filtres de revue</h2>
         <div className="mt-4 grid gap-4">
           <label className="grid gap-2 text-sm font-semibold">
@@ -221,7 +242,8 @@ export function ClaimReviewWorkspace({ items, procedures }: ClaimReviewWorkspace
             {visibleItems.length} claim(s) affiché(s), {notedCount} note(s) locale(s).
           </p>
           <p className="mt-2">
-            Les notes restent dans ce navigateur et ne modifient jamais le corpus public.
+            Les notes restent dans ce navigateur et se synchronisent côté PostgreSQL quand le mode
+            base est actif.
           </p>
         </div>
 
@@ -244,9 +266,12 @@ export function ClaimReviewWorkspace({ items, procedures }: ClaimReviewWorkspace
         {saveStatus ? <p className="mt-3 text-sm text-brand-strong">{saveStatus}</p> : null}
       </aside>
 
-      <section className="space-y-4">
+      <section className="min-w-0 space-y-4">
         {visibleItems.map((item) => (
-          <article key={item.claim.id} className="rounded-md border border-line bg-surface p-5">
+          <article
+            key={item.claim.id}
+            className="min-w-0 rounded-md border border-line bg-surface p-5"
+          >
             <div className="flex flex-wrap gap-2">
               <span className="rounded-sm bg-[#fff1d6] px-2 py-1 text-xs font-semibold text-[#774d08]">
                 {priorityLabels[item.priority]}
@@ -261,20 +286,20 @@ export function ClaimReviewWorkspace({ items, procedures }: ClaimReviewWorkspace
 
             <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <h3 className="text-lg font-semibold">{item.claim.label}</h3>
+                <h3 className="break-words text-lg font-semibold">{item.claim.label}</h3>
                 <Link
                   href={`/demarches/${item.claim.procedureSlug}` as Route}
-                  className="mt-1 inline-flex text-sm font-semibold text-brand-strong hover:underline"
+                  className="mt-1 inline-flex break-all text-sm font-semibold text-brand-strong hover:underline"
                 >
                   {item.claim.procedureSlug}
                 </Link>
               </div>
-              <span className="w-fit rounded-sm border border-line px-2 py-1 text-xs text-muted">
+              <span className="w-fit max-w-full break-words rounded-sm border border-line px-2 py-1 text-xs text-muted">
                 {item.claim.sourceField ?? "champ non précisé"}
               </span>
             </div>
 
-            <p className="mt-3 text-sm leading-6 text-muted">{item.claim.value}</p>
+            <p className="mt-3 break-words text-sm leading-6 text-muted">{item.claim.value}</p>
             <div className="mt-4 rounded-md border border-line bg-background p-4 text-sm">
               <p className="font-semibold">Pourquoi ce claim est dans la file</p>
               <p className="mt-2 text-muted">{item.reason}</p>
@@ -309,6 +334,7 @@ export function ClaimReviewWorkspace({ items, procedures }: ClaimReviewWorkspace
               <textarea
                 value={notes[item.claim.id] ?? ""}
                 onChange={(event) => updateNote(item.claim.id, event.target.value)}
+                onBlur={() => syncNote(item.claim.id, item.claim.procedureSlug)}
                 rows={3}
                 className="rounded-md border border-line bg-background p-3 font-normal"
                 placeholder="Ex. source à connecter, libellé à clarifier, claim à masquer..."

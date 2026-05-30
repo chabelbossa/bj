@@ -88,7 +88,7 @@ export function SourceCandidateForm() {
     }));
   }
 
-  function submitCandidate(event: React.FormEvent<HTMLFormElement>) {
+  async function submitCandidate(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
     setCopyStatus(null);
@@ -107,6 +107,18 @@ export function SourceCandidateForm() {
 
       setDrafts((current) => [draft, ...current.filter((item) => item.id !== draft.id)]);
       setForm(initialFormState);
+      const response = await fetch("/api/source-candidates", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(draft),
+      });
+      const result = (await response.json().catch(() => null)) as { persisted?: boolean } | null;
+
+      setCopyStatus(
+        result?.persisted
+          ? "Brouillon enregistré dans PostgreSQL et conservé localement."
+          : "Brouillon conservé localement ; PostgreSQL optionnel non actif.",
+      );
     } catch {
       setError("Vérifiez les champs obligatoires et l'URL candidate.");
     }
@@ -136,8 +148,10 @@ export function SourceCandidateForm() {
       <form onSubmit={submitCandidate} className="rounded-md border border-line bg-surface p-5">
         <h2 className="text-xl font-semibold">Proposer une source</h2>
         <p className="mt-2 text-sm leading-6 text-muted">
-          La proposition reste locale au navigateur. Elle ne rend aucune information officielle et
-          doit être revue avant intégration dans le registre.
+          La proposition reste disponible dans le navigateur et peut être enregistrée dans
+          PostgreSQL quand <code className="rounded-sm bg-background px-1 py-0.5">DATA_MODE</code>
+          vaut <code className="rounded-sm bg-background px-1 py-0.5">postgres</code>. Elle ne rend
+          aucune information officielle sans revue.
         </p>
 
         <div className="mt-5 grid gap-4">
@@ -227,7 +241,7 @@ export function SourceCandidateForm() {
           type="submit"
           className="mt-5 min-h-11 w-full rounded-md bg-brand px-4 font-semibold text-white hover:bg-brand-strong"
         >
-          Générer la proposition locale
+          Générer la proposition
         </button>
       </form>
 

@@ -2,7 +2,14 @@
 
 ## Open Source Possible
 
-OpenCivic Kit peut exposer :
+OpenCivic Kit expose déjà dans le workspace :
+
+- `cn` ;
+- `formatFcfa` ;
+- `verificationTone` ;
+- un manifest public de principes de design civique.
+
+Il peut ensuite exposer :
 
 - composants UI génériques ;
 - schémas publics ;

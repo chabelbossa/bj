@@ -1,5 +1,6 @@
 import { ModuleCard } from "@/components/ui/ModuleCard";
 import { TrustNotice } from "@/components/ui/TrustNotice";
+import { formatFcfa, openCivicKitManifest, verificationTone } from "@dossierbj/ui";
 
 export const metadata = {
   title: "OpenCivic Kit",
@@ -14,8 +15,9 @@ export default function OpenCivicKitPage() {
         </p>
         <h1 className="mt-3 text-3xl font-bold sm:text-4xl">La couche open source prévue</h1>
         <p className="mt-4 leading-7 text-muted">
-          OpenCivic Kit pourra publier des composants, types et helpers utiles à d&apos;autres
-          projets civictech, sans exposer le corpus enrichi ni les workflows premium.
+          OpenCivic Kit expose maintenant les premiers helpers publics utilisés par l&apos;app :
+          classes conditionnelles, format FCFA et ton de vérification réutilisable par d&apos;autres
+          projets civictech.
         </p>
       </div>
       <div className="mt-6">
@@ -23,15 +25,30 @@ export default function OpenCivicKitPage() {
       </div>
       <section className="mt-8 grid gap-4 md:grid-cols-2">
         <ModuleCard
-          title="À ouvrir"
-          description="Composants de citation, checklists, types publics, helpers FCFA et starter civictech."
-          status="Possible"
+          title="Consommé par l'app"
+          description={`Statut package ${openCivicKitManifest.status}. Exemple public : ${formatFcfa(1900)}.`}
+          status="MVP"
         />
         <ModuleCard
           title="À garder propriétaire"
           description="Corpus enrichi, scoring avancé, prompts critiques, analytics business, workflows premium et billing."
           status="Protégé"
         />
+      </section>
+      <section className="mt-8 rounded-md border border-line bg-surface p-5">
+        <h2 className="text-xl font-semibold">Manifest public</h2>
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
+          {openCivicKitManifest.publicHelpers.map((helper) => (
+            <article key={helper} className="rounded-md border border-line bg-background p-4">
+              <p className="text-sm font-semibold">{helper}</p>
+              <p className="mt-2 text-sm text-muted">
+                {helper === "verificationTone"
+                  ? `partially_verified -> ${verificationTone("partially_verified")}`
+                  : "Helper exporté depuis @dossierbj/ui."}
+              </p>
+            </article>
+          ))}
+        </div>
       </section>
     </div>
   );

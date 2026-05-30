@@ -4,7 +4,7 @@
 
 Le projet doit démarrer avec :
 
-- données mockées ou seedées ;
+- données seedées et fixtures de test ;
 - provider IA mock ;
 - pas de base cloud ;
 - pas de vector DB externe ;

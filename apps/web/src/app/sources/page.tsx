@@ -37,8 +37,8 @@ export default async function SourcesPage() {
         <h1 className="mt-3 text-3xl font-bold sm:text-4xl">Sources à vérifier</h1>
         <p className="mt-4 leading-7 text-muted">
           Cette page sert de mini back-office local. Elle distingue les sources connectées, les
-          sources en revue et les candidates, sans scraping agressif ni collecte de documents
-          personnels.
+          sources en revue et les candidates. Les notes et brouillons restent locaux en mode mock,
+          puis passent par PostgreSQL quand le mode base est actif.
         </p>
       </div>
 
@@ -147,13 +147,15 @@ export default async function SourcesPage() {
       <section className="mt-8 rounded-md border border-line bg-surface p-5">
         <h2 className="text-xl font-semibold">Gestion locale</h2>
         <p className="mt-3 text-sm leading-6 text-muted">
-          Pour ajouter ou modifier une source candidate, éditez
+          Pour ajouter ou modifier durablement une source candidate, utilisez le formulaire ou
+          éditez
           <code className="mx-1 rounded-sm bg-background px-1 py-0.5">
             packages/core/src/seed/sourceRegistry.ts
           </code>
-          puis lancez <code className="rounded-sm bg-background px-1 py-0.5">pnpm test</code>. Une
-          source ne doit devenir vérifiée qu&apos;après revue humaine et rattachement explicite aux
-          citations.
+          puis lancez <code className="rounded-sm bg-background px-1 py-0.5">pnpm test</code> et{" "}
+          <code className="rounded-sm bg-background px-1 py-0.5">pnpm validate:sources</code>. Une
+          source ne devient vérifiée qu&apos;après revue humaine et rattachement explicite aux
+          citations ; PostgreSQL conserve les brouillons comme audit logs quand il est activé.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
           <Link
@@ -202,7 +204,7 @@ export default async function SourcesPage() {
           </ul>
         </div>
         <div className="rounded-md border border-line bg-surface p-5">
-          <h2 className="text-xl font-semibold">Documents demo</h2>
+          <h2 className="text-xl font-semibold">Documents sources</h2>
           <ul className="mt-4 space-y-3 text-sm text-muted">
             {sourceDocuments.map((document) => (
               <li key={document.id}>

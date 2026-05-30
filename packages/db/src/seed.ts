@@ -5,6 +5,7 @@ import {
   demoProcedures,
   demoSourceReviewItems,
   officialSources,
+  pilotOpportunities,
   sourceDocuments,
 } from "@dossierbj/core";
 
@@ -18,6 +19,23 @@ try {
   await sql.begin(async (tx) => {
     const toJson = (value: unknown): Parameters<typeof tx.json>[0] =>
       JSON.parse(JSON.stringify(value)) as Parameters<typeof tx.json>[0];
+    const removedProcedureIds = [
+      "procedure-demo-administrative-certificate",
+      "procedure-demo-civil-status",
+    ];
+
+    await tx`
+      delete from source_chunks
+      where id in ('procedure-chunk-attestation-administrative', 'procedure-chunk-document-etat-civil')
+    `;
+    await tx`delete from procedure_claims where procedure_id in ${tx(removedProcedureIds)}`;
+    await tx`
+      delete from source_references
+      where target_type = 'procedure' and target_id in ${tx(removedProcedureIds)}
+    `;
+    await tx`delete from required_documents where procedure_id in ${tx(removedProcedureIds)}`;
+    await tx`delete from procedure_steps where procedure_id in ${tx(removedProcedureIds)}`;
+    await tx`delete from procedures where id in ${tx(removedProcedureIds)}`;
 
     for (const source of officialSources) {
       await tx`
@@ -237,6 +255,32 @@ try {
           note = excluded.note,
           reviewed_at = excluded.reviewed_at,
           actor = excluded.actor
+      `;
+    }
+
+    for (const opportunity of pilotOpportunities) {
+      await tx`
+        insert into opportunities (
+          id, title, source_url, authority, country, sector, deadline, summary,
+          required_documents, eligibility, status
+        ) values (
+          ${opportunity.id}, ${opportunity.title}, ${opportunity.sourceUrl},
+          ${opportunity.authority}, ${opportunity.country}, ${opportunity.sector},
+          ${toDate(opportunity.deadline)}, ${opportunity.summary},
+          ${tx.json(opportunity.requiredDocuments)}, ${tx.json(opportunity.eligibility)},
+          ${opportunity.status}
+        )
+        on conflict (id) do update set
+          title = excluded.title,
+          source_url = excluded.source_url,
+          authority = excluded.authority,
+          country = excluded.country,
+          sector = excluded.sector,
+          deadline = excluded.deadline,
+          summary = excluded.summary,
+          required_documents = excluded.required_documents,
+          eligibility = excluded.eligibility,
+          status = excluded.status
       `;
     }
   });

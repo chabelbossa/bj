@@ -61,7 +61,7 @@ export default async function AssistantPage({ searchParams }: AssistantPageProps
           }}
         >
           Cette interface utilise CivicRAG avec le provider IA mock par défaut. Les sources viennent
-          des données mockées ou de Postgres selon le mode actif.
+          du corpus seedé ou de Postgres selon le mode actif.
         </p>
       </div>
 

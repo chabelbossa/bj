@@ -1,8 +1,7 @@
-import type { Procedure, ProcedureFact, RequiredDocument } from "../schemas";
+import type { Procedure, ProcedureFact } from "../schemas";
 
 import {
   DEMO_RETRIEVED_AT,
-  demoSourceReference,
   monEntrepriseCertificatesRef,
   monEntrepriseCostsRef,
   monEntrepriseGuideRef,
@@ -12,28 +11,10 @@ import {
   numeriqueCasierServiceRef,
   numeriqueRccmServiceRef,
   servicePublicCasierRef,
+  servicePublicCipRef,
   servicePublicRccmRef,
+  servicePublicTaxClearanceRef,
 } from "./sources";
-
-const createDemoRequiredDocuments = (procedureId: string): RequiredDocument[] => [
-  {
-    id: `${procedureId}-doc-official-list`,
-    name: "Liste officielle des pièces",
-    description: "Information non encore vérifiée. À confirmer sur la plateforme officielle.",
-    required: true,
-    condition: "Donnée demo : ne pas utiliser comme liste officielle.",
-    sourceRefs: [demoSourceReference],
-  },
-  {
-    id: `${procedureId}-doc-identity-context`,
-    name: "Informations d'identification ou de contexte",
-    description:
-      "Placeholder prudent : le type exact d'information à préparer doit être confirmé par une source officielle.",
-    required: true,
-    condition: "Ne pas téléverser de document personnel dans le MVP.",
-    sourceRefs: [demoSourceReference],
-  },
-];
 
 const createFact = (
   id: string,
@@ -49,89 +30,6 @@ const createFact = (
   status,
   sourceRefs,
   note,
-});
-
-const createDemoProcedure = (
-  id: string,
-  title: string,
-  slug: string,
-  category: string,
-  targetUsers: string[],
-  aliases: string[],
-  userNeed: string,
-  expectedOutcome: string,
-): Procedure => ({
-  id,
-  title,
-  slug,
-  country: "BJ",
-  category,
-  aliases,
-  targetUsers,
-  summary:
-    "Donnée de démonstration non officielle. Cette fiche sert à tester le parcours et doit être remplacée par des sources officielles vérifiées.",
-  userNeed,
-  expectedOutcome,
-  estimatedDuration: "Information non encore vérifiée",
-  officialCost: "À vérifier sur la plateforme officielle",
-  requiredDocuments: createDemoRequiredDocuments(id),
-  steps: [
-    {
-      id: `${id}-step-source-check`,
-      order: 1,
-      title: "Vérifier la source officielle",
-      description:
-        "Consulter la plateforme officielle ou l'institution compétente avant de préparer le dossier.",
-      sourceRefs: [demoSourceReference],
-    },
-    {
-      id: `${id}-step-prepare`,
-      order: 2,
-      title: "Préparer les informations",
-      description:
-        "Rassembler uniquement les éléments confirmés par une source officielle ou par l'institution concernée.",
-      sourceRefs: [demoSourceReference],
-    },
-    {
-      id: `${id}-step-questions`,
-      order: 3,
-      title: "Noter les informations manquantes",
-      description:
-        "Lister les frais, délais, pièces ou conditions qui ne sont pas encore confirmés.",
-      sourceRefs: [demoSourceReference],
-    },
-  ],
-  preparationHints: [
-    "Préparer une liste de questions à poser à l'institution compétente.",
-    "Séparer les informations vérifiées des suppositions.",
-    "Éviter de transmettre des documents personnels tant que le canal officiel n'est pas confirmé.",
-  ],
-  pointsToVerify: [
-    "Pièces réellement obligatoires",
-    "Frais officiels",
-    "Délais officiels",
-    "Canal de dépôt ou plateforme officielle",
-  ],
-  verifiedFacts: [
-    createFact(
-      `${id}-fact-demo`,
-      "Statut des données",
-      "Fiche de démonstration non officielle",
-      "unverified",
-      [demoSourceReference],
-      "Aucune affirmation administrative ne doit être déduite de cette fiche.",
-    ),
-  ],
-  warnings: [
-    "Données de démonstration non officielles.",
-    "Ne pas utiliser cette fiche comme référence administrative définitive.",
-    "Vérifiez toujours les informations critiques auprès des plateformes officielles.",
-  ],
-  sources: [demoSourceReference],
-  sourceStatusNote:
-    "Source officielle non connectée. Cette fiche utilise une référence demo réservée à la validation produit.",
-  lastVerifiedAt: DEMO_RETRIEVED_AT,
-  verificationStatus: "demo_unverified",
 });
 
 const businessCreationProcedure: Procedure = {
@@ -410,7 +308,7 @@ const criminalRecordProcedure: Procedure = {
       sourceRefs: [servicePublicCasierRef],
     },
     {
-      id: "casier-step-check-identity",
+      id: "casier-step-verify-inputs",
       order: 3,
       title: "Vérifier les informations saisies",
       description:
@@ -635,28 +533,329 @@ const rccmProcedure: Procedure = {
   verificationStatus: "partially_verified",
 };
 
+const taxClearanceProcedure: Procedure = {
+  id: "procedure-core-tax-clearance-land",
+  title: "Attestation de régularité fiscale foncière",
+  slug: "attestation-regularite-fiscale-fonciere",
+  country: "BJ",
+  category: "Fiscalité",
+  aliases: [
+    "attestation fiscale",
+    "foncier",
+    "impôts",
+    "regularite fiscale",
+    "proprietaire terrien",
+    "dgi",
+  ],
+  targetUsers: ["Propriétaires", "Citoyens", "Entreprises"],
+  summary:
+    "Fiche partiellement vérifiée à partir de service-public.bj. Elle couvre le public visé, le canal officiel, le coût annoncé, le délai et les prérequis visibles pour l'attestation de régularité fiscale foncière.",
+  userNeed:
+    "Savoir si ce service correspond à une preuve de régularité fiscale foncière et préparer les pièces citées avant de faire la demande.",
+  expectedOutcome:
+    "Une checklist prudente pour vérifier son IFU, sa situation fiscale foncière, les documents fonciers et le canal officiel avant soumission.",
+  officialUrl: servicePublicTaxClearanceRef.url,
+  estimatedDuration: "72 heures annoncées sur service-public.bj.",
+  officialCost: "Gratuit selon service-public.bj.",
+  requiredDocuments: [
+    {
+      id: "tax-clearance-doc-ifu",
+      name: "Numéro IFU",
+      description: "La fiche service-public.bj indique qu'il faut avoir un numéro IFU.",
+      required: true,
+      condition: "Pré-requis annoncé pour le propriétaire demandeur.",
+      sourceRefs: [servicePublicTaxClearanceRef],
+    },
+    {
+      id: "tax-clearance-doc-fiscal-status",
+      name: "Situation fiscale foncière à jour",
+      description:
+        "La fiche officielle indique une situation fiscale foncière à jour avant délivrance.",
+      required: true,
+      condition: "À revérifier auprès de la DGI si un paiement récent n'est pas encore visible.",
+      sourceRefs: [servicePublicTaxClearanceRef],
+    },
+    {
+      id: "tax-clearance-doc-payment-receipt",
+      name: "Quittance de paiement",
+      description: "La fiche officielle cite une quittance de paiement parmi les pièces.",
+      required: true,
+      condition:
+        "La fiche indique le service gratuit ; la quittance concerne la situation fiscale.",
+      sourceRefs: [servicePublicTaxClearanceRef],
+    },
+    {
+      id: "tax-clearance-doc-land-title",
+      name: "Convention de vente ou titre foncier",
+      description: "La fiche service-public.bj cite la convention de vente ou le titre foncier.",
+      required: true,
+      condition: "Selon le document disponible pour le bien foncier concerné.",
+      sourceRefs: [servicePublicTaxClearanceRef],
+    },
+    {
+      id: "tax-clearance-doc-recovery-or-survey",
+      name: "Fiche de compulsion, avis de mise en recouvrement ou levée topographique",
+      description:
+        "La fiche officielle cite aussi la fiche de compulsion ou l'avis de mise en recouvrement, ainsi que la levée topographique.",
+      required: true,
+      condition: "Préparer les documents explicitement demandés sur le formulaire officiel.",
+      sourceRefs: [servicePublicTaxClearanceRef],
+    },
+  ],
+  steps: [
+    {
+      id: "tax-clearance-step-open-service",
+      order: 1,
+      title: "Ouvrir le service officiel",
+      description:
+        "Utiliser la fiche service-public.bj de l'attestation de régularité fiscale foncière.",
+      sourceRefs: [servicePublicTaxClearanceRef],
+    },
+    {
+      id: "tax-clearance-step-check-eligibility",
+      order: 2,
+      title: "Confirmer le profil propriétaire",
+      description:
+        "Le service cible les propriétaires terriens qui doivent prouver leur régularité fiscale foncière.",
+      sourceRefs: [servicePublicTaxClearanceRef],
+    },
+    {
+      id: "tax-clearance-step-prepare-files",
+      order: 3,
+      title: "Préparer les justificatifs fiscaux et fonciers",
+      description:
+        "Réunir IFU, situation fiscale foncière à jour, quittance, document de propriété et éléments topographiques cités.",
+      sourceRefs: [servicePublicTaxClearanceRef],
+    },
+    {
+      id: "tax-clearance-step-submit-follow",
+      order: 4,
+      title: "Soumettre et suivre le délai",
+      description:
+        "La fiche annonce un service gratuit et un délai de 72 heures, avec réception du document par mail.",
+      sourceRefs: [servicePublicTaxClearanceRef],
+    },
+  ],
+  preparationHints: [
+    "Vérifier que l'IFU et la situation fiscale foncière sont à jour avant de lancer la demande.",
+    "Préparer les justificatifs du bien foncier concerné dans les formats demandés par le service officiel.",
+    "Utiliser une adresse e-mail accessible pour recevoir l'attestation.",
+    "Revérifier la fiche service-public.bj avant soumission, surtout si un paiement fiscal récent vient d'être effectué.",
+  ],
+  pointsToVerify: [
+    "Statut de mise à jour fiscale réellement visible côté DGI",
+    "Pièce exacte demandée selon le type de propriété",
+    "Canal de support si l'attestation n'arrive pas par mail",
+    "Éventuelle évolution du délai de 72 heures",
+  ],
+  verifiedFacts: [
+    createFact(
+      "tax-clearance-fact-channel",
+      "Canal officiel",
+      "La fiche service-public.bj décrit un service de demande et de réception de l'attestation par mail.",
+      "verified",
+      [servicePublicTaxClearanceRef],
+    ),
+    createFact(
+      "tax-clearance-fact-public",
+      "Public visé",
+      "Le service cible tout propriétaire terrien.",
+      "verified",
+      [servicePublicTaxClearanceRef],
+    ),
+    createFact(
+      "tax-clearance-fact-cost",
+      "Frais",
+      "La fiche service-public.bj indique un service gratuit.",
+      "verified",
+      [servicePublicTaxClearanceRef],
+      "Revérifier avant soumission si la fiche évolue.",
+    ),
+    createFact(
+      "tax-clearance-fact-duration",
+      "Délai annoncé",
+      "La fiche service-public.bj indique 72 heures.",
+      "verified",
+      [servicePublicTaxClearanceRef],
+    ),
+    createFact(
+      "tax-clearance-fact-documents",
+      "Pièces et prérequis",
+      "La fiche cite IFU, situation fiscale foncière à jour, quittance de paiement, document de propriété, fiche de compulsion ou avis de mise en recouvrement, et levée topographique.",
+      "verified",
+      [servicePublicTaxClearanceRef],
+    ),
+  ],
+  warnings: [
+    "DossierBJ est indépendant et ne remplace pas service-public.bj ni la DGI.",
+    "Ne transmettez aucun titre foncier, IFU ou document fiscal dans DossierBJ.",
+    "Revérifiez la gratuité, le délai et les pièces sur la fiche officielle avant soumission.",
+  ],
+  sources: [servicePublicTaxClearanceRef],
+  sourceStatusNote:
+    "Service, coût, délai, public et pièces extraits depuis la fiche service-public.bj le 2026-05-30. La fiche reste prudente car les valeurs peuvent changer.",
+  lastVerifiedAt: "2026-05-30",
+  verificationStatus: "partially_verified",
+};
+
+const cipProcedure: Procedure = {
+  id: "procedure-core-personal-identification-certificate",
+  title: "Certificat d'identification personnelle (CIP)",
+  slug: "certificat-identification-personnelle",
+  country: "BJ",
+  category: "État civil et citoyenneté",
+  aliases: [
+    "cip",
+    "cipr",
+    "identification",
+    "ravip",
+    "certificat identification",
+    "document etat civil",
+  ],
+  targetUsers: ["Citoyens", "Résidents", "Diaspora"],
+  summary:
+    "Fiche partiellement vérifiée à partir de service-public.bj. Elle couvre le certificat d'identification personnelle pour nationaux et résidents, le coût annoncé, le délai et les pièces visibles.",
+  userNeed:
+    "Comprendre quelles pièces préparer pour demander un CIP ou CIPR sans stocker de données personnelles dans DossierBJ.",
+  expectedOutcome:
+    "Une checklist prudente pour vérifier récépissé RAVIP, acte de naissance, justificatif de résidence et quittance avant d'utiliser le service officiel.",
+  officialUrl: servicePublicCipRef.url,
+  estimatedDuration: "48h annoncées sur service-public.bj.",
+  officialCost: "1 800 FCFA selon service-public.bj.",
+  requiredDocuments: [
+    {
+      id: "cip-doc-ravip-receipt",
+      name: "Copie du récépissé RAVIP",
+      description: "La fiche service-public.bj cite la copie du récépissé RAVIP.",
+      required: true,
+      condition: "Pour CIP national et CIPR résident selon la fiche officielle.",
+      sourceRefs: [servicePublicCipRef],
+    },
+    {
+      id: "cip-doc-birth-certificate",
+      name: "Copie de l'acte de naissance",
+      description: "La fiche officielle cite la copie de l'acte de naissance.",
+      required: true,
+      condition: "Pour nationaux et étrangers résidents selon le service affiché.",
+      sourceRefs: [servicePublicCipRef],
+    },
+    {
+      id: "cip-doc-residence-proof",
+      name: "Attestation de résidence ou facture SBEE/SONEB",
+      description:
+        "La fiche service-public.bj cite l'attestation de résidence ou une facture SBEE/SONEB.",
+      required: true,
+      condition: "Justificatif de résidence indiqué pour CIP et CIPR.",
+      sourceRefs: [servicePublicCipRef],
+    },
+    {
+      id: "cip-doc-payment-receipt",
+      name: "Quittance de paiement des frais",
+      description: "La fiche officielle cite la quittance de paiement des frais.",
+      required: true,
+      condition: "À préparer après avoir vérifié le montant officiel au moment de la demande.",
+      sourceRefs: [servicePublicCipRef],
+    },
+  ],
+  steps: [
+    {
+      id: "cip-step-open-service",
+      order: 1,
+      title: "Ouvrir le service officiel",
+      description:
+        "Utiliser la fiche service-public.bj du certificat d'identification personnelle.",
+      sourceRefs: [servicePublicCipRef],
+    },
+    {
+      id: "cip-step-choose-profile",
+      order: 2,
+      title: "Choisir le profil CIP ou CIPR",
+      description:
+        "La fiche distingue le CIP pour les nationaux et le CIPR pour les étrangers résidents.",
+      sourceRefs: [servicePublicCipRef],
+    },
+    {
+      id: "cip-step-prepare-documents",
+      order: 3,
+      title: "Préparer les justificatifs",
+      description:
+        "Préparer récépissé RAVIP, acte de naissance, justificatif de résidence et quittance de paiement.",
+      sourceRefs: [servicePublicCipRef],
+    },
+    {
+      id: "cip-step-submit-follow",
+      order: 4,
+      title: "Soumettre et suivre le délai",
+      description: "La fiche service-public.bj indique 1 800 FCFA et un délai de 48h.",
+      sourceRefs: [servicePublicCipRef],
+    },
+  ],
+  preparationHints: [
+    "Vérifier que les informations RAVIP et acte de naissance correspondent exactement.",
+    "Préparer le justificatif de résidence le plus récent disponible.",
+    "Revérifier le montant sur la fiche officielle avant paiement.",
+    "Ne pas déposer de copies de documents personnels dans DossierBJ.",
+  ],
+  pointsToVerify: [
+    "Validité attendue des justificatifs de résidence",
+    "Canal exact de paiement et de retrait",
+    "Éventuelles règles spécifiques diaspora ou résident étranger",
+    "Évolution du tarif ou du délai annoncé",
+  ],
+  verifiedFacts: [
+    createFact(
+      "cip-fact-service",
+      "Objet du service",
+      "La fiche service-public.bj décrit le CIP comme un document sécurisé qui certifie l'identité de la personne.",
+      "verified",
+      [servicePublicCipRef],
+    ),
+    createFact(
+      "cip-fact-public",
+      "Public indiqué",
+      "La fiche service-public.bj indique tout citoyen et distingue CIP national et CIPR résident.",
+      "verified",
+      [servicePublicCipRef],
+    ),
+    createFact(
+      "cip-fact-cost",
+      "Frais",
+      "La fiche service-public.bj indique 1 800 FCFA.",
+      "verified",
+      [servicePublicCipRef],
+      "Revérifier le tarif avant paiement.",
+    ),
+    createFact(
+      "cip-fact-duration",
+      "Délai annoncé",
+      "La fiche service-public.bj indique 48h.",
+      "verified",
+      [servicePublicCipRef],
+    ),
+    createFact(
+      "cip-fact-documents",
+      "Pièces",
+      "La fiche cite récépissé RAVIP, acte de naissance, attestation de résidence ou facture SBEE/SONEB, et quittance de paiement.",
+      "verified",
+      [servicePublicCipRef],
+    ),
+  ],
+  warnings: [
+    "DossierBJ est indépendant et ne remplace pas service-public.bj ni l'ANIP.",
+    "Ne téléversez aucun document d'identité ou justificatif de résidence dans DossierBJ.",
+    "Revérifiez les frais, délais et pièces sur la fiche officielle avant paiement.",
+  ],
+  sources: [servicePublicCipRef],
+  sourceStatusNote:
+    "Service, coût, délai et pièces extraits depuis la fiche service-public.bj le 2026-05-30. La fiche reste prudente car les valeurs peuvent changer.",
+  lastVerifiedAt: "2026-05-30",
+  verificationStatus: "partially_verified",
+};
+
 export const demoProcedures: Procedure[] = [
   businessCreationProcedure,
   criminalRecordProcedure,
   rccmProcedure,
-  createDemoProcedure(
-    "procedure-demo-administrative-certificate",
-    "Attestation administrative",
-    "attestation-administrative",
-    "Administration",
-    ["Citoyens", "Organisations"],
-    ["attestation", "certificat", "administration"],
-    "Comprendre quoi vérifier avant de demander une attestation.",
-    "Une vue claire des informations manquantes à confirmer.",
-  ),
-  createDemoProcedure(
-    "procedure-demo-civil-status",
-    "Demande de document d'état civil",
-    "document-etat-civil",
-    "État civil",
-    ["Citoyens", "Diaspora"],
-    ["état civil", "acte", "naissance", "mariage", "décès"],
-    "Préparer une demande de document d'état civil sans stocker de données personnelles.",
-    "Une checklist prudente orientée vérification officielle.",
-  ),
+  taxClearanceProcedure,
+  cipProcedure,
 ];

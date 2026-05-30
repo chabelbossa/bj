@@ -12,6 +12,7 @@ export const navItems = [
   { href: "/methode-verification", label: "Méthode" },
   { href: "/assistant", label: "Assistant" },
   { href: "/pulse", label: "Pulse" },
+  { href: "/ao-radar", label: "AO Radar" },
   { href: "/ux-lab", label: "UX Lab" },
   { href: "/open-civic-kit", label: "OpenCivic Kit" },
 ] as const;

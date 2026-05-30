@@ -24,7 +24,7 @@ Les documents sources doivent garder une trace de version. Si une page change, l
 
 ## Ingestion Manuelle MVP
 
-Le MVP utilise une ingestion manuelle fichier-based. Une API publique officielle peut aider à lire une fiche, mais le résultat doit rester copié, cité et testé dans le registre :
+Le MVP utilise une ingestion manuelle versionnée. Une API publique officielle peut aider à lire une fiche, mais le résultat doit rester copié, cité et testé dans le registre :
 
 1. Ajouter une entrée dans `packages/core/src/seed/sourceRegistry.ts`.
 2. Confirmer l'autorité, le pays, l'URL et le statut.
@@ -35,6 +35,17 @@ Le MVP utilise une ingestion manuelle fichier-based. Une API publique officielle
 
 Une URL service-public ou gouvernementale peut être `pending_review` si la page est identifiée mais que ses détails n'ont pas encore été extraits humainement.
 
+## Surveillance
+
+Les sources `service-public.bj` déjà connectées peuvent être revérifiées avec :
+
+```bash
+pnpm monitor:sources
+```
+
+La commande ne remplace pas la revue humaine. Elle sert d'alerte lorsque statut, frais, délai ou
+pièces ne correspondent plus au snapshot attendu.
+
 ## Règles De Collecte
 
 - Pas de scraping agressif.
@@ -44,5 +55,5 @@ Une URL service-public ou gouvernementale peut être `pending_review` si la page
 
 ## Affichage
 
-L'UI doit distinguer source officielle, source à vérifier et donnée demo non officielle.
+L'UI doit distinguer source officielle, source à vérifier, donnée de test et information insuffisante.
 Les fiches doivent afficher les citations au niveau de la fiche, mais aussi au niveau des pièces, étapes et affirmations sensibles quand elles existent.

@@ -24,8 +24,8 @@ const modules = [
   },
   {
     title: "AO Radar",
-    description: "Préparation technique pour appels d'offres et checklists de soumission.",
-    status: "Plus tard",
+    description: "Pilote appels d'offres avec source officielle, dates à revérifier et checklists.",
+    status: "MVP",
   },
 ];
 
@@ -88,8 +88,8 @@ export default async function HomePage() {
               maxWidth: 520,
             }}
           >
-            DossierBJ combine des fiches demo clairement marquées et quelques sources officielles
-            connectées manuellement pour tester un parcours vraiment exploitable.
+            DossierBJ combine des fiches sourcées, un RAG local et des workflows éditoriaux pour
+            tester un parcours vraiment exploitable sans dépendance payante.
           </p>
 
           <div style={{ marginBottom: 28 }}>
@@ -255,7 +255,8 @@ export default async function HomePage() {
                 margin: 0,
               }}
             >
-              Les fiches indiquent clairement ce qui est partiellement vérifié et ce qui reste demo.
+              Les fiches indiquent clairement ce qui est sourcé, partiellement vérifié et à
+              revérifier.
             </p>
           </div>
           <Link

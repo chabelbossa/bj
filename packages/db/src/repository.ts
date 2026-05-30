@@ -10,16 +10,19 @@ import {
   getProcedureTargetUsersFromList,
   getSourceValidationSummary,
   officialSources as mockOfficialSources,
+  pilotOpportunities,
   searchProcedureList,
   sourceDocuments as mockSourceDocuments,
   summarizeClaimCoverage,
   validateSourceIntegrity,
   type OfficialSource,
+  type Opportunity,
   type Procedure,
   type ProcedureClaim,
   type ProcedureSearchFilters,
   type SourceReference,
   type SourceChunk,
+  type SourceCandidateDraft,
   type SourceDocument,
   type SourceReviewEvent,
   type SourceReviewItem,
@@ -50,6 +53,12 @@ type PersistedAssistantAnswer = {
   missingInfo: string[];
   disclaimer: string;
   suggestedOfficialVerification: string;
+};
+
+export type ClaimReviewNoteInput = {
+  claimId: string;
+  procedureSlug?: string;
+  note: string;
 };
 
 const readProceduresFromPostgres = async (): Promise<Procedure[]> => {
@@ -202,6 +211,34 @@ export const getClaimCoverageData = async () => {
   return summarizeClaimCoverage(claims);
 };
 
+export const listOpportunities = async (): Promise<Opportunity[]> => {
+  if (getDataMode() === "mock") {
+    return pilotOpportunities;
+  }
+
+  const db = await createDatabaseClient();
+
+  if (!db) {
+    return pilotOpportunities;
+  }
+
+  const rows = await db.select().from(schema.opportunities);
+
+  return rows.map((row) => ({
+    id: row.id,
+    title: row.title,
+    sourceUrl: row.sourceUrl,
+    authority: row.authority,
+    country: row.country,
+    sector: row.sector,
+    deadline: toIsoDate(row.deadline) ?? "",
+    summary: row.summary,
+    requiredDocuments: asArray(row.requiredDocuments),
+    eligibility: row.eligibility,
+    status: row.status,
+  }));
+};
+
 export const listOfficialSources = async (): Promise<OfficialSource[]> => {
   if (getDataMode() === "mock") {
     return mockOfficialSources;
@@ -341,6 +378,55 @@ export const saveAssistantQuery = async ({
     confidence: answer.confidence,
     citations: answer.citations,
   });
+};
+
+export const saveSourceCandidateDraft = async (draft: SourceCandidateDraft) => {
+  if (getDataMode() !== "postgres") {
+    return { persisted: false, reason: "DATA_MODE is not postgres" };
+  }
+
+  const db = await createDatabaseClient();
+
+  if (!db) {
+    return { persisted: false, reason: "database unavailable" };
+  }
+
+  await db.insert(schema.auditLogs).values({
+    id: `audit-source-candidate-${draft.id}-${Date.now()}`,
+    actorId: "local-editor",
+    action: "source_candidate_draft.created",
+    targetType: "source_candidate_draft",
+    targetId: draft.id,
+    metadata: JSON.parse(JSON.stringify(draft)) as Record<string, unknown>,
+  });
+
+  return { persisted: true };
+};
+
+export const saveClaimReviewNote = async (input: ClaimReviewNoteInput) => {
+  if (getDataMode() !== "postgres") {
+    return { persisted: false, reason: "DATA_MODE is not postgres" };
+  }
+
+  const db = await createDatabaseClient();
+
+  if (!db) {
+    return { persisted: false, reason: "database unavailable" };
+  }
+
+  await db.insert(schema.auditLogs).values({
+    id: `audit-claim-note-${input.claimId}-${Date.now()}`,
+    actorId: "local-editor",
+    action: "claim_review_note.saved",
+    targetType: "procedure_claim",
+    targetId: input.claimId,
+    metadata: {
+      note: input.note,
+      procedureSlug: input.procedureSlug,
+    },
+  });
+
+  return { persisted: true };
 };
 
 export const getSourceValidationData = async () => {

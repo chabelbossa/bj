@@ -140,6 +140,7 @@ export function Footer() {
             >
               {[
                 { href: "/pulse" as Route, label: "Digital Pulse" },
+                { href: "/ao-radar" as Route, label: "AO Radar" },
                 { href: "/ux-lab" as Route, label: "CivicUX Lab" },
                 { href: "/open-civic-kit" as Route, label: "OpenCivic Kit" },
               ].map((item) => (
@@ -242,7 +243,7 @@ export function Footer() {
               whiteSpace: "nowrap",
             }}
           >
-            Mode local · données demo · IA mock
+            Mode local · sources partielles · IA mock
           </p>
         </div>
       </div>

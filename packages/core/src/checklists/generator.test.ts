@@ -4,7 +4,7 @@ import { demoProcedures } from "../seed";
 import { generateProcedureChecklist, getChecklistProgress } from "./generator";
 
 describe("checklist generator", () => {
-  it("creates a cautious checklist from a demo procedure", () => {
+  it("creates a cautious checklist from a seeded procedure", () => {
     const procedure = demoProcedures[0];
 
     expect(procedure).toBeDefined();

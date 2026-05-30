@@ -8,6 +8,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "monitor:sources": "tsx src/sources/monitorSourcesCli.ts",
     "validate:sources": "tsx src/sources/validateSourcesCli.ts"
   },
   "dependencies": {

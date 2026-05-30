@@ -6,7 +6,9 @@ Priorité 1. Démarches, sources, pièces, étapes, checklists et assistant sour
 
 ## AO Radar / TenderCopilot
 
-Priorité 2. Dépend de CivicRAG, `Opportunity`, sources vérifiées et alertes. Ne pas construire le module complet avant validation du Core.
+Priorité 2. Pilote MVP disponible avec `Opportunity`, source officielle `gouv.bj`, dates à
+revérifier et checklist de pré-soumission. Ne pas automatiser l'ingestion avant validation
+juridique et commerciale.
 
 ## Diaspora Desk / RootsTrip
 
@@ -14,7 +16,7 @@ Priorité 3. Démarches diaspora, voyage, eVisa, documents utiles et guides sour
 
 ## Digital Pulse
 
-Module léger au MVP. Observe les changements, tendances numériques et qualité des services publics numériques.
+Module léger au MVP. Agrège les métriques du corpus et la watchlist gratuite `service-public.bj`.
 
 ## CivicUX Lab
 
@@ -22,7 +24,7 @@ Module léger au MVP. Audits UX, scores simples, critères publics et recommanda
 
 ## OpenCivic Kit
 
-Couche open source : composants, types, helpers et starter civictech.
+Couche open source : helpers consommés par l'app, types publics et futur starter civictech.
 
 ## ExportReady Africa
 

@@ -1,5 +1,6 @@
 "use client";
 
+import type { Route } from "next";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -102,7 +103,7 @@ export function Header() {
           {navItems.map((item) => (
             <Link
               key={item.href}
-              href={item.href}
+              href={item.href as Route}
               style={{
                 fontFamily: "var(--font-sans)",
                 fontSize: 14,
@@ -198,7 +199,7 @@ export function Header() {
             {navItems.map((item) => (
               <Link
                 key={item.href}
-                href={item.href}
+                href={item.href as Route}
                 onClick={() => setMenuOpen(false)}
                 style={{
                   fontFamily: "var(--font-sans)",
