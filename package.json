@@ -36,10 +36,10 @@
   "devDependencies": {
     "@types/node": "^20",
     "eslint": "^9",
-    "eslint-config-next": "16.2.6",
-    "prettier": "^3.6.2",
+    "eslint-config-next": "16.2.9",
+    "prettier": "^3.8.4",
     "typescript": "^5",
-    "vitest": "^4.1.7"
+    "vitest": "^4.1.8"
   },
   "pnpm": {
     "overrides": {
